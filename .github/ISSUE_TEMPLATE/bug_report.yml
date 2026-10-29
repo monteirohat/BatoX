@@ -1,0 +1,44 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: batox
+    attributes:
+      label: BatoX version
+      description: Shown on the dashboard, or run `./build/batox-linux-arm64 -version`.
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: input
+    id: batocera
+    attributes:
+      label: Batocera version
+      placeholder: "41"
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware
+      placeholder: Raspberry Pi 4 Model B
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser (for web app issues)
+      placeholder: Firefox 131 on Android
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Output of `./scripts/deploy.sh logs`, or the Logs screen. Remove any tokens or passwords.
+      render: text
