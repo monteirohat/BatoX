@@ -11,6 +11,7 @@ set the `baseUrl` and `token` variables.
 - [Service and device](#service-and-device)
 - [Systems and games](#systems-and-games)
 - [Music](#music)
+- [Messages](#messages)
 - [EmulationStation](#emulationstation)
 - [Batocera settings](#batocera-settings)
 
@@ -304,6 +305,40 @@ Deletes a track. `?path=snes/World.ogg`.
 { "status": "deleted", "path": "snes/World.ogg" }
 ```
 
+## Messages
+
+### `POST /messages/notify` and `POST /messages/messagebox`
+
+Show a message on the console screen.
+
+```json
+{ "text": "Dinner is ready!", "title": "Mom", "position": "center", "seconds": 10 }
+```
+
+`text` is required, up to 500 characters. The other fields only apply to cards drawn on top of the
+screen: `title` (default `BatoX`, `""` for none, up to 60 characters), `position` (`top`, `center`
+or `bottom`, default `top`) and `seconds` (2 to 60, default 6).
+
+- **notify:** a card drawn on top of everything, games included, that disappears on its own. It
+  uses the on-screen overlay (the BatoX Apps libraries, built into BatoX), which needs Batocera's
+  sway compositor. When the overlay is not available, BatoX falls back to EmulationStation's
+  notification: a single line that only shows on EmulationStation's menus.
+- **messagebox:** EmulationStation's dialog, which stays until someone presses a button. While it
+  is open, EmulationStation waits, including before launching a game. During a game, the text is
+  also drawn on top of the game for 10 seconds. It is available in the API only; the Messages
+  screen sends notifications.
+
+Notifications go through a queue and are shown one at a time. `via` tells how the message was
+shown: `overlay`, `emulationstation`, or `emulationstation+overlay`. `400` for invalid fields,
+`429` when too many messages are waiting, `502` when EmulationStation doesn't answer, `503` in dev
+mode.
+
+```json
+{ "status": "sent", "type": "notify", "via": "overlay", "text": "Dinner is ready!" }
+```
+
+The Messages screen uses `GET /emulationstation/status` (below) to show whether a game is running.
+
 ## EmulationStation
 
 ### `POST /emulationstation/reload-gamelists`
@@ -316,6 +351,17 @@ Controls EmulationStation through its init script (`esInitScript`).
 
 ```json
 { "status": "ok", "action": "restart" }
+```
+
+### `GET /emulationstation/status`
+
+Whether EmulationStation answers, its version, whether it is idle (no game, scraper or update
+running), the game being played, and whether messages can be drawn on top of games (`overlay`).
+Always `200`; `available` is `false` when EmulationStation is not running, and in dev mode.
+
+```json
+{ "available": true, "version": "43", "idle": false, "overlay": true,
+  "runningGame": { "name": "Golden Sun", "system": "gba", "path": "/userdata/roms/gba/Golden Sun.gba" } }
 ```
 
 ### `GET /emulationstation/logs`

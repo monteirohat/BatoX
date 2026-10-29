@@ -8,6 +8,15 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Messages screen, in the menu: send a message to the console screen, with quick messages, title
+  suggestions (including the last titles typed) and a history, and see first whether a game is
+  running.
+- Messages are drawn on top of everything, games included, through the BatoX Apps overlay (built
+  into BatoX), with a choice of position, duration (up to 60 seconds) and title. Without the
+  overlay, EmulationStation's notification is used. The API also offers EmulationStation's message
+  box (`POST /api/v1/messages/messagebox`), which is not on the screen.
+- `POST /api/v1/messages/notify`, `POST /api/v1/messages/messagebox` and
+  `GET /api/v1/emulationstation/status` endpoints.
 - `internal/esapi`: a client for every route of EmulationStation's web API (port 1234), read from
   batocera-emulationstation's `HttpServerThread.cpp` and `HttpApi.cpp`, with tests.
 - Game details: a details button (or a click on the game name) opens a modal with the scraped
@@ -17,6 +26,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
+- Phones: the bottom navigation fits its nine items down to 360 px wide screens, and scrolls on
+  narrower ones.
 - Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the
   console's lists and collections right away, without a full reload. When EmulationStation is not
   running or doesn't know the game, BatoX deletes the file itself, as before.

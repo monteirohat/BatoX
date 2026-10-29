@@ -7,6 +7,8 @@ import { state } from "../state.js";
 
 export async function render(page) {
   const tabs = [["controls", "Controls"], ["config", "Settings"], ["theme", "Theme"], ["log", "Log"]];
+  // Messages used to be a tab here; it is a view of its own now.
+  if (!tabs.some(([id]) => id === state.esTab)) state.esTab = "controls";
   page.innerHTML = `
     <header class="page-head">
       <div><h1>EmulationStation</h1><p>Batocera's game browser.</p></div>

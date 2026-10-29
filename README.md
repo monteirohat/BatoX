@@ -47,6 +47,9 @@ clicks, no terminal needed.
   preview tracks in the browser, and delete them.
 - **EmulationStation controls**: reload game lists, restart, stop and start, edit
   `es_settings.cfg`, install themes from a ZIP, and read or clear the log.
+- **Messages to the console**: send a message to the TV screen ("Dinner is ready!"), drawn on top
+  of the game too, with a choice of position, duration and title. Uses the
+  [BatoX Apps](https://github.com/monteirohat/batox-apps) overlay, built into BatoX.
 - **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions, search,
   and the commented-out defaults that Batocera ships as suggestions.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).

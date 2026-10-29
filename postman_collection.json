@@ -517,8 +517,88 @@
       ]
     },
     {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send a notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/messages/notify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                "notify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"Dinner is ready!\", \"title\": \"Mom\", \"position\": \"center\", \"seconds\": 10}"
+            }
+          }
+        },
+        {
+          "name": "Send a message box",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/messages/messagebox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                "messagebox"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"text\": \"Time for bed.\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "EmulationStation",
       "item": [
+        {
+          "name": "Console status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "status"
+              ]
+            }
+          }
+        },
         {
           "name": "Reload game lists",
           "request": {

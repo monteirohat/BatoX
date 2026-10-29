@@ -14,6 +14,7 @@ import (
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
+	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
@@ -30,6 +31,14 @@ type Deps struct {
 	Systems  *systems.Registry
 	Roms     *roms.Service
 	Music    *music.Service
+	Onscreen Onscreen // nil when there is no screen to draw on (dev mode)
+}
+
+// Onscreen shows message cards on top of the screen, games included
+// (implemented by internal/onscreen).
+type Onscreen interface {
+	Available() bool
+	Show(onscreen.Message) error
 }
 
 type Server struct {
@@ -106,6 +115,9 @@ func (s *Server) routes() chi.Router {
 			r.Get("/emulationstation/settings", s.esSettings)
 			r.Put("/emulationstation/settings/{name}", s.setESSetting)
 			r.Post("/emulationstation/theme", s.uploadTheme)
+			r.Get("/emulationstation/status", s.esStatus)
+			r.Post("/messages/notify", s.message("notify"))
+			r.Post("/messages/messagebox", s.message("messagebox"))
 
 			// batocera.conf
 			r.Get("/batocera/settings", s.listBatoceraSettings)

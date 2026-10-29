@@ -1,0 +1,41 @@
+/* Messages view
+   Console status, message form, quick messages and history. */
+
+.console-status { border-left: 4px solid var(--line); }
+.console-status h2 { margin-bottom: 2px; }
+.console-status p { margin: 0; }
+.console-status[data-state="ready"] { border-left-color: var(--ok); }
+.console-status[data-state="playing"] { border-left-color: var(--signal); }
+.console-status[data-state="off"] { border-left-color: var(--danger); }
+
+.msg-form { display: grid; gap: 14px; }
+.msg-form > p { margin: -6px 0 0; }
+.msg-count { justify-self: end; font-variant-numeric: tabular-nums; }
+
+.segmented { display: inline-flex; justify-self: start; gap: 4px; padding: 4px; background: var(--surface-2); border-radius: 999px; }
+.segmented button { min-height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 650; cursor: pointer; }
+.segmented button[aria-checked="true"] { background: var(--brand); color: var(--brand-ink); }
+
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--ink); font-size: 13px; cursor: pointer; }
+.chip:hover { border-color: var(--brand-text); }
+.chip[aria-pressed="true"] { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-text); font-weight: 650; }
+.chip-muted { color: var(--ink-2); border-style: dashed; }
+
+.msg-history { display: grid; margin: 0; padding: 0; list-style: none; }
+.msg-history li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.msg-history li:first-child { border-top: 0; }
+.msg-meta { color: var(--ink-2); font-size: 12px; }
+.msg-sent-text { margin: 2px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
+.msg-form .actions { align-items: center; }
+.msg-options { display: grid; grid-template-columns: auto minmax(160px, 220px); justify-content: start; gap: 14px 18px; align-items: end; }
+.msg-title-field { grid-column: 1 / -1; }
+.msg-title-field input { max-width: 420px; }
+.msg-title-field .presets { margin-top: 2px; }
+.msg-options[hidden] { display: none; }
+/* Same look as label.field, for the group of position buttons */
+.msg-options div.field { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+@media (max-width: 760px) {
+  .msg-options { grid-template-columns: 1fr; }
+}
+.msg-options .chip:not([aria-pressed="true"]) { font-weight: 400; }

@@ -65,6 +65,7 @@ internal/
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys
   esapi/                  client for EmulationStation's web API (port 1234)
+  onscreen/               queue of message cards drawn on top of the screen (BatoX Apps)
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
   gamelist/               reader for EmulationStation's gamelist.xml (scraped metadata)
@@ -106,6 +107,12 @@ docs/                     documentation and images
   - `/removegames` deletes the ROM files too;
   - `/restart` reboots the whole console, so the client calls it `RebootConsole`;
   - the server starts with two threads, so the client sends one request at a time.
+- **On-screen messages.** `internal/onscreen` draws message cards on top of everything, games
+  included, with the `overlay` and `ui` libraries of
+  [BatoX Apps](https://github.com/monteirohat/batox-apps). They are a regular Go dependency,
+  compiled into the BatoX binary: nothing else is installed on the console. To update them, run
+  `go get github.com/monteirohat/batox-apps@latest` and commit `go.mod` and `go.sum`. The overlay
+  uses Linux-only system calls, so BatoX builds for Linux only (which is every target it has).
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 

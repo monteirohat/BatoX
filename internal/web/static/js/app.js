@@ -6,6 +6,7 @@ import * as dashboard from "./views/dashboard.js";
 import * as games from "./views/games.js";
 import * as upload from "./views/upload.js";
 import * as music from "./views/music.js";
+import * as messages from "./views/messages.js";
 import * as es from "./views/es.js";
 import * as batocera from "./views/batocera.js";
 import * as logs from "./views/logs.js";
@@ -17,6 +18,7 @@ const views = {
   games: games.render,
   upload: upload.render,
   music: music.render,
+  messages: messages.render,
   es: es.render,
   batocera: batocera.render,
   logs: logs.render,

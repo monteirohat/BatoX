@@ -16,6 +16,7 @@ import (
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
+	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
@@ -81,7 +82,7 @@ func run(cfgPath string) error {
 	plat := platform.New(cfg, logger)
 	romSvc := roms.NewService(store, reg, plat, logger)
 
-	srv := api.New(api.Deps{
+	deps := api.Deps{
 		Version:  version,
 		Config:   cfg,
 		Log:      logger,
@@ -90,7 +91,11 @@ func run(cfgPath string) error {
 		Systems:  reg,
 		Roms:     romSvc,
 		Music:    music.NewService(cfg.MusicDir, logger),
-	})
+	}
+	if cfg.Platform == config.PlatformBatocera {
+		deps.Onscreen = onscreen.New(logger) // messages on top of games, through sway
+	}
+	srv := api.New(deps)
 
 	httpSrv := &http.Server{
 		Addr:              cfg.Listen,

@@ -49,10 +49,19 @@ h2 { font: 650 18px/1.25 var(--font-display); margin: 0 0 4px; }
     border-right: 0; border-top: 1px solid var(--line);
   }
   .brand, .rail-foot { display: none; }
-  .nav-link { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 2px; padding: 6px 2px; font-size: 10.5px; white-space: nowrap; }
+  .nav-link { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 2px; padding: 6px 0; font-size: 10px; letter-spacing: -0.01em; white-space: nowrap; }
   .nav-link .long { display: none; }
   .nav-link .short { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   main { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Narrow phones (360 px): nine labels still have to fit */
+@media (max-width: 380px) {
+  .nav-link { font-size: 9px; letter-spacing: -0.02em; }
+}
+/* Very narrow phones (320 px): the bar scrolls sideways instead */
+@media (max-width: 340px) {
+  .nav-link { flex: 0 0 auto; min-width: 46px; padding: 6px 4px; }
 }
 @media (min-width: 761px) {
   .nav-link .short { display: none; }
