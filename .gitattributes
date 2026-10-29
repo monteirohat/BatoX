@@ -1,0 +1,4 @@
+# Shell scripts must keep LF endings, or Batocera won't run them.
+* text=auto eol=lf
+*.png binary
+*.svg text eol=lf

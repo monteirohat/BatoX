@@ -1,0 +1,37 @@
+# Build output
+/build/
+/dist/
+/batox
+*.exe
+
+# Dev mode data (database, logs, test ROMs and music)
+/dev/
+*.db
+*.db-journal
+*.log
+
+# Local configuration (may contain a token)
+/config.json
+
+# Never commit games, music or theme archives
+*.gba
+*.gb
+*.gbc
+*.nes
+*.sfc
+*.smc
+*.iso
+*.cso
+*.chd
+*.zip
+*.7z
+*.mp3
+*.ogg
+*.wav
+*.flac
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
