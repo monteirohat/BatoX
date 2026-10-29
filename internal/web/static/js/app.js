@@ -2,6 +2,7 @@
 
 import { state, clearTimers } from "./state.js";
 import { $, $$, errorBox } from "./ui.js";
+import { api } from "./api.js";
 import * as dashboard from "./views/dashboard.js";
 import * as games from "./views/games.js";
 import * as upload from "./views/upload.js";
@@ -65,4 +66,24 @@ window.addEventListener("hashchange", () => {
   window.scrollTo(0, 0);
 });
 
+const RELEASES = "https://github.com/monteirohat/batox/releases";
+
+// Shows BatoX's version at the bottom of the menu, linked to its release
+// notes. Development builds ("dev", "v1.1.0-3-gabc1234-dirty") link to the
+// list of releases instead.
+async function showVersion() {
+  const link = $("#rail-version");
+  try {
+    const { version } = await api("/about");
+    if (!version) return;
+    link.textContent = `BatoX ${version}`;
+    link.href = /^v\d+\.\d+\.\d+$/.test(version) ? `${RELEASES}/tag/${version}` : RELEASES;
+    link.title = "Release notes on GitHub";
+    link.hidden = false;
+  } catch {
+    // Offline: the connection indicator already says so.
+  }
+}
+
 route();
+showVersion();

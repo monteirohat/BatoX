@@ -31,6 +31,7 @@ async function refresh() {
   const pct = f => Math.round(f * 100) + "%";
 
   const tags = [
+    st.version && `BatoX ${esc(st.version)}`,
     dev.batoceraVersion && `Batocera ${esc(dev.batoceraVersion.split(" ")[0])}`,
     dev.kernel && `Kernel ${esc(dev.kernel)}`,
     `${dev.cpus} cores`,

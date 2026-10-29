@@ -26,6 +26,8 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
+- BatoX's version is shown on the dashboard's console card and at the bottom of the menu, linked
+  to its release notes on GitHub.
 - Phones: the bottom navigation fits its nine items down to 360 px wide screens, and scrolls on
   narrower ones.
 - Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the

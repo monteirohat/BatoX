@@ -19,7 +19,9 @@
 .nav-link svg { width: 20px; height: 20px; flex: none; }
 .nav-link:hover { background: var(--surface-2); color: var(--ink); }
 .nav-link[aria-current="page"] { background: var(--brand-soft); color: var(--brand-text); }
-.rail-foot { margin-top: auto; padding: 12px; font-size: 13px; color: var(--ink-2); }
+.rail-foot { display: grid; gap: 6px; margin-top: auto; padding: 12px; font-size: 13px; color: var(--ink-2); }
+.rail-version { padding-left: 17px; color: var(--ink-2); font-size: 12px; text-decoration: none; }
+.rail-version:hover { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; }
 .conn { display: flex; align-items: center; gap: 8px; }
 .conn i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-2); }
 .conn[data-state="ok"] i { background: var(--ok); }
