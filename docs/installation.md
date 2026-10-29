@@ -1,10 +1,18 @@
 # Installation
 
 BatoX runs as a [Batocera service](https://wiki.batocera.org/launch_a_script) on the console and
-is installed over SSH. This guide covers SSH access, installing, upgrading, uninstalling and
-troubleshooting.
+is installed over SSH. There are three ways to install it:
+
+| Method | Best for |
+|---|---|
+| [BatoX Installer](#installing-with-the-batox-installer) | Most people: a desktop app, no terminal needed |
+| [A release, by hand](#installing-a-release-manually) | People comfortable with `ssh` and `scp` |
+| [`make deploy`](#installing-with-make-deploy) | Developers working on BatoX itself |
+
+This guide also covers SSH access, upgrading, uninstalling and troubleshooting.
 
 - [Requirements](#requirements)
+- [Installing with the BatoX Installer](#installing-with-the-batox-installer)
 - [SSH access to Batocera](#ssh-access-to-batocera)
 - [Installing with `make deploy`](#installing-with-make-deploy)
 - [Installing a release manually](#installing-a-release-manually)
@@ -19,11 +27,40 @@ troubleshooting.
 
 - **Console:** Batocera **v38 or newer** (BatoX relies on the `batocera-services` system) on a
   Raspberry Pi 4/5 or another arm64 board, or on an x86_64 PC.
-- **Computer:** any machine with `ssh` and `scp`. To build from source you also need
+- **Computer:** Windows, macOS or Linux. With the [BatoX Installer](https://github.com/monteirohat/BatoX_Installer) nothing else is
+  needed. For the manual methods you need `ssh` and `scp`, and to build from source also
   [Go 1.24+](https://go.dev/dl) and `make`. The binary has no CGO dependencies, so it
   cross-compiles from Linux, macOS or Windows.
 
+## Installing with the BatoX Installer
+
+The [BatoX Installer](https://github.com/monteirohat/BatoX_Installer) is a desktop app, in the style of balenaEtcher, that does every step
+of the installation for you over SSH.
+
+1. Download it for your system from the
+   [latest installer release](https://github.com/monteirohat/BatoX_Installer/releases/latest): a setup or portable `.exe` for Windows,
+   a `.dmg` for macOS (Apple Silicon or Intel), or an `.AppImage` or `.deb` for Linux.
+2. Open it and choose the BatoX **version**. The latest release is selected; choose **Choose**
+   to pick another release or type a tag such as `v1.0.0`.
+3. Enter the **console** address, `batocera.local` or its IP address, and click
+   **Check console**. The installer shows the board, the Batocera version and whether BatoX is
+   already installed. It uses the default login, `root` / `linux`; change it under
+   **SSH login** if you set another password.
+4. Click **Install**, or **Update** if an older BatoX is installed.
+
+At the end it shows the BatoX address and the API token, with buttons to open BatoX and copy
+the token. Behind the scenes it follows the same steps as `make deploy`: it downloads the right
+binary for the console's processor, verifies it against the release's `SHA256SUMS`, migrates a
+MyMine install if there is one, copies the files, starts the service and checks the API. The SSH
+password is never saved.
+
+The installer builds are not code-signed yet, so the first launch shows a warning. See the
+[installer README](https://github.com/monteirohat/BatoX_Installer#download) for how to open it on each system.
+
 ## SSH access to Batocera
+
+The BatoX Installer handles SSH for you; this section is for the manual methods and for
+troubleshooting.
 
 Batocera has SSH enabled by default:
 
@@ -164,16 +201,17 @@ batocera-services stop batox
 
 ## Upgrading
 
-Run `make deploy` again (or copy the new release binary over the old one). The configuration,
-token, catalog and logs in `/userdata/system/batox/` are kept.
+Open the [BatoX Installer](https://github.com/monteirohat/BatoX_Installer), choose the new version and click **Update**. You can also run
+`make deploy` again, or copy the new release binary over the old one. The configuration, token,
+catalog and logs in `/userdata/system/batox/` are kept.
 
 Because the web app is embedded in the binary, the browser picks up the new interface on the next
 page load. If it does not, force a reload with **Ctrl+Shift+R**.
 
 ## Upgrading from MyMine
 
-BatoX was previously called MyMine and lived in `/userdata/system/mymine`. The deploy script
-migrates it automatically:
+BatoX was previously called MyMine and lived in `/userdata/system/mymine`. The BatoX Installer
+and the deploy script both migrate it automatically:
 
 1. stops and disables the `mymine` service and removes its service script;
 2. if `/userdata/system/batox` does not exist yet, moves `/userdata/system/mymine` there and
@@ -183,7 +221,7 @@ migrates it automatically:
 In the browser, the token and preferences saved by MyMine are copied over the first time the
 BatoX page opens, so you don't need to type the token again.
 
-If you install a release manually instead, do the same by hand:
+If you install a release by hand instead, do the same yourself:
 
 ```bash
 ssh root@batocera.local
@@ -231,6 +269,11 @@ After a reinstall you also need to run `ssh-copy-id` again.
 
 **`Connection refused` or `Connection timed out`**
 Check that the console is on, on the same network, and that the address is right.
+
+**The BatoX Installer can't find or connect to the console**
+The installer shows the reason on screen. Most often the address is wrong (try the IP address
+instead of `batocera.local`), the console is off or on another network, or the SSH password was
+changed (set it under **SSH login**). The SSH problems below apply to the installer too.
 
 **The deploy says "The API did not answer"**
 Look at the logs with `./scripts/deploy.sh logs`. The most common cause is another program using

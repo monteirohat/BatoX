@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Game details: a details button (or a click on the game name) opens a modal with the scraped
+  description, artwork gallery, video, manual, developer, publisher, genre, release date, rating,
+  play count, last played and every other `gamelist.xml` field, plus the file data.
+- `GET /api/v1/roms/{id}/details` and `GET /api/v1/roms/{id}/media/{kind}` endpoints.
+
 ## [1.0.0] - 2026-10-29
 
 First public release. BatoX was previously developed privately as **MyMine**, a game-upload API

@@ -86,6 +86,8 @@ func (s *Server) routes() chi.Router {
 			r.Post("/roms/sync", s.syncRoms)
 			r.Get("/roms/system/{system}", s.romsBySystem)
 			r.Get("/roms/{id}", s.getRom)
+			r.Get("/roms/{id}/details", s.gameDetails)
+			r.Get("/roms/{id}/media/{kind}", s.gameMedia)
 			r.Delete("/roms/{id}", s.deleteRom)
 
 			// Background music

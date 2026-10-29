@@ -4,6 +4,7 @@ import { esc, fmtBytes, fmtDate, sysColor, plural } from "../format.js";
 import { $, $$, toast, confirmDialog, busy, errorBox } from "../ui.js";
 import { api } from "../api.js";
 import { state } from "../state.js";
+import { openGameDetails } from "./game-details.js";
 
 export async function render(page) {
   page.innerHTML = `
@@ -25,8 +26,12 @@ export async function render(page) {
   $("#btn-sync").onclick = e => syncLibrary(e.currentTarget);
   $("#rom-search").oninput = e => { state.romSearch = e.target.value; drawRoms(); };
   await loadLibrary();
+
+  // Called by app.js when leaving the view: closes an open details modal.
+  return () => { if (details) details.close(); };
 }
 
+let details = null; // the open game details modal, if any
 let library = { systems: [], roms: [] };
 
 async function loadLibrary() {
@@ -73,21 +78,35 @@ function drawRoms() {
   area.innerHTML = `<div class="rom-list">
     <div class="rom rom-head"><span>Name</span><span>System</span><span>Size</span><span>Language</span><span>Added</span><span class="sr-only">Actions</span></div>
     ${list.map(r => `<div class="rom">
-      <span class="rom-name">${esc(r.name)}<span class="rom-path">${esc(r.path)}</span></span>
+      <span class="rom-name"><button class="rom-open" data-id="${esc(r.id)}">${esc(r.name)}</button><span class="rom-path">${esc(r.path)}</span></span>
       <span class="rom-meta">
         <span class="sys-tag" style="--sys:${sysColor(r.system)}">${esc(r.system)}</span>
         <span class="num">${fmtBytes(r.size)}</span>
         <span>${esc(r.language || "—")}</span>
         <span class="num">${fmtDate(r.addedAt)}</span>
       </span>
-      <button class="btn btn-danger btn-sm icon-btn rom-del" data-id="${esc(r.id)}" data-name="${esc(r.name)}" aria-label="Delete ${esc(r.name)}" title="Delete">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
-      </button>
+      <span class="rom-actions">
+        <button class="btn btn-sm icon-btn rom-info" data-id="${esc(r.id)}" aria-label="Details of ${esc(r.name)}" title="Details">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
+        </button>
+        <button class="btn btn-danger btn-sm icon-btn rom-del" data-id="${esc(r.id)}" data-name="${esc(r.name)}" aria-label="Delete ${esc(r.name)}" title="Delete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+        </button>
+      </span>
     </div>`).join("")}
   </div>
   <p class="muted small">${list.length === library.roms.length ? plural(list.length, "game", "games") : `${list.length} of ${plural(library.roms.length, "game", "games")}`} shown.</p>`;
 
   $$(".rom-del", area).forEach(b => b.onclick = () => deleteRom(b.dataset.id, b.dataset.name));
+  $$(".rom-info, .rom-open", area).forEach(b => b.onclick = () => showDetails(b.dataset.id));
+}
+
+function showDetails(id) {
+  if (details) details.close();
+  details = openGameDetails(id, {
+    onDelete: rom => deleteRom(rom.id, rom.name),
+    onClose: () => { details = null; },
+  });
 }
 
 async function deleteRom(id, name) {

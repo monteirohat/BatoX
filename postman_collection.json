@@ -283,6 +283,47 @@
           }
         },
         {
+          "name": "Game details (scraped metadata)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}/details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Game media (box art)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}/media/boxart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}",
+                "media",
+                "boxart"
+              ]
+            }
+          }
+        },
+        {
           "name": "Upload a game",
           "request": {
             "method": "POST",

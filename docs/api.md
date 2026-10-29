@@ -176,6 +176,43 @@ Games of one system. `400` if the system is unknown.
 
 One game. `404` if not found.
 
+### `GET /roms/{id}/details`
+
+The catalog data of a game together with what EmulationStation scraped into the system's
+`gamelist.xml` (for example `/userdata/roms/gba/gamelist.xml`). `scraped` is `false` when the game
+has no gamelist entry yet; `metadata` then is empty.
+
+`metadata` holds every text field of the gamelist entry, as stored by EmulationStation: common
+ones are `name`, `desc`, `developer`, `publisher`, `genre`, `players`, `rating` (0 to 1),
+`releasedate` and `lastplayed` (`YYYYMMDDTHHMMSS`), `playcount`, `gametime` (seconds), `favorite`
+and `hidden`.
+
+`media` lists the artwork and files that exist on disk, best cover candidates first. Each `url` is
+relative to `/api/v1`.
+
+```json
+{
+  "rom": { "id": "2f1d0c8e9a...", "system": "gba", "name": "Golden Sun.gba", "path": "/userdata/roms/gba/Golden Sun.gba" },
+  "systemName": "Game Boy Advance",
+  "scraped": true,
+  "metadata": { "name": "Golden Sun", "desc": "An ancient power is stirring...", "developer": "Camelot", "rating": "0.9", "releasedate": "20010801T000000", "playcount": "7" },
+  "media": [
+    { "kind": "boxart", "type": "image", "url": "/roms/2f1d0c8e9a.../media/boxart" },
+    { "kind": "video", "type": "video", "url": "/roms/2f1d0c8e9a.../media/video" },
+    { "kind": "manual", "type": "document", "url": "/roms/2f1d0c8e9a.../media/manual" }
+  ]
+}
+```
+
+Media kinds: `boxart`, `thumbnail`, `image`, `mix`, `titleshot`, `marquee`, `wheel`, `cartridge`,
+`fanart`, `boxback`, `map`, `bezel`, `video`, `manual`, `magazine`. Types: `image`, `video`,
+`document` or `file`.
+
+### `GET /roms/{id}/media/{kind}`
+
+Downloads one media file of a game (supports HTTP range requests, so videos can be streamed).
+Only files inside `romsDir` are served; paths in `gamelist.xml` pointing elsewhere return `404`.
+
 ### `POST /roms`
 
 Uploads a game. The body is `multipart/form-data` with the file in the `file` field; it is

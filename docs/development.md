@@ -66,6 +66,7 @@ internal/
   device/                 hardware info from /proc and /sys
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
+  gamelist/               reader for EmulationStation's gamelist.xml (scraped metadata)
   logx/                   rotating JSON logs
   music/                  background music folder
   platform/               OS-specific actions: Batocera vs. dev
@@ -109,7 +110,7 @@ css/
   base.css              dark theme tokens (from the logo), typography, reset
   layout.css            navigation and main area
   components.css        buttons, forms, tabs, notices, logs, dialog, toasts
-  components/           styles for JS components (upload queue)
+  components/           styles for JS components (upload queue, modal)
   views/                one file per view
 js/
   app.js                entry point and hash routing (#dashboard, #games...)
@@ -117,8 +118,9 @@ js/
   state.js              shared state and browser preferences
   ui.js                 toasts, confirmation dialog, error notices
   format.js             sizes, dates, HTML escaping
-  components/           reusable pieces (upload queue)
+  components/           reusable pieces (upload queue, modal)
   views/                one module per view; each exports render(page)
+                        (game-details.js is the modal opened from the games view)
 ```
 
 ### Adding a view

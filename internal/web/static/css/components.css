@@ -71,10 +71,10 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .notice b { display: block; margin-bottom: 2px; }
 .notice.info { background: var(--brand-soft); color: var(--ink); }
 
-dialog { border: 0; border-radius: var(--r-l); padding: 24px; max-width: min(440px, calc(100vw - 32px)); background: var(--surface); color: var(--ink); }
+dialog:not(.modal) { border: 0; border-radius: var(--r-l); padding: 24px; max-width: min(440px, calc(100vw - 32px)); background: var(--surface); color: var(--ink); }
 dialog::backdrop { background: rgba(10, 10, 30, .5); }
-dialog h2 { margin-bottom: 8px; }
-dialog p { margin: 0 0 20px; color: var(--ink-2); }
+dialog:not(.modal) h2 { margin-bottom: 8px; }
+dialog:not(.modal) p { margin: 0 0 20px; color: var(--ink-2); }
 .toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 20; max-width: min(380px, calc(100vw - 32px)); }
 .toast { padding: 12px 16px; border-radius: var(--r-m); background: var(--ink); color: var(--bg); font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.45); animation: toast-in .2s ease; }
 .toast.err { background: var(--danger-strong); color: #fff; }

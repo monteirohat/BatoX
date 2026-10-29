@@ -24,7 +24,9 @@ and music, browse your library, tweak EmulationStation and Batocera settings, in
 keep an eye on the hardware, without pulling the SD card or opening a network share.
 
 It is a single self-contained binary: the web app is embedded, the catalog uses a pure-Go SQLite
-driver, and there are no runtime dependencies to install on the console.
+driver, and there are no runtime dependencies to install on the console. The easiest way to get it
+there is the **[BatoX Installer](https://github.com/monteirohat/BatoX_Installer)**, a desktop app that installs and updates BatoX in a few
+clicks, no terminal needed.
 
 <p align="center">
   <img src="docs/assets/screenshots/dashboard.png" alt="BatoX dashboard" width="900">
@@ -36,6 +38,9 @@ driver, and there are no runtime dependencies to install on the console.
   plus reboot and shutdown.
 - **Game library** with a per-system filter, search, deletion and a sync that detects new, moved,
   renamed, duplicated and removed ROMs.
+- **Game details** for every game: the description, artwork, video, manual, developer, rating,
+  play count and the rest of what EmulationStation scraped into `gamelist.xml`, plus the file
+  data.
 - **Game uploads** of many files at once, with progress bars. Accepted extensions come straight
   from Batocera's own `es_systems.cfg`, so BatoX accepts exactly what EmulationStation can list.
 - **Background music** for EmulationStation: upload to the main folder or to a per-system folder,
@@ -47,16 +52,35 @@ driver, and there are no runtime dependencies to install on the console.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).
 - Works on **Raspberry Pi (arm64)** and **x86_64 PCs** running Batocera v38 or newer.
 
-| Games | Music | Batocera settings |
-|---|---|---|
-| ![Games](docs/assets/screenshots/games.png) | ![Music](docs/assets/screenshots/music.png) | ![Batocera settings](docs/assets/screenshots/batocera-settings.png) |
+| Games | Game details |
+|---|---|
+| ![Games](docs/assets/screenshots/games.png) | ![Game details](docs/assets/screenshots/game-details.png) |
+
+| Music | Batocera settings |
+|---|---|
+| ![Music](docs/assets/screenshots/music.png) | ![Batocera settings](docs/assets/screenshots/batocera-settings.png) |
 
 ## Quick start
 
 You need a Batocera v38+ machine on your network with SSH enabled (it is on by default). The SSH
 user is `root` and the default password is `linux`.
 
-### Option 1: install a release
+### Option 1: BatoX Installer (recommended)
+
+The **[BatoX Installer](https://github.com/monteirohat/BatoX_Installer)** is a desktop app for Windows, macOS and Linux, in the style of
+balenaEtcher. It downloads the BatoX release you choose from GitHub, checks your console, installs
+or updates BatoX over SSH, and shows you the address and the API token at the end.
+
+<p align="center">
+  <a href="https://github.com/monteirohat/BatoX_Installer"><img src="https://raw.githubusercontent.com/monteirohat/BatoX_Installer/main/docs/assets/screenshots/steps.png" alt="BatoX Installer" width="720"></a>
+</p>
+
+1. Download it from the [BatoX Installer releases](https://github.com/monteirohat/BatoX_Installer/releases/latest).
+2. Pick a version (the latest is selected), enter `batocera.local` or the console's IP address,
+   and click **Check console**.
+3. Click **Install**. Use the same app later to update to a new version.
+
+### Option 2: install a release by hand
 
 Download `batox-linux-arm64` (Raspberry Pi) or `batox-linux-amd64` (PC) and the `batox` service
 script from the [latest release](https://github.com/monteirohat/batox/releases), then run:
@@ -73,7 +97,7 @@ ssh root@$HOST "chmod +x /userdata/system/batox/batox /userdata/system/services/
   && sleep 2 && cat /userdata/system/batox/token"
 ```
 
-### Option 2: build from source
+### Option 3: build from source
 
 Requires Go 1.24+ and `make`:
 
@@ -93,6 +117,9 @@ token.
 Go to **http://batocera.local:8080**. On the first visit, open the **Access** screen, paste the
 token and click **Save and test**. The token is stored only in that browser.
 
+The BatoX Installer shows the token at the end; with the other options, read it with
+`ssh root@batocera.local cat /userdata/system/batox/token`.
+
 See the [installation guide](docs/installation.md) for SSH setup, upgrades, uninstalling and
 troubleshooting.
 
@@ -100,12 +127,26 @@ troubleshooting.
 
 | Guide | What it covers |
 |---|---|
+| [BatoX Installer](https://github.com/monteirohat/BatoX_Installer) | Desktop app that installs and updates BatoX for you |
 | [Installation](docs/installation.md) | SSH access, installing, upgrading (including from MyMine), uninstalling, troubleshooting |
 | [Configuration](docs/configuration.md) | `config.json` options, environment variables, file locations |
 | [API reference](docs/api.md) | Authentication, error format and every endpoint |
 | [Development](docs/development.md) | Project layout, dev mode, tests, frontend architecture, releases |
 
 A [Postman collection](postman_collection.json) with every endpoint is included.
+
+## Updating
+
+Open the [BatoX Installer](https://github.com/monteirohat/BatoX_Installer), choose the new version and click **Update**, or run
+`make deploy` again from a clone of this repository. Both keep your token, settings and game
+catalog.
+
+## Upgrading from MyMine
+
+BatoX was previously called MyMine. The [BatoX Installer](https://github.com/monteirohat/BatoX_Installer) and `make deploy` (or
+`./scripts/deploy.sh deploy`) both detect an existing MyMine install, stop and remove the old
+service, and move its data to `/userdata/system/batox`, keeping your token and game catalog. The web app also carries over the
+token saved in your browser. See [Installation](docs/installation.md#upgrading-from-mymine).
 
 ## Security
 
@@ -128,12 +169,10 @@ report a vulnerability.
 
 Ideas and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Upgrading from MyMine
+## Related projects
 
-BatoX was previously called MyMine. `make deploy` (or `./scripts/deploy.sh deploy`) detects an
-existing MyMine install, stops and removes the old service, and moves its data to
-`/userdata/system/batox`, keeping your token and game catalog. The web app also carries over the
-token saved in your browser. See [Installation](docs/installation.md#upgrading-from-mymine).
+- **[BatoX Installer](https://github.com/monteirohat/BatoX_Installer)**: the desktop app that installs and updates BatoX on a Batocera
+  console (Electron, React and TypeScript).
 
 ## License
 
