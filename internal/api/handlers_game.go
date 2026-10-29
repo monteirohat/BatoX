@@ -1,10 +1,13 @@
 package api
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -126,4 +129,105 @@ func (s *Server) gameMedia(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Cache-Control", "private, max-age=300")
 	http.ServeContent(w, r, filepath.Base(p), st.ModTime(), f)
+}
+
+// How long launchGame waits for EmulationStation to close a running game and
+// to confirm the new one started, and how often it checks. Variables, so tests
+// can shorten them.
+var (
+	launchConfirmWait  = 8 * time.Second
+	quitConfirmWait    = 10 * time.Second
+	launchPollInterval = 500 * time.Millisecond
+)
+
+// launchGame: POST /roms/{id}/launch -> opens the game on the console screen.
+//
+// When another game is running, it answers 409 unless ?replace=true: then it
+// closes that game first (unsaved progress is lost) and opens this one. The
+// web app asks for confirmation before replacing.
+func (s *Server) launchGame(w http.ResponseWriter, r *http.Request) {
+	rom, err := s.DB.GetRom(chi.URLParam(r, "id"))
+	if err != nil {
+		s.internalError(w, err)
+		return
+	}
+	if rom == nil {
+		writeError(w, http.StatusNotFound, roms.ErrNotFound.Error())
+		return
+	}
+	es := s.Platform.ES()
+	if es == nil {
+		writeError(w, http.StatusServiceUnavailable, "EmulationStation is not available in dev mode.")
+		return
+	}
+	replace := r.URL.Query().Get("replace") == "true"
+	ctx, cancel := context.WithTimeout(r.Context(), quitConfirmWait+launchConfirmWait+10*time.Second)
+	defer cancel()
+
+	running, err := es.RunningGame(ctx)
+	if err != nil {
+		writeError(w, http.StatusBadGateway, esReason(err))
+		return
+	}
+	replaced := ""
+	if running != nil {
+		if running.Path == rom.Path {
+			writeJSON(w, http.StatusOK, map[string]string{"status": "playing", "name": rom.Name})
+			return
+		}
+		if !replace {
+			writeError(w, http.StatusConflict, fmt.Sprintf("%s is running on the console. Close it first.", running.Name))
+			return
+		}
+		if err := es.EmuKill(ctx); err != nil {
+			writeError(w, http.StatusBadGateway, esReason(err))
+			return
+		}
+		if !waitFor(ctx, quitConfirmWait, func() bool {
+			game, err := es.RunningGame(ctx)
+			return err == nil && game == nil
+		}) {
+			writeError(w, http.StatusGatewayTimeout, fmt.Sprintf("%s didn't close in time. Try again in a moment.", running.Name))
+			return
+		}
+		replaced = running.Name
+		s.Log.Infof("Game closed from BatoX to open another: %s", running.Path)
+	}
+
+	if err := es.Launch(ctx, rom.Path); err != nil {
+		writeError(w, http.StatusBadGateway, esReason(err))
+		return
+	}
+	// EmulationStation answers before the game starts, even for a path it
+	// doesn't know, so confirm through the running game.
+	status := "requested"
+	if waitFor(ctx, launchConfirmWait, func() bool {
+		game, err := es.RunningGame(ctx)
+		return err == nil && game != nil && game.Path == rom.Path
+	}) {
+		status = "playing"
+	}
+	s.Log.Infof("Game launched from BatoX: %s (%s)", rom.Path, status)
+	out := map[string]string{"status": status, "name": rom.Name}
+	if replaced != "" {
+		out["replaced"] = replaced
+	}
+	writeJSON(w, http.StatusOK, out)
+}
+
+// waitFor checks done every launchPollInterval until it returns true, the time
+// is up, or ctx ends. It reports whether done returned true.
+func waitFor(ctx context.Context, limit time.Duration, done func() bool) bool {
+	deadline := time.Now().Add(limit)
+	for time.Now().Before(deadline) {
+		select {
+		case <-ctx.Done():
+			return false
+		case <-time.After(launchPollInterval):
+			if done() {
+				return true
+			}
+		}
+	}
+	return false
 }

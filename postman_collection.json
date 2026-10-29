@@ -324,6 +324,26 @@
           }
         },
         {
+          "name": "Play a game on the console",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}/launch",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}",
+                "launch"
+              ]
+            }
+          }
+        },
+        {
           "name": "Upload a game",
           "request": {
             "method": "POST",

@@ -8,6 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Play button in the games list, next to the details button: opens the game on the console after a
+  confirmation, and checks that it started. When another game is running, the confirmation says it
+  will be closed, losing unsaved progress, and BatoX switches games. `POST /api/v1/roms/{id}/launch`
+  endpoint, with `?replace=true` to close the running game first.
 - Now playing card on the dashboard: the game being played, with its cover, system, how long it
   has been played and how many times before, and shortcuts to send a message, see its details and
   close it. `GET /api/v1/now-playing`, `GET /api/v1/now-playing/cover` and

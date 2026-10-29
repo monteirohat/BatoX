@@ -1,4 +1,4 @@
-// Games view: library, per-system filter, deletion and sync.
+// Games view: library, per-system filter, playing on the console, deletion and sync.
 
 import { esc, fmtBytes, fmtDate, sysColor, plural } from "../format.js";
 import { $, $$, toast, confirmDialog, busy, errorBox } from "../ui.js";
@@ -86,6 +86,9 @@ function drawRoms() {
         <span class="num">${fmtDate(r.addedAt)}</span>
       </span>
       <span class="rom-actions">
+        <button class="btn btn-sm icon-btn rom-play" data-id="${esc(r.id)}" data-name="${esc(r.name)}" data-path="${esc(r.path)}" aria-label="Play ${esc(r.name)} on the console" title="Play on the console">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+        </button>
         <button class="btn btn-sm icon-btn rom-info" data-id="${esc(r.id)}" aria-label="Details of ${esc(r.name)}" title="Details">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
         </button>
@@ -98,7 +101,56 @@ function drawRoms() {
   <p class="muted small">${list.length === library.roms.length ? plural(list.length, "game", "games") : `${list.length} of ${plural(library.roms.length, "game", "games")}`} shown.</p>`;
 
   $$(".rom-del", area).forEach(b => b.onclick = () => deleteRom(b.dataset.id, b.dataset.name));
+  $$(".rom-play", area).forEach(b => b.onclick = () => playGame(b));
   $$(".rom-info, .rom-open", area).forEach(b => b.onclick = () => showDetails(b.dataset.id));
+}
+
+// The game's name without the file extension: "Golden Sun.gba" -> "Golden Sun".
+const displayName = file => file.replace(/\.[^.]+$/, "");
+
+// Opens a game on the console. When another game is running, the confirmation
+// says it will be closed, losing unsaved progress, and the API is asked to
+// replace it.
+async function playGame(button) {
+  const { id, path } = button.dataset;
+  const name = displayName(button.dataset.name);
+
+  let running = null;
+  try {
+    const np = await api("/now-playing");
+    if (np.playing) running = np.game;
+  } catch {
+    // Unknown: the API refuses on its own if a game is running.
+  }
+
+  if (running && running.path === path) {
+    toast(`${name} is already on the TV.`);
+    return;
+  }
+  const ok = await confirmDialog(running ? {
+    title: `Switch to ${name}?`,
+    message: `${running.name} is running on the console. It will be closed right away, and any progress that wasn't saved is lost. Then ${name} opens on the TV.`,
+    confirmLabel: "Close and play",
+    danger: true,
+  } : {
+    title: `Play ${name}?`,
+    message: "The game opens on the TV connected to the console, on top of whatever is on screen right now. Pick up the controller to play.",
+    confirmLabel: "Play",
+  });
+  if (!ok) return;
+
+  const done = busy(button, "");
+  try {
+    const query = running ? "?replace=true" : "";
+    const res = await api(`/roms/${encodeURIComponent(id)}/launch${query}`, { method: "POST" });
+    toast(res.status === "playing"
+      ? `${name} is open on the TV.`
+      : "Sent to the console. If the game doesn't open, reload the game lists on the EmulationStation screen.");
+  } catch (err) {
+    toast(err.message, true);
+  } finally {
+    done();
+  }
 }
 
 function showDetails(id) {

@@ -16,7 +16,7 @@
 
 .rom-list { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; }
 .rom {
-  display: grid; grid-template-columns: minmax(0, 1fr) 110px 90px 70px 104px 84px; gap: 12px; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 1fr) 110px 90px 70px 104px 128px; gap: 12px; align-items: center;
   padding: 10px 14px; border-top: 1px solid var(--line); font-size: 14px;
 }
 .rom:first-child { border-top: 0; }
@@ -25,6 +25,8 @@
 .rom-open { display: block; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
 .rom-open:hover { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; }
 .rom-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.rom-play { color: var(--brand-text); }
+.rom-play:hover:not(:disabled) { background: var(--brand); border-color: var(--brand); color: #fff; }
 .rom-path { display: block; font-weight: 400; color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
 .sys-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
 .sys-tag::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--sys, var(--brand)); }

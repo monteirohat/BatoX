@@ -215,6 +215,29 @@ Media kinds: `boxart`, `thumbnail`, `image`, `mix`, `titleshot`, `marquee`, `whe
 Downloads one media file of a game (supports HTTP range requests, so videos can be streamed).
 Only files inside `romsDir` are served; paths in `gamelist.xml` pointing elsewhere return `404`.
 
+### `POST /roms/{id}/launch`
+
+Opens the game on the console screen, on top of whatever is shown. EmulationStation answers before
+the game starts, even for a game it doesn't know, so BatoX waits up to 8 seconds for the game to
+show up as running:
+
+```json
+{ "status": "playing", "name": "Golden Sun.gba" }
+```
+
+`status` is `playing` once confirmed, or `requested` when the game didn't show up in time (for a
+ROM EmulationStation hasn't loaded yet, reload the game lists). When the game is already running,
+it answers `playing` right away and nothing is reopened.
+
+When another game is running, it answers `409`, so nobody loses unsaved progress by accident. With
+`?replace=true`, BatoX closes that game first (**unsaved progress is lost**), waits up to 10
+seconds for it to close (`504` if it doesn't), then opens this one; the answer names the game it
+closed:
+
+```json
+{ "status": "playing", "name": "Golden Sun.gba", "replaced": "Metroid Fusion" }
+```
+
 ### `POST /roms`
 
 Uploads a game. The body is `multipart/form-data` with the file in the `file` field; it is
