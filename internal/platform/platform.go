@@ -4,12 +4,11 @@ package platform
 
 import (
 	"errors"
-	"net/http"
 	"regexp"
-	"strings"
 	"time"
 
 	"github.com/monteirohat/batox/internal/config"
+	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
 )
 
@@ -26,7 +25,15 @@ type Platform interface {
 
 	GetSetting(key string) (string, error) // batocera.conf
 	SetSetting(key, value string) error
+
+	// ES returns the client for EmulationStation's web API, or nil when there
+	// is no EmulationStation (dev mode).
+	ES() *esapi.Client
 }
+
+// esTimeout bounds each EmulationStation API request. Media uploads (videos)
+// can be large, so it is generous.
+const esTimeout = 60 * time.Second
 
 var ErrSettingNotFound = errors.New("setting not found")
 
@@ -37,12 +44,11 @@ func ValidKey(key string) bool { return keyPattern.MatchString(key) }
 
 func New(cfg *config.Config, log *logx.Logger) Platform {
 	if cfg.Platform == config.PlatformBatocera {
-		return &Batocera{
-			esAPI:      strings.TrimRight(cfg.ESAPIURL, "/"),
-			initScript: cfg.ESInitScript,
-			log:        log,
-			client:     &http.Client{Timeout: 15 * time.Second},
+		b := &Batocera{initScript: cfg.ESInitScript, log: log}
+		if cfg.ESAPIURL != "" {
+			b.es = esapi.New(cfg.ESAPIURL, esTimeout)
 		}
+		return b
 	}
 	return NewDev(log, cfg.BatoceraConfFile)
 }

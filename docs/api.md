@@ -236,7 +236,9 @@ catalog, or if a file with the same name exists and `overwrite` is not set.
 
 ### `DELETE /roms/{id}`
 
-Deletes the file and its catalog entry. Scraped media and saves are not touched.
+Deletes the file and its catalog entry. On Batocera, the deletion goes through EmulationStation, so
+the game leaves the console's lists and collections right away; if EmulationStation is not running,
+BatoX deletes the file itself. Scraped media and saves are not touched.
 
 ```json
 { "status": "deleted", "rom": { "id": "2f1d0c8e9a...", "name": "Game.gba" } }

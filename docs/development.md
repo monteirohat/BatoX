@@ -64,6 +64,7 @@ internal/
   config/                 configuration loading and token generation
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys
+  esapi/                  client for EmulationStation's web API (port 1234)
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
   gamelist/               reader for EmulationStation's gamelist.xml (scraped metadata)
@@ -95,6 +96,16 @@ docs/                     documentation and images
   files whose size or modification time changed.
 - **Schema migrations.** `internal/db/db.go` holds an append-only list of migrations, tracked with
   SQLite's `user_version`. Never edit a released migration; add a new one.
+- **EmulationStation API.** `internal/esapi` wraps every route of EmulationStation's built-in web
+  API, read from batocera-emulationstation (`es-app/src/services/HttpServerThread.cpp` and
+  `HttpApi.cpp`). `platform.Platform.ES()` returns the client on Batocera and `nil` in dev mode.
+  Notes from the source code:
+  - a game's id is the MD5 of its full path (`esapi.GameID`);
+  - writing metadata that is already set answers 404, which `SetGameMetadata` reports as "no
+    change";
+  - `/removegames` deletes the ROM files too;
+  - `/restart` reboots the whole console, so the client calls it `RebootConsole`;
+  - the server starts with two threads, so the client sends one request at a time.
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 

@@ -4,38 +4,34 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"os/exec"
 	"strings"
 	"time"
 
+	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
 )
 
 // Batocera controls EmulationStation through its built-in web server
 // (port 1234, local connections only by default) and through its init script.
 type Batocera struct {
-	esAPI      string
+	es         *esapi.Client // nil when esApiUrl is empty
 	initScript string
 	log        *logx.Logger
-	client     *http.Client
 }
 
 func (b *Batocera) Name() string { return "batocera" }
 
+func (b *Batocera) ES() *esapi.Client { return b.es }
+
 func (b *Batocera) ReloadGames() error {
-	if b.esAPI == "" {
+	if b.es == nil {
 		return errors.New("esApiUrl is not set")
 	}
-	resp, err := b.client.Get(b.esAPI + "/reloadgames")
-	if err != nil {
-		return fmt.Errorf("EmulationStation did not respond at %s: %w", b.esAPI, err)
-	}
-	defer resp.Body.Close()
-	_, _ = io.Copy(io.Discard, resp.Body)
-	if resp.StatusCode >= 300 {
-		return fmt.Errorf("reloadgames returned HTTP %d", resp.StatusCode)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	if err := b.es.ReloadGames(ctx); err != nil {
+		return err
 	}
 	b.log.Infof("EmulationStation: game lists reloaded")
 	return nil

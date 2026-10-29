@@ -3,6 +3,7 @@
 package roms
 
 import (
+	"context"
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
@@ -178,6 +179,14 @@ func (s *Service) Delete(id string) (*db.Rom, error) {
 	if rom == nil {
 		return nil, ErrNotFound
 	}
+
+	// Ask EmulationStation to remove the game first: it deletes the file and
+	// drops the game from its lists, collections and gamelist recovery at once,
+	// so the console's screen updates without a full reload.
+	removedByES := s.removeFromES(rom)
+
+	// Safety net: EmulationStation may not be running, may not know the game,
+	// or may have failed to delete the file.
 	if err := os.Remove(rom.Path); err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return nil, fmt.Errorf("removing file: %w", err)
 	}
@@ -185,8 +194,28 @@ func (s *Service) Delete(id string) (*db.Rom, error) {
 		return nil, err
 	}
 	s.log.Infof("ROM deleted: %s", rom.Path)
-	s.reloadAsync()
+	if !removedByES {
+		s.reloadAsync()
+	}
 	return rom, nil
+}
+
+// removeFromES removes a game through EmulationStation's /removegames route and
+// reports whether EmulationStation handled it. Any failure is logged and left to
+// the caller's fallback, which deletes the file directly.
+func (s *Service) removeFromES(rom *db.Rom) bool {
+	es := s.plat.ES()
+	if es == nil {
+		return false
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	removed, err := es.RemoveGames(ctx, rom.System, []string{rom.Path})
+	if err != nil {
+		s.log.Errorf("EmulationStation could not remove %s, deleting it directly: %v", rom.Path, err)
+		return false
+	}
+	return removed
 }
 
 type SyncResult struct {

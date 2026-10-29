@@ -8,10 +8,18 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `internal/esapi`: a client for every route of EmulationStation's web API (port 1234), read from
+  batocera-emulationstation's `HttpServerThread.cpp` and `HttpApi.cpp`, with tests.
 - Game details: a details button (or a click on the game name) opens a modal with the scraped
   description, artwork gallery, video, manual, developer, publisher, genre, release date, rating,
   play count, last played and every other `gamelist.xml` field, plus the file data.
 - `GET /api/v1/roms/{id}/details` and `GET /api/v1/roms/{id}/media/{kind}` endpoints.
+
+### Changed
+
+- Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the
+  console's lists and collections right away, without a full reload. When EmulationStation is not
+  running or doesn't know the game, BatoX deletes the file itself, as before.
 
 ## [1.0.0] - 2026-10-29
 

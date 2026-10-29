@@ -2,6 +2,7 @@ package platform
 
 import (
 	"github.com/monteirohat/batox/internal/batoconf"
+	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
 )
 
@@ -17,6 +18,9 @@ func NewDev(log *logx.Logger, confFile string) *Dev {
 }
 
 func (d *Dev) Name() string { return "dev" }
+
+// ES returns nil: there is no EmulationStation in dev mode.
+func (d *Dev) ES() *esapi.Client { return nil }
 
 func (d *Dev) action(name string) error {
 	d.log.Infof("[dev] %s (skipped outside Batocera)", name)
