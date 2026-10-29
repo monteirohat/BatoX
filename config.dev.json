@@ -1,0 +1,5 @@
+{
+  "platform": "dev",
+  "listen": ":8080",
+  "disableAuth": true
+}

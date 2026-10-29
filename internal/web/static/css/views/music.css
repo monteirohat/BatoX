@@ -1,0 +1,15 @@
+/* Music view
+   Music folders and track list with preview. */
+
+.music-folder > header .folder-meta { color: var(--ink-2); font-size: 14px; }
+.tracks { display: grid; }
+.track {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr) 80px 44px; gap: 12px; align-items: center;
+  padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px;
+}
+.track:first-child { border-top: 0; }
+.track-name { font-weight: 600; overflow-wrap: anywhere; }
+.track[data-playing="true"] .track-name { color: var(--brand-text); }
+.play-btn { width: 36px; min-height: 36px; padding: 0; }
+.play-btn:disabled { visibility: hidden; }
+.track[data-playing="true"] .play-btn { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }

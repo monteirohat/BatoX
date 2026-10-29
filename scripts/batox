@@ -1,0 +1,62 @@
+#!/bin/bash
+# BatoX - Batocera service (Batocera v38+)
+#
+# Install: copy to /userdata/system/services/batox (no .sh extension), then run
+#   batocera-services enable batox && batocera-services start batox
+# It also shows up in MAIN MENU > SYSTEM SETTINGS > SERVICES.
+
+DIR=/userdata/system/batox
+BIN="$DIR/batox"
+CONFIG="$DIR/config.json"
+PIDFILE=/var/run/batox.pid
+
+is_running() {
+    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+}
+
+case "$1" in
+    start)
+        if is_running; then
+            echo "batox is already running (pid $(cat "$PIDFILE"))"
+            exit 0
+        fi
+        if [ ! -x "$BIN" ]; then
+            echo "binary not found or not executable: $BIN"
+            exit 1
+        fi
+        mkdir -p "$DIR/logs"
+        cd "$DIR" || exit 1
+        nohup "$BIN" -config "$CONFIG" >> "$DIR/logs/stdout.log" 2>&1 &
+        echo $! > "$PIDFILE"
+        echo "batox started (pid $(cat "$PIDFILE"))"
+        ;;
+    stop)
+        if is_running; then
+            kill "$(cat "$PIDFILE")"
+            for _ in 1 2 3 4 5 6 7 8 9 10; do
+                is_running || break
+                sleep 1
+            done
+            is_running && kill -9 "$(cat "$PIDFILE")"
+        fi
+        rm -f "$PIDFILE"
+        echo "batox stopped"
+        ;;
+    restart)
+        "$0" stop
+        "$0" start
+        ;;
+    status)
+        if is_running; then
+            echo "batox is running (pid $(cat "$PIDFILE"))"
+        else
+            echo "batox is stopped"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+exit 0

@@ -1,0 +1,7 @@
+{"level":"info","msg":"BatoX dev starting (platform: dev)","time":"2026-10-29T01:07:04Z"}
+{"level":"info","msg":"WARNING: authentication is disabled (disableAuth=true)","time":"2026-10-29T01:07:04Z"}
+{"level":"info","msg":"18 systems loaded from: built-in list (es_systems.cfg not found)","time":"2026-10-29T01:07:04Z"}
+{"level":"info","msg":"API listening on :8080","time":"2026-10-29T01:07:04Z"}
+{"level":"info","msg":"sync: 0 added, 0 updated, 0 moved, 0 removed, 0 unchanged, 0 duplicates, 0 errors (1 ms)","time":"2026-10-29T01:07:04Z"}
+{"level":"info","msg":"shutting down...","time":"2026-10-29T01:07:25Z"}
+{"level":"info","msg":"BatoX stopped","time":"2026-10-29T01:07:25Z"}

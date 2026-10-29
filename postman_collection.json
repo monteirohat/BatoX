@@ -1,0 +1,815 @@
+{
+  "info": {
+    "name": "BatoX API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "BatoX REST API. Set the baseUrl and token collection variables. Docs: https://github.com/monteirohat/batox/blob/main/docs/api.md"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://batocera.local:8080"
+    },
+    {
+      "key": "token",
+      "value": "PASTE_YOUR_TOKEN_HERE"
+    },
+    {
+      "key": "romId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Service and device",
+      "item": [
+        {
+          "name": "Ping",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/ping",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "ping"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "About",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/about",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "about"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Device",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "device"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logs (info)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/logs?type=info&tail=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "info"
+                },
+                {
+                  "key": "tail",
+                  "value": "200"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logs (error)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/logs?type=error&tail=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "error"
+                },
+                {
+                  "key": "tail",
+                  "value": "200"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reboot",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reboot",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reboot"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Shutdown",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/shutdown",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shutdown"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Systems and games",
+      "item": [
+        {
+          "name": "List systems",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/systems",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "systems"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List games",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Games by system",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/system/gba",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "system",
+                "gba"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Game by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload a game",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms?system=gba&language=en&overwrite=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms"
+              ],
+              "query": [
+                {
+                  "key": "system",
+                  "value": "gba"
+                },
+                {
+                  "key": "language",
+                  "value": "en"
+                },
+                {
+                  "key": "overwrite",
+                  "value": "false"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "description": "Pick the file in the 'file' form-data field."
+          }
+        },
+        {
+          "name": "Sync the catalog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/sync",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "sync"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete a game",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Music",
+      "item": [
+        {
+          "name": "List music",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/music",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "music"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload a track",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/music?folder=&overwrite=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "music"
+              ],
+              "query": [
+                {
+                  "key": "folder",
+                  "value": ""
+                },
+                {
+                  "key": "overwrite",
+                  "value": "false"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Download a track",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/music/file?path=snes/theme.ogg",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "music",
+                "file"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "snes/theme.ogg"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete a track",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/music?path=snes/theme.ogg",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "music"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "snes/theme.ogg"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EmulationStation",
+      "item": [
+        {
+          "name": "Reload game lists",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/reload-gamelists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "reload-gamelists"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Restart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/restart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "restart"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stop",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/stop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "stop"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "start"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/logs?tail=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "logs"
+              ],
+              "query": [
+                {
+                  "key": "tail",
+                  "value": "200"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Clear log",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/logs/clear",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "logs",
+                "clear"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Settings (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Settings (XML)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/settings?raw=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "settings"
+              ],
+              "query": [
+                {
+                  "key": "raw",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change a setting",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/settings/ThemeSet",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "settings",
+                "ThemeSet"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"value\": \"BatoX\", \"type\": \"string\"}"
+            }
+          }
+        },
+        {
+          "name": "Install a theme",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/emulationstation/theme?activate=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emulationstation",
+                "theme"
+              ],
+              "query": [
+                {
+                  "key": "activate",
+                  "value": "true"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "description": "ZIP in the 'file' field. The file name becomes the theme name."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Batocera settings",
+      "item": [
+        {
+          "name": "List all settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Write a setting (key in body)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "settings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"key\": \"system.hostname\", \"value\": \"batocera\"}"
+            }
+          }
+        },
+        {
+          "name": "Read a setting",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/settings/system.hostname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "settings",
+                "system.hostname"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Write a setting (key in URL)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/settings/system.hostname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "settings",
+                "system.hostname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"value\": \"batocera\"}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

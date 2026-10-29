@@ -1,0 +1,32 @@
+/* Dashboard
+   The console "plate" (styled after the BatoX logo) and the hardware meters. */
+
+.plate {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr auto; gap: 18px 28px; align-items: end;
+  padding: 28px 28px 24px;
+  background: var(--grad); color: var(--brand-ink);
+  border-radius: var(--r-l);
+}
+/* The three window dots of the logo */
+.plate-dots { grid-column: 1 / -1; display: flex; gap: 8px; margin-bottom: -6px; }
+.plate-dots i { width: 12px; height: 12px; border-radius: 50%; background: #FC6C69; }
+.plate-dots i:nth-child(2) { background: #FFBF4C; }
+.plate-dots i:nth-child(3) { background: #4DD98B; }
+.plate-host { margin: 0; font-weight: 600; opacity: .85; }
+.plate-model { margin: 4px 0 12px; font: 750 clamp(28px, 5vw, 52px)/1 var(--font-display); letter-spacing: -0.03em; }
+.plate-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.plate-tags span { padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand-ink) 16%, transparent); font-size: 13px; font-weight: 600; }
+.plate-power { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 8px; }
+.plate-power .btn { background: transparent; color: var(--brand-ink); border-color: color-mix(in srgb, var(--brand-ink) 45%, transparent); }
+.plate-power .btn:hover { background: color-mix(in srgb, var(--brand-ink) 14%, transparent); }
+
+.meters { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.meter { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 16px; }
+.meter dt { color: var(--ink-2); font-size: 14px; font-weight: 600; }
+.meter dd { margin: 6px 0 0; font: 700 26px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.meter dd small { font: 500 13px/1.4 var(--font); color: var(--ink-2); display: block; margin-top: 4px; }
+
+@media (max-width: 760px) {
+  .plate { grid-template-columns: 1fr; padding: 22px 20px 24px; }
+}

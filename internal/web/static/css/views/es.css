@@ -1,0 +1,14 @@
+/* EmulationStation view
+   es_settings.cfg list. */
+
+.settings { display: grid; }
+.setting { display: grid; grid-template-columns: minmax(0, 1.2fr) 70px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.setting:first-child { border-top: 0; }
+.setting code { font: 600 14px/1.3 var(--font); overflow-wrap: anywhere; }
+.setting input, .setting select { min-height: 36px; }
+
+@media (max-width: 760px) {
+  .setting { grid-template-columns: 1fr auto; }
+  .setting .stype { display: none; }
+  .setting .sinput { grid-column: 1; }
+}

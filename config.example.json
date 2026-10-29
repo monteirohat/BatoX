@@ -1,0 +1,6 @@
+{
+  "platform": "batocera",
+  "listen": ":8080",
+  "maxUploadMB": 8192,
+  "syncOnStart": true
+}
