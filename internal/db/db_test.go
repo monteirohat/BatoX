@@ -69,3 +69,23 @@ func TestReopenKeepsData(t *testing.T) {
 		t.Error("data lost after reopening the database")
 	}
 }
+
+func TestGetRomByPath(t *testing.T) {
+	s, err := Open(filepath.Join(t.TempDir(), "test.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close()
+
+	rom := Rom{ID: "abc", System: "gba", Name: "Golden Sun.gba", Path: "/userdata/roms/gba/Golden Sun.gba", Size: 1, MTime: 1}
+	if err := s.InsertRom(rom); err != nil {
+		t.Fatal(err)
+	}
+	got, err := s.GetRomByPath(rom.Path)
+	if err != nil || got == nil || got.ID != "abc" {
+		t.Fatalf("GetRomByPath = %+v, %v", got, err)
+	}
+	if got, err := s.GetRomByPath("/userdata/roms/gba/missing.gba"); got != nil || err != nil {
+		t.Errorf("missing path: got %+v, %v; want nil, nil", got, err)
+	}
+}

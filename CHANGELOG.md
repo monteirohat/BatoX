@@ -8,6 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Now playing card on the dashboard: the game being played, with its cover, system, how long it
+  has been played and how many times before, and shortcuts to send a message, see its details and
+  close it. `GET /api/v1/now-playing`, `GET /api/v1/now-playing/cover` and
+  `POST /api/v1/now-playing/quit` endpoints.
 - Messages screen, in the menu: send a message to the console screen, with quick messages, title
   suggestions (including the last titles typed) and a history, and see first whether a game is
   running.

@@ -16,6 +16,7 @@ import (
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
+	"github.com/monteirohat/batox/internal/nowplaying"
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/roms"
@@ -95,6 +96,9 @@ func run(cfgPath string) error {
 	if cfg.Platform == config.PlatformBatocera {
 		deps.Onscreen = onscreen.New(logger) // messages on top of games, through sway
 	}
+	if es := plat.ES(); es != nil {
+		deps.NowPlaying = nowplaying.New(es) // started below, with the shutdown context
+	}
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{
@@ -107,6 +111,10 @@ func run(cfgPath string) error {
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+
+	if deps.NowPlaying != nil {
+		go deps.NowPlaying.Run(ctx)
+	}
 
 	if cfg.SyncOnStart {
 		go func() {

@@ -60,7 +60,8 @@ func newFakeES(t *testing.T, running bool) *fakeES {
 			_, _ = w.Write([]byte(`{"Version":"43","SortName":false}`))
 		case "/runningGame":
 			if running {
-				_, _ = w.Write([]byte(`{"id":"abc","path":"/userdata/roms/gba/Golden Sun.gba","name":"Golden Sun","systemName":"gba"}`))
+				_, _ = w.Write([]byte(`{"id":"abc","path":"/userdata/roms/gba/Golden Sun.gba","name":"Golden Sun","systemName":"gba",` +
+					`"playcount":"7","thumbnail":"/systems/gba/games/abc/media/thumbnail"}`))
 			} else {
 				w.WriteHeader(http.StatusCreated)
 				_, _ = w.Write([]byte(`{"msg":"NO GAME RUNNING"}`))
@@ -72,8 +73,11 @@ func newFakeES(t *testing.T, running bool) *fakeES {
 			} else {
 				_, _ = w.Write([]byte("[ true ]"))
 			}
-		case "/notify", "/messagebox":
+		case "/notify", "/messagebox", "/emukill":
 			w.WriteHeader(http.StatusOK)
+		case "/systems/gba/games/abc/media/thumbnail":
+			w.Header().Set("Content-Type", "image/png")
+			_, _ = w.Write([]byte("PNGDATA"))
 		default:
 			http.NotFound(w, r)
 		}

@@ -11,6 +11,7 @@ set the `baseUrl` and `token` variables.
 - [Service and device](#service-and-device)
 - [Systems and games](#systems-and-games)
 - [Music](#music)
+- [Now playing](#now-playing)
 - [Messages](#messages)
 - [EmulationStation](#emulationstation)
 - [Batocera settings](#batocera-settings)
@@ -303,6 +304,42 @@ Deletes a track. `?path=snes/World.ogg`.
 
 ```json
 { "status": "deleted", "path": "snes/World.ogg" }
+```
+
+## Now playing
+
+### `GET /now-playing`
+
+The game being played. Always `200`; `available` is `false` when EmulationStation is not running,
+and in dev mode.
+
+```json
+{ "available": true, "playing": true,
+  "game": { "name": "Golden Sun", "system": "gba", "systemName": "Game Boy Advance",
+            "path": "/userdata/roms/gba/Golden Sun.gba", "romId": "2f1d0c8e9a...",
+            "hasCover": true, "playCount": 7,
+            "since": "2026-10-29T20:00:00Z", "sinceKnown": true, "seconds": 1530 } }
+```
+
+- `romId` is the game's id in the BatoX catalog (for `GET /roms/{id}/details`), when it is there.
+- `playCount` counts the sessions before this one: EmulationStation updates it when a game ends.
+- EmulationStation doesn't report when a game started, so BatoX checks the running game every 10
+  seconds and records when it first appeared. `since` is precise to about 10 seconds. When the
+  game was already running as BatoX started, `sinceKnown` is `false`: the game has been running for
+  at least `seconds`.
+
+### `GET /now-playing/cover`
+
+The cover of the running game (box art, or the main image), read through EmulationStation, so it
+also works for games outside the BatoX catalog. `404` when no game is running or it has no cover.
+
+### `POST /now-playing/quit`
+
+Closes the running game right away (EmulationStation's `/emukill`). **Unsaved progress is lost.**
+`409` when no game is running.
+
+```json
+{ "status": "closed", "name": "Golden Sun" }
 ```
 
 ## Messages

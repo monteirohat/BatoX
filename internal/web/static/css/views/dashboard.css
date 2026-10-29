@@ -30,3 +30,29 @@
 @media (max-width: 760px) {
   .plate { grid-template-columns: 1fr; padding: 22px 20px 24px; }
 }
+
+/* "Now playing" card: cover on the left, game and actions on the right */
+.now-playing { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; align-items: center; }
+.np-cover {
+  display: grid; place-items: center; width: 120px; aspect-ratio: 3 / 4; overflow: hidden;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+}
+.np-cover img { width: 100%; height: 100%; object-fit: contain; }
+.np-cover img.np-placeholder { width: 56px; height: 56px; opacity: .45; }
+.np-info { min-width: 0; }
+.np-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.np-label i { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); animation: np-live 1.6s ease-in-out infinite; }
+@keyframes np-live { 50% { opacity: .35; } }
+.now-playing h2 { margin: 6px 0 4px; font-size: 26px; overflow-wrap: anywhere; }
+.np-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 14px; color: var(--ink-2); font-size: 14px; }
+.np-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 760px) {
+  .now-playing { grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .np-cover { width: 84px; }
+  .now-playing h2 { font-size: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .np-label i { animation: none; }
+}

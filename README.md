@@ -36,6 +36,8 @@ clicks, no terminal needed.
 
 - **Dashboard** with the board model, Batocera version, temperature, memory, storage and uptime,
   plus reboot and shutdown.
+- **Now playing**: the game being played, with its cover and for how long, and shortcuts to send a
+  message, see its details or close it.
 - **Game library** with a per-system filter, search, deletion and a sync that detects new, moved,
   renamed, duplicated and removed ROMs.
 - **Game details** for every game: the description, artwork, video, manual, developer, rating,

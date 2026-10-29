@@ -48,6 +48,18 @@ func (s *Store) GetRom(id string) (*Rom, error) {
 	return &r, nil
 }
 
+// GetRomByPath returns the ROM stored at path, or nil, nil when there is none.
+func (s *Store) GetRomByPath(path string) (*Rom, error) {
+	r, err := scanRom(s.conn.QueryRow("SELECT "+romColumns+" FROM roms WHERE path = ?", path))
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &r, nil
+}
+
 // ListRoms lists every ROM, or only those of the given system.
 func (s *Store) ListRoms(system string) ([]Rom, error) {
 	query := "SELECT " + romColumns + " FROM roms"

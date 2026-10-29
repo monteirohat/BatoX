@@ -68,10 +68,11 @@ function stars(rating) {
 
 /**
  * Opens the details modal of a game. Returns the modal handle ({ close }).
- *  - onDelete(rom): called when the person chooses "Delete game"
+ *  - onDelete(rom): called when the person chooses "Delete game"; without it,
+ *                   the modal has no delete button
  *  - onClose():     called after the modal closes
  */
-export function openGameDetails(id, { onDelete, onClose }) {
+export function openGameDetails(id, { onDelete, onClose = () => {} } = {}) {
   const urls = [];  // object URLs to release on close
   let closed = false;
 
@@ -79,7 +80,7 @@ export function openGameDetails(id, { onDelete, onClose }) {
     title: "Game details",
     wide: true,
     body: `<p class="muted">Loading game details…</p>`,
-    footer: `<button class="btn btn-danger" data-act="delete" disabled>Delete game</button>
+    footer: `${onDelete ? `<button class="btn btn-danger" data-act="delete" disabled>Delete game</button>` : ""}
              <button class="btn" data-act="close">Close</button>`,
     onClose: () => {
       closed = true;
@@ -173,8 +174,10 @@ export function openGameDetails(id, { onDelete, onClose }) {
       </div>`;
 
     const del = $('[data-act="delete"]', modal.footer);
-    del.disabled = false;
-    del.onclick = () => { modal.close(); onDelete(rom); };
+    if (del) {
+      del.disabled = false;
+      del.onclick = () => { modal.close(); onDelete(rom); };
+    }
 
     const cover = $("#game-cover", modal.body);
     async function showImage(m) {

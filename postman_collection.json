@@ -517,6 +517,67 @@
       ]
     },
     {
+      "name": "Now playing",
+      "item": [
+        {
+          "name": "Game being played",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/now-playing",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "now-playing"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cover of the running game",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/now-playing/cover",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "now-playing",
+                "cover"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Close the running game",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/now-playing/quit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "now-playing",
+                "quit"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Messages",
       "item": [
         {

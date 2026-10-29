@@ -14,6 +14,7 @@ import (
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
+	"github.com/monteirohat/batox/internal/nowplaying"
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/roms"
@@ -32,6 +33,8 @@ type Deps struct {
 	Roms     *roms.Service
 	Music    *music.Service
 	Onscreen Onscreen // nil when there is no screen to draw on (dev mode)
+	// NowPlaying follows the running game; nil without EmulationStation (dev mode).
+	NowPlaying *nowplaying.Tracker
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -116,6 +119,9 @@ func (s *Server) routes() chi.Router {
 			r.Put("/emulationstation/settings/{name}", s.setESSetting)
 			r.Post("/emulationstation/theme", s.uploadTheme)
 			r.Get("/emulationstation/status", s.esStatus)
+			r.Get("/now-playing", s.nowPlaying)
+			r.Get("/now-playing/cover", s.nowPlayingCover)
+			r.Post("/now-playing/quit", s.quitGame)
 			r.Post("/messages/notify", s.message("notify"))
 			r.Post("/messages/messagebox", s.message("messagebox"))
 

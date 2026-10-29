@@ -65,6 +65,7 @@ internal/
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys
   esapi/                  client for EmulationStation's web API (port 1234)
+  nowplaying/             follows the running game and when it started
   onscreen/               queue of message cards drawn on top of the screen (BatoX Apps)
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
