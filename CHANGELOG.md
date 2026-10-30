@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Consoles screen: every system Batocera can emulate, with the theme's logo, manufacturer, release
+  year, type, games and play statistics, filters by type, search and sorting, and shortcuts to its
+  games and to uploading games. `GET /api/v1/consoles` and `GET /api/v1/consoles/{name}/logo`
+  endpoints. The systems list now reads the manufacturer, release year and hardware type from
+  `es_systems.cfg`.
 - Play button in the games list, next to the details button: opens the game on the console after a
   confirmation, and checks that it started. When another game is running, the confirmation says it
   will be closed, losing unsaved progress, and BatoX switches games. `POST /api/v1/roms/{id}/launch`
@@ -36,8 +41,8 @@ All notable changes to this project are documented here. The format follows
 
 - BatoX's version is shown on the dashboard's console card and at the bottom of the menu, linked
   to its release notes on GitHub.
-- Phones: the bottom navigation fits its nine items down to 360 px wide screens, and scrolls on
-  narrower ones.
+- Phones: the bottom navigation scrolls sideways when its items don't fit, keeping every label
+  readable and the current screen in sight.
 - Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the
   console's lists and collections right away, without a full reload. When EmulationStation is not
   running or doesn't know the game, BatoX deletes the file itself, as before.

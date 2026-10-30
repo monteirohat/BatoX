@@ -427,6 +427,49 @@
       ]
     },
     {
+      "name": "Consoles",
+      "item": [
+        {
+          "name": "List consoles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/consoles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "consoles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Console logo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/consoles/gba/logo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "consoles",
+                "gba",
+                "logo"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Music",
       "item": [
         {

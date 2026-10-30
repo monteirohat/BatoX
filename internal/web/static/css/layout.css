@@ -46,24 +46,21 @@ h2 { font: 650 18px/1.25 var(--font-display); margin: 0 0 4px; }
   .app { grid-template-columns: 1fr; }
   .rail {
     position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: auto; z-index: 10;
-    flex-direction: row; gap: 2px; overflow-x: auto;
+    flex-direction: row; gap: 2px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
     padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
     border-right: 0; border-top: 1px solid var(--line);
   }
   .brand, .rail-foot { display: none; }
-  .nav-link { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 2px; padding: 6px 0; font-size: 10px; letter-spacing: -0.01em; white-space: nowrap; }
+  /* Ten items don't fit side by side on a phone: each keeps a readable width,
+     they share the space when there is room, and the bar scrolls otherwise. */
+  .nav-link { flex: 1 0 auto; min-width: 56px; flex-direction: column; gap: 2px; padding: 6px 4px; font-size: 10.5px; white-space: nowrap; scroll-snap-align: start; }
   .nav-link .long { display: none; }
   .nav-link .short { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   main { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
 }
 
-/* Narrow phones (360 px): nine labels still have to fit */
-@media (max-width: 380px) {
-  .nav-link { font-size: 9px; letter-spacing: -0.02em; }
-}
-/* Very narrow phones (320 px): the bar scrolls sideways instead */
-@media (max-width: 340px) {
-  .nav-link { flex: 0 0 auto; min-width: 46px; padding: 6px 4px; }
+@media (max-width: 760px) {
+  .rail::-webkit-scrollbar { display: none; }
 }
 @media (min-width: 761px) {
   .nav-link .short { display: none; }

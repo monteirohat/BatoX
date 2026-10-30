@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +22,11 @@ type System struct {
 	FullName   string   `json:"fullName,omitempty"`
 	Dir        string   `json:"dir"`
 	Extensions []string `json:"extensions"`
+
+	// From es_systems.cfg, when present.
+	Manufacturer string `json:"manufacturer,omitempty"`
+	ReleaseYear  int    `json:"releaseYear,omitempty"`
+	Hardware     string `json:"hardware,omitempty"` // console, portable, arcade, computer...
 }
 
 // Accepts reports whether the file has an extension the system accepts.
@@ -64,10 +70,13 @@ var fallback = map[string][]string{
 
 type esSystemList struct {
 	Systems []struct {
-		Name      string `xml:"name"`
-		FullName  string `xml:"fullname"`
-		Path      string `xml:"path"`
-		Extension string `xml:"extension"`
+		Name         string `xml:"name"`
+		FullName     string `xml:"fullname"`
+		Path         string `xml:"path"`
+		Extension    string `xml:"extension"`
+		Manufacturer string `xml:"manufacturer"`
+		Release      string `xml:"release"`
+		Hardware     string `xml:"hardware"`
 	} `xml:"system"`
 }
 
@@ -103,10 +112,13 @@ func Load(esSystemsFile, romsDir string) (*Registry, error) {
 			folder = filepath.Base(p)
 		}
 		reg.byName[name] = System{
-			Name:       name,
-			FullName:   strings.TrimSpace(s.FullName),
-			Dir:        filepath.Join(romsDir, folder),
-			Extensions: exts,
+			Name:         name,
+			FullName:     strings.TrimSpace(s.FullName),
+			Dir:          filepath.Join(romsDir, folder),
+			Extensions:   exts,
+			Manufacturer: strings.TrimSpace(s.Manufacturer),
+			ReleaseYear:  parseYear(s.Release),
+			Hardware:     strings.ToLower(strings.TrimSpace(s.Hardware)),
 		}
 	}
 	if len(reg.byName) == 0 {
@@ -147,3 +159,16 @@ func (r *Registry) All() []System {
 }
 
 func (r *Registry) Source() string { return r.source }
+
+// parseYear reads a release year such as "1989" (or "1989-11-21"); 0 when absent.
+func parseYear(s string) int {
+	s = strings.TrimSpace(s)
+	if len(s) < 4 {
+		return 0
+	}
+	year, err := strconv.Atoi(s[:4])
+	if err != nil || year < 1950 || year > 2100 {
+		return 0
+	}
+	return year
+}

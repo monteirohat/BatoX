@@ -87,3 +87,12 @@ dialog:not(.modal) p { margin: 0 0 20px; color: var(--ink-2); }
   .log-row { grid-template-columns: 1fr; gap: 2px; }
   .toasts { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* Chips: small rounded buttons for filters, suggestions and tags */
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--ink); font-size: 13px; cursor: pointer; }
+.chip:hover { border-color: var(--brand-text); }
+.chip[aria-pressed="true"] { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-text); font-weight: 650; }
+.chip-muted { color: var(--ink-2); border-style: dashed; }
+.chip-static { cursor: default; font-family: var(--font-code); font-size: 12px; }
+.chip-static:hover { border-color: var(--line); }

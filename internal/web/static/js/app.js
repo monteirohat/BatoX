@@ -5,6 +5,7 @@ import { $, $$, errorBox } from "./ui.js";
 import { api } from "./api.js";
 import * as dashboard from "./views/dashboard.js";
 import * as games from "./views/games.js";
+import * as consoles from "./views/consoles.js";
 import * as upload from "./views/upload.js";
 import * as music from "./views/music.js";
 import * as messages from "./views/messages.js";
@@ -17,6 +18,7 @@ import * as access from "./views/access.js";
 const views = {
   dashboard: dashboard.render,
   games: games.render,
+  consoles: consoles.render,
   upload: upload.render,
   music: music.render,
   messages: messages.render,
@@ -43,8 +45,13 @@ async function route() {
   if (state.cleanup) { state.cleanup(); state.cleanup = null; }
   state.view = view;
   $$(".nav-link").forEach(a => {
-    if (a.dataset.view === view) a.setAttribute("aria-current", "page");
-    else a.removeAttribute("aria-current");
+    if (a.dataset.view === view) {
+      a.setAttribute("aria-current", "page");
+      // On phones the bar scrolls: keep the current item in sight.
+      a.scrollIntoView({ block: "nearest", inline: "nearest" });
+    } else {
+      a.removeAttribute("aria-current");
+    }
   });
   const main = $("#view");
   main.innerHTML = "";

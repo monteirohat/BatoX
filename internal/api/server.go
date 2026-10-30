@@ -120,6 +120,8 @@ func (s *Server) routes() chi.Router {
 			r.Put("/emulationstation/settings/{name}", s.setESSetting)
 			r.Post("/emulationstation/theme", s.uploadTheme)
 			r.Get("/emulationstation/status", s.esStatus)
+			r.Get("/consoles", s.consoles)
+			r.Get("/consoles/{name}/logo", s.consoleLogo)
 			r.Get("/now-playing", s.nowPlaying)
 			r.Get("/now-playing/cover", s.nowPlayingCover)
 			r.Post("/now-playing/quit", s.quitGame)

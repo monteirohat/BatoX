@@ -44,6 +44,8 @@ clicks, no terminal needed.
   play count and the rest of what EmulationStation scraped into `gamelist.xml`, plus the file
   data.
 - **Play on the console** from the games list, switching from the game being played when needed.
+- **Consoles**: every system Batocera can emulate, with the theme's logo, manufacturer, release
+  year, type and the games you have, filtered by type and searchable.
 - **Game uploads** of many files at once, with progress bars. Accepted extensions come straight
   from Batocera's own `es_systems.cfg`, so BatoX accepts exactly what EmulationStation can list.
 - **Background music** for EmulationStation: upload to the main folder or to a per-system folder,

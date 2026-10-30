@@ -1,0 +1,40 @@
+/* Consoles view
+   Filters and a grid of console cards, with the theme logo on each. */
+
+.consoles-toolbar select { flex: 0 0 auto; width: auto; }
+.consoles-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin: 4px 0 18px; }
+.consoles-summary { margin: 0 0 14px; }
+
+.console-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.console-card {
+  display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 14px; text-align: left;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); color: var(--ink);
+  font: inherit; cursor: pointer; transition: border-color .15s, transform .15s;
+}
+.console-card:hover { border-color: var(--brand-text); transform: translateY(-2px); }
+.console-empty { opacity: .6; }
+.console-empty:hover { opacity: 1; }
+
+.console-logo {
+  display: grid; place-items: center; height: 72px; margin-bottom: 8px; padding: 8px;
+  background: var(--surface-2); border-radius: var(--r-m); overflow: hidden;
+}
+/* An explicit height: theme logos are often SVGs with no size of their own */
+.console-logo img { height: 52px; width: auto; max-width: 100%; object-fit: contain; }
+.console-logo-text { font: 700 15px/1.2 var(--font-display); color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
+.console-name { font-weight: 650; overflow-wrap: anywhere; }
+.console-sub { color: var(--ink-2); font-size: 13px; }
+.console-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font-size: 13px; }
+.console-games { font-weight: 650; }
+.console-fav { color: var(--signal); }
+.console-type { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; }
+
+.console-detail-logo { display: grid; place-items: center; height: 110px; margin-bottom: 18px; padding: 12px; background: var(--surface-2); border-radius: var(--r-m); }
+.console-detail-logo img { height: 84px; width: auto; max-width: 100%; object-fit: contain; }
+.console-detail h3 { margin: 18px 0 8px; font: 650 15px/1.3 var(--font-display); }
+
+@media (max-width: 760px) {
+  .console-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .console-logo { height: 56px; }
+  .console-logo img { height: 38px; }
+}

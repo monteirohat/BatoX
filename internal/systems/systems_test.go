@@ -13,6 +13,9 @@ const esSystems = `<?xml version="1.0"?>
     <fullname>Game Boy Advance</fullname>
     <path>/userdata/roms/gba</path>
     <extension>.gba .GBA .zip</extension>
+    <manufacturer>Nintendo</manufacturer>
+    <release>2001</release>
+    <hardware>Portable</hardware>
   </system>
   <system>
     <name>kodi</name>
@@ -39,6 +42,9 @@ func TestLoadFromESSystems(t *testing.T) {
 	if gba.FullName != "Game Boy Advance" || gba.Dir != filepath.Join("/roms", "gba") {
 		t.Errorf("gba = %+v", gba)
 	}
+	if gba.Manufacturer != "Nintendo" || gba.ReleaseYear != 2001 || gba.Hardware != "portable" {
+		t.Errorf("details = %q, %d, %q", gba.Manufacturer, gba.ReleaseYear, gba.Hardware)
+	}
 	if len(gba.Extensions) != 2 || gba.Extensions[0] != ".gba" || gba.Extensions[1] != ".zip" {
 		t.Errorf("extensions = %v, want [.gba .zip]", gba.Extensions)
 	}
@@ -60,5 +66,14 @@ func TestLoadFallback(t *testing.T) {
 	}
 	if _, ok := reg.Get("psx"); !ok {
 		t.Error("fallback list should include psx")
+	}
+}
+
+func TestParseYear(t *testing.T) {
+	cases := map[string]int{"1989": 1989, "1989-11-21": 1989, " 2001 ": 2001, "": 0, "abc": 0, "12": 0, "0000": 0}
+	for in, want := range cases {
+		if got := parseYear(in); got != want {
+			t.Errorf("parseYear(%q) = %d, want %d", in, got, want)
+		}
 	}
 }

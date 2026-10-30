@@ -16,11 +16,6 @@
 .segmented button { min-height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 650; cursor: pointer; }
 .segmented button[aria-checked="true"] { background: var(--brand); color: var(--brand-ink); }
 
-.presets { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--ink); font-size: 13px; cursor: pointer; }
-.chip:hover { border-color: var(--brand-text); }
-.chip[aria-pressed="true"] { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-text); font-weight: 650; }
-.chip-muted { color: var(--ink-2); border-style: dashed; }
 
 .msg-history { display: grid; margin: 0; padding: 0; list-style: none; }
 .msg-history li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }

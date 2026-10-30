@@ -10,6 +10,7 @@ set the `baseUrl` and `token` variables.
 - [Errors](#errors)
 - [Service and device](#service-and-device)
 - [Systems and games](#systems-and-games)
+- [Consoles](#consoles)
 - [Music](#music)
 - [Now playing](#now-playing)
 - [Messages](#messages)
@@ -284,6 +285,31 @@ Reconciles the catalog with the disk, including subfolders (media folders such a
   "durationMs": 1830
 }
 ```
+
+## Consoles
+
+### `GET /consoles`
+
+Every system Batocera can emulate, from `es_systems.cfg`, with the games in the BatoX catalog and,
+when EmulationStation is running, its statistics. EmulationStation only lists systems that have
+games; the others have `inEmulationStation: false`.
+
+```json
+{ "emulationStation": true,
+  "consoles": [
+    { "name": "gba", "fullName": "Game Boy Advance", "manufacturer": "Nintendo", "releaseYear": 2001,
+      "hardware": "portable", "folder": "/userdata/roms/gba", "folderExists": true,
+      "extensions": [".gba", ".zip", ".7z"], "games": 3,
+      "inEmulationStation": true, "favorites": 1, "played": 2, "hidden": 0,
+      "mostPlayed": "Golden Sun", "hasLogo": true } ] }
+```
+
+`hardware` is what `es_systems.cfg` says: usually `console`, `portable`, `arcade` or `computer`.
+
+### `GET /consoles/{name}/logo`
+
+The system logo of the current EmulationStation theme (often SVG). `404` when EmulationStation is
+not running or the theme has no logo for the system.
 
 ## Music
 
