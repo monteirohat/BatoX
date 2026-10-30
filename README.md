@@ -52,6 +52,8 @@ clicks, no terminal needed.
   preview tracks in the browser, and delete them.
 - **EmulationStation controls**: reload game lists, restart, stop and start, edit
   `es_settings.cfg`, install themes from a ZIP, and read or clear the log.
+- **Timer**: limit play time with a countdown in a corner of the TV; at zero, BatoX closes the game
+  or turns the console off.
 - **Messages to the console**: send a message to the TV screen ("Dinner is ready!"), drawn on top
   of the game too, with a choice of position, duration and title. Uses the
   [BatoX Apps](https://github.com/monteirohat/batox-apps) overlay, built into BatoX.

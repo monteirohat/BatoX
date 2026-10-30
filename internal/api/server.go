@@ -17,6 +17,7 @@ import (
 	"github.com/monteirohat/batox/internal/nowplaying"
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
+	"github.com/monteirohat/batox/internal/playtimer"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
 	"github.com/monteirohat/batox/internal/web"
@@ -35,6 +36,8 @@ type Deps struct {
 	Onscreen Onscreen // nil when there is no screen to draw on (dev mode)
 	// NowPlaying follows the running game; nil without EmulationStation (dev mode).
 	NowPlaying *nowplaying.Tracker
+	// Timer counts down play time on the screen.
+	Timer *playtimer.Manager
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -120,6 +123,10 @@ func (s *Server) routes() chi.Router {
 			r.Put("/emulationstation/settings/{name}", s.setESSetting)
 			r.Post("/emulationstation/theme", s.uploadTheme)
 			r.Get("/emulationstation/status", s.esStatus)
+			r.Get("/timer", s.timerStatus)
+			r.Post("/timer", s.startTimer)
+			r.Post("/timer/extend", s.extendTimer)
+			r.Delete("/timer", s.cancelTimer)
 			r.Get("/consoles", s.consoles)
 			r.Get("/consoles/{name}/logo", s.consoleLogo)
 			r.Get("/now-playing", s.nowPlaying)

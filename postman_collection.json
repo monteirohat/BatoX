@@ -702,6 +702,102 @@
       ]
     },
     {
+      "name": "Timer",
+      "item": [
+        {
+          "name": "Timer status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/timer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "timer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start a timer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/timer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "timer"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"seconds\": 1800, \"action\": \"close-game\", \"corner\": \"top-right\", \"title\": \"Time left\"}"
+            }
+          }
+        },
+        {
+          "name": "Add time",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/timer/extend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "timer",
+                "extend"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"seconds\": 300}"
+            }
+          }
+        },
+        {
+          "name": "Cancel the timer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/timer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "timer"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "EmulationStation",
       "item": [
         {

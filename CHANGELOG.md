@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Timer screen: limit play time with a countdown in a chosen corner of the TV, on top of the game.
+  At zero, BatoX closes the game or turns the console off. Time can be added or the timer
+  cancelled, and the screen shows how the last timer ended. The timer runs inside BatoX, using the
+  `ui.Countdown` of BatoX Apps v0.2.0. `GET`, `POST` and `DELETE /api/v1/timer` and
+  `POST /api/v1/timer/extend` endpoints.
 - Consoles screen: every system Batocera can emulate, with the theme's logo, manufacturer, release
   year, type, games and play statistics, filters by type, search and sorting, and shortcuts to its
   games and to uploading games. `GET /api/v1/consoles` and `GET /api/v1/consoles/{name}/logo`

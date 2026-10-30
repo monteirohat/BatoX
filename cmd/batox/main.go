@@ -19,8 +19,11 @@ import (
 	"github.com/monteirohat/batox/internal/nowplaying"
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
+	"github.com/monteirohat/batox/internal/playtimer"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
+
+	"github.com/monteirohat/batox-apps/overlay"
 )
 
 // version is set at build time: -ldflags "-X main.version=..."
@@ -99,6 +102,9 @@ func run(cfgPath string) error {
 	if es := plat.ES(); es != nil {
 		deps.NowPlaying = nowplaying.New(es) // started below, with the shutdown context
 	}
+	// Play-time timer: drawn with the BatoX Apps overlay, then closes the game
+	// through EmulationStation or powers the console off.
+	deps.Timer = playtimer.New(overlay.Run, playtimer.NewActor(plat.ES(), plat.Shutdown), logger)
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{

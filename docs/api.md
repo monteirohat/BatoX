@@ -14,6 +14,7 @@ set the `baseUrl` and `token` variables.
 - [Music](#music)
 - [Now playing](#now-playing)
 - [Messages](#messages)
+- [Timer](#timer)
 - [EmulationStation](#emulationstation)
 - [Batocera settings](#batocera-settings)
 
@@ -424,6 +425,46 @@ mode.
 ```
 
 The Messages screen uses `GET /emulationstation/status` (below) to show whether a game is running.
+
+## Timer
+
+A play-time timer: a countdown drawn in a corner of the TV, on top of the game, and an action when
+it reaches zero. It runs inside BatoX, so it keeps going when the browser is closed. One timer runs
+at a time. Without the screen overlay (no sway, as in dev mode), it still counts and still acts.
+
+### `GET /timer`
+
+```json
+{ "active": true, "action": "close-game", "corner": "top-right", "title": "Time left",
+  "startedAt": "2026-10-30T20:00:00Z", "endsAt": "2026-10-30T20:30:00Z",
+  "totalSeconds": 1800, "remainingSeconds": 1453, "onScreen": true,
+  "last": { "at": "2026-10-29T21:30:00Z", "action": "close-game", "outcome": "Golden Sun was closed" } }
+```
+
+`onScreen` is `false` when the timer counts without being shown. `last` tells how the previous
+timer ended, with `error` when its action failed.
+
+### `POST /timer`
+
+Starts a timer, replacing the running one.
+
+```json
+{ "seconds": 1800, "action": "close-game", "corner": "top-right", "title": "Time left" }
+```
+
+Only `seconds` is required (10 seconds to 24 hours). `action`: `close-game` (default; unsaved
+progress is lost), `shutdown` or `none`. `corner`: `top-left`, `top-right` (default),
+`bottom-left` or `bottom-right`. `title`: up to 40 characters, `""` for none. Answers with the
+status, like `GET /timer`.
+
+### `POST /timer/extend`
+
+Adds time to the running timer: `{"seconds": 300}`. `409` when no timer is running.
+
+### `DELETE /timer`
+
+Cancels the running timer: it disappears from the TV and its action never runs.
+`{"cancelled": true}`, or `false` when no timer was running.
 
 ## EmulationStation
 

@@ -67,6 +67,7 @@ internal/
   esapi/                  client for EmulationStation's web API (port 1234)
   nowplaying/             follows the running game and when it started
   onscreen/               queue of message cards drawn on top of the screen (BatoX Apps)
+  playtimer/              play-time timer: countdown on the screen, then close the game or power off
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
   gamelist/               reader for EmulationStation's gamelist.xml (scraped metadata)

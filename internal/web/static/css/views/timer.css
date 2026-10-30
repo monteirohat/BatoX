@@ -1,0 +1,69 @@
+/* Timer view
+   The running timer, and the form: duration, action and a TV to pick the corner. */
+
+/* Running timer */
+.timer-now { text-align: center; }
+.timer-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.timer-label i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; animation: timer-live 1.6s ease-in-out infinite; }
+@keyframes timer-live { 50% { opacity: .35; } }
+.timer-left { margin: 6px 0 10px; font: 800 64px/1 var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.timer-bar { height: 8px; max-width: 520px; margin: 0 auto 14px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.timer-bar i { display: block; height: 100%; background: linear-gradient(90deg, #12C6F5, #1767EE 45%, #4530EC 75%, #A100EE); border-radius: inherit; transition: width 1s linear; }
+.timer-now .actions { justify-content: center; }
+.timer-now .notice { text-align: left; max-width: 560px; margin: 0 auto 14px; }
+.timer-now[data-state="warn"] .timer-left, .timer-now[data-state="warn"] .timer-label { color: #FFB43E; }
+.timer-now[data-state="warn"] .timer-bar i { background: #FFB43E; }
+.timer-now[data-state="urgent"] .timer-left, .timer-now[data-state="urgent"] .timer-label { color: var(--danger); }
+.timer-now[data-state="urgent"] .timer-bar i { background: var(--danger); }
+
+/* No empty gap while no timer is running */
+#timer-active:empty, #timer-last:empty { display: none; }
+
+/* Form */
+.timer-form .chip:not([aria-pressed="true"]) { font-weight: 400; }
+.timer-form { display: grid; gap: 20px; }
+.timer-form div.field { display: grid; gap: 8px; font-weight: 600; font-size: 14px; }
+.timer-custom { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-size: 13px; font-weight: 400; }
+.timer-custom input { width: 84px; color: var(--ink); }
+
+.timer-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.timer-option {
+  display: grid; gap: 4px; padding: 12px 14px; text-align: left; cursor: pointer;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m); color: var(--ink); font: inherit;
+}
+.timer-option b { font-size: 14px; }
+.timer-option span { color: var(--ink-2); font-size: 13px; font-weight: 400; line-height: 1.4; }
+.timer-option:hover { border-color: var(--brand-text); }
+.timer-option[aria-checked="true"] { background: var(--brand-soft); border-color: var(--brand); }
+.timer-option[aria-checked="true"] b { color: var(--brand-text); }
+
+.timer-row { display: grid; grid-template-columns: auto minmax(0, 360px); justify-content: start; gap: 18px 36px; align-items: start; }
+
+/* A small TV: one button per corner */
+.timer-tv {
+  position: relative; width: 220px; aspect-ratio: 16 / 9;
+  background: linear-gradient(160deg, #0f1830, #070b16); border: 3px solid var(--line); border-radius: 10px;
+}
+.timer-corner {
+  position: absolute; width: 50%; height: 50%; padding: 10px; border: 0; background: none; cursor: pointer;
+  display: flex; color: var(--ink-2);
+}
+.timer-corner[data-corner^="top"] { top: 0; align-items: flex-start; }
+.timer-corner[data-corner^="bottom"] { bottom: 0; align-items: flex-end; }
+.timer-corner[data-corner$="left"] { left: 0; justify-content: flex-start; }
+.timer-corner[data-corner$="right"] { right: 0; justify-content: flex-end; }
+.timer-corner i { width: 44px; height: 22px; border: 1px dashed currentColor; border-radius: 5px; opacity: .5; }
+.timer-corner:hover i { opacity: 1; color: var(--brand-text); }
+.timer-corner[aria-checked="true"] i { opacity: 1; border: 0; background: linear-gradient(135deg, #12C6F5, #1767EE 45%, #A100EE); box-shadow: 0 0 12px rgba(23, 103, 238, .6); }
+
+.timer-last { margin: 0; }
+
+@media (max-width: 760px) {
+  .timer-left { font-size: 52px; }
+  .timer-actions, .timer-row { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer-label i { animation: none; }
+  .timer-bar i { transition: none; }
+}
