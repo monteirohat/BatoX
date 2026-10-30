@@ -50,6 +50,7 @@ Run `make help` for the full list.
 | `make build-host` | Build for the current machine |
 | `make run-dev` | Run locally in dev mode |
 | `make test` | Run the unit tests |
+| `make test-race` | Run the tests with the race detector, as CI and releases do (needs gcc: `sudo apt install build-essential`) |
 | `make vet` | Run `go vet` |
 | `make fmt` / `fmt-check` | Format the code / fail if it is not formatted |
 | `make deploy` | Build and install on Batocera (see [Installation](installation.md)) |

@@ -6,7 +6,7 @@ VERSION   ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo de
 LDFLAGS   := -s -w -X main.version=$(VERSION)
 BUILD_DIR := build
 
-.PHONY: help build build-arm64 build-amd64 build-host run-dev test vet fmt fmt-check tidy deploy clean
+.PHONY: help build build-arm64 build-amd64 build-host run-dev test test-race vet fmt fmt-check tidy deploy clean
 
 help: ## show this help
 	@grep -E '^[a-z0-9-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-12s %s\n", $$1, $$2}'
@@ -27,6 +27,9 @@ run-dev: ## run locally with config.dev.json (files under ./dev)
 
 test: ## run the unit tests
 	go test ./...
+
+test-race: ## run the tests with the race detector, as CI does (needs gcc)
+	go test -race ./...
 
 vet: ## run go vet
 	go vet ./...

@@ -49,19 +49,20 @@ func (f *fakes) acted() []Action {
 	return append([]Action(nil), f.actions...)
 }
 
+// newManager returns a Manager with timings short enough for tests. They are
+// set on this Manager only, before any timer starts, so nothing is shared
+// with the timers of other tests.
 func newManager(t *testing.T) (*Manager, *fakes) {
 	t.Helper()
-	oldMin, oldUp, oldTick := minDuration, timesUpFor, tickInterval
-	minDuration, timesUpFor, tickInterval = time.Millisecond, 10*time.Millisecond, 5*time.Millisecond
-	t.Cleanup(func() { minDuration, timesUpFor, tickInterval = oldMin, oldUp, oldTick })
-
 	log, err := logx.New(filepath.Join(t.TempDir(), "logs"), false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(log.Close)
 	f := &fakes{}
-	return New(f.show, f.act, log), f
+	m := New(f.show, f.act, log)
+	m.minDuration, m.timesUpFor, m.tick = time.Millisecond, 10*time.Millisecond, 5*time.Millisecond
+	return m, f
 }
 
 // waitFor polls cond for up to a second.
@@ -176,7 +177,7 @@ func TestTimerWithoutTheOverlayStillActs(t *testing.T) {
 
 func TestValidation(t *testing.T) {
 	m, _ := newManager(t)
-	minDuration = MinDuration // the real limit
+	m.minDuration = MinDuration // the real limit
 	for name, s := range map[string]Settings{
 		"too short":  settings(time.Second, CloseGame),
 		"too long":   settings(25*time.Hour, CloseGame),

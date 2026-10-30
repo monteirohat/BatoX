@@ -67,9 +67,6 @@ const (
 	maxTitleLen = 40
 )
 
-// minDuration is MinDuration; tests lower it to run timers of milliseconds.
-var minDuration = MinDuration
-
 var (
 	ErrNoTimer  = errors.New("no timer is running")
 	ErrTooLong  = fmt.Errorf("a timer can last up to %v", MaxDuration)
@@ -84,7 +81,7 @@ type Settings struct {
 	Title    string // small line above the time
 }
 
-func (s Settings) validate() error {
+func (s Settings) validate(minDuration time.Duration) error {
 	if s.Duration < minDuration {
 		return errTooShort
 	}
@@ -163,13 +160,6 @@ func NewActor(es *esapi.Client, shutdown func() error) Actor {
 	}
 }
 
-// How long "Time's up" stays on screen before the action, and how often the
-// countdown checks the time. Variables, so tests can shorten them.
-var (
-	timesUpFor   = 4 * time.Second
-	tickInterval = 250 * time.Millisecond
-)
-
 type timer struct {
 	settings Settings
 	started  time.Time
@@ -186,18 +176,30 @@ type Manager struct {
 	log  *logx.Logger
 	now  func() time.Time
 
+	// Timings, set by New. They live here rather than in package variables so
+	// tests can shorten them on their own Manager while timers of other tests
+	// are still finishing.
+	minDuration time.Duration // shortest timer accepted
+	timesUpFor  time.Duration // how long "Time's up" stays on screen before the action
+	tick        time.Duration // how often the countdown checks the time
+
 	mu   sync.Mutex
 	cur  *timer
 	last *Result
 }
 
 func New(show Shower, act Actor, log *logx.Logger) *Manager {
-	return &Manager{show: show, act: act, log: log, now: time.Now}
+	return &Manager{
+		show: show, act: act, log: log, now: time.Now,
+		minDuration: MinDuration,
+		timesUpFor:  4 * time.Second,
+		tick:        250 * time.Millisecond,
+	}
 }
 
 // Start starts a timer, replacing the running one.
 func (m *Manager) Start(s Settings) (Status, error) {
-	if err := s.validate(); err != nil {
+	if err := s.validate(m.minDuration); err != nil {
 		return Status{}, err
 	}
 	ctx, cancel := context.WithCancel(context.Background())
@@ -299,7 +301,7 @@ func (m *Manager) run(ctx context.Context, t *timer) {
 		}
 	}
 
-	ticker := time.NewTicker(tickInterval)
+	ticker := time.NewTicker(m.tick)
 	defer ticker.Stop()
 countdown:
 	for {
@@ -332,7 +334,7 @@ countdown:
 	if onScreen {
 		final := card
 		final.Title, final.Remaining, final.Total = "Time's up", 0, t.total
-		c, cancel := context.WithTimeout(ctx, timesUpFor)
+		c, cancel := context.WithTimeout(ctx, m.timesUpFor)
 		_ = m.show(c, opts, 0, final.Render)
 		cancel()
 	}
