@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-11-15
+
 ### Added
 
 - Extensions screen: install extensions from the official catalog,
@@ -14,7 +16,8 @@ All notable changes to this project are documented here. The format follows
   Batocera settings), read their log, restart, update and remove them. BatoX downloads only from
   the catalog's host, refuses a package whose SHA-256 doesn't match, unpacks it safely, switches
   versions atomically, starts the enabled extensions with the console, starts them again if they
-  stop, and stops them, with everything they started, before it exits. `GET /api/v1/extensions`,
+  stop, and stops them, with everything they started, before it exits. The screen says when the
+  catalog hasn't been published yet or can't be reached. `GET /api/v1/extensions`,
   `POST /api/v1/extensions/{id}/install`, `PUT .../enabled`, `PUT .../settings`, `POST .../restart`,
   `DELETE /api/v1/extensions/{id}` and `GET .../log` endpoints, and the `extensionsDir` and
   `extensionsCatalogUrl` options.
@@ -158,7 +161,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/monteirohat/batox/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/monteirohat/batox/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/monteirohat/batox/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/monteirohat/batox/compare/v1.3.0...v1.4.0
