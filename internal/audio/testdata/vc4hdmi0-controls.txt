@@ -1,0 +1,5 @@
+numid=1,iface=CARD,name='HDMI Jack'
+numid=5,iface=PCM,name='ELD'
+numid=4,iface=PCM,name='IEC958 Playback Default'
+numid=3,iface=PCM,name='IEC958 Playback Mask'
+numid=2,iface=PCM,name='Playback Channel Map'

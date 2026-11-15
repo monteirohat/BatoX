@@ -1102,6 +1102,75 @@
       ]
     },
     {
+      "name": "Audio",
+      "item": [
+        {
+          "name": "Sound outputs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/audio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audio"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Choose the sound output",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/audio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"device\": \"auto\"}"
+            }
+          }
+        },
+        {
+          "name": "Play a test sound",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/audio/test",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audio",
+                "test"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Batocera settings",
       "item": [
         {

@@ -60,6 +60,9 @@ clicks, no terminal needed.
 - **Video**: with two screens (a small panel and a TV, say), choose the one that shows
   EmulationStation and the games, and turn the other one off or keep it as a second screen. The
   change applies when the console restarts, from the same screen.
+- **Audio**: choose where the sound comes out (each HDMI output shown by the name of the screen
+  plugged into it, the headphone jack, USB or Bluetooth), right away, with a test sound and a
+  warning when the sound isn't on the screen the games are on.
 - **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions, search,
   and the commented-out defaults that Batocera ships as suggestions.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).

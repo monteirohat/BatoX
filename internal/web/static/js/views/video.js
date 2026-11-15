@@ -62,7 +62,7 @@ function draw() {
     </section>
     <section class="panel">
       <header><div><h2>Main screen</h2><p>Shows EmulationStation and the games.</p></div></header>
-      <div class="video-options" role="radiogroup" aria-label="Main screen" id="video-main"></div>
+      <div class="choices" role="radiogroup" aria-label="Main screen" id="video-main"></div>
     </section>
     <section class="panel">
       <header><div><h2>Second screen</h2><p>The other screen, next to the main one.</p></div></header>
@@ -109,7 +109,7 @@ function pendingNotice() {
 
 function option(group, value, title, hint, checked) {
   return `
-    <button class="video-option" role="radio" data-group="${group}" data-value="${esc(value)}" aria-checked="${checked}">
+    <button class="choice" role="radio" data-group="${group}" data-value="${esc(value)}" aria-checked="${checked}">
       <b>${esc(title)}</b><span>${esc(hint)}</span>
     </button>`;
 }
@@ -134,14 +134,14 @@ function drawChoices() {
     const others = form.main === "auto" ? [] : outs.filter(o => o.name !== form.main);
     const specific = outs.length > 2 ? others : [];
     const isOn = form.second === "auto" || (outs.length === 2 && form.second !== "none");
-    second.innerHTML = `<div class="video-options" role="radiogroup" aria-label="Second screen">${[
+    second.innerHTML = `<div class="choices" role="radiogroup" aria-label="Second screen">${[
       option("second", "auto", "On", "Batocera shows artwork for the game on it (its backglass).", isOn),
       option("second", "none", "Off", "Only the main screen is used. The other one stays dark.", form.second === "none"),
       ...specific.map(o => option("second", o.name, `On: ${label(o.name)}`, details(o), form.second === o.name)),
     ].join("")}</div>`;
   }
 
-  $$(".video-option", $("#video-body")).forEach(b => b.onclick = () => {
+  $$(".choice", $("#video-body")).forEach(b => b.onclick = () => {
     form[b.dataset.group] = b.dataset.value;
     // A specific second screen needs a specific main screen, different from it.
     if (form.main === "auto" || form.second === form.main) {

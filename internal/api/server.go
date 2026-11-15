@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
@@ -41,6 +42,9 @@ type Deps struct {
 	Timer *playtimer.Manager
 	// Video reads the screens from the kernel; its zero value reads nothing.
 	Video video.Probe
+	// Audio reads the screen behind each HDMI sound output; its zero value
+	// reads nothing.
+	Audio audio.Probe
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -141,6 +145,11 @@ func (s *Server) routes() chi.Router {
 			// Screens (batocera.conf video outputs)
 			r.Get("/video", s.videoState)
 			r.Put("/video", s.setVideo)
+
+			// Sound output (batocera.conf audio.device)
+			r.Get("/audio", s.audioState)
+			r.Put("/audio", s.setAudio)
+			r.Post("/audio/test", s.testAudio)
 
 			// batocera.conf
 			r.Get("/batocera/settings", s.listBatoceraSettings)

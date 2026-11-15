@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/monteirohat/batox/internal/api"
+	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
@@ -100,6 +101,7 @@ func run(cfgPath string) error {
 	if cfg.Platform == config.PlatformBatocera {
 		deps.Onscreen = onscreen.New(logger) // messages on top of games, through sway
 		deps.Video = video.DefaultProbe()    // screens, from /sys/class/drm
+		deps.Audio = audio.DefaultProbe()    // screens behind HDMI sound, from ALSA
 	}
 	if es := plat.ES(); es != nil {
 		deps.NowPlaying = nowplaying.New(es) // started below, with the shutdown context

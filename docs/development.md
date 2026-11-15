@@ -34,6 +34,7 @@ In dev mode:
   `es_settings.cfg`, `batocera.conf`), which is git-ignored;
 - EmulationStation actions, reboot and shutdown are only logged;
 - the Video screen lists two pretend screens, `HDMI-A-1` and `HDMI-A-2`, without models or state;
+- the Audio screen lists a pretend headphone jack and two HDMI outputs; switching is only logged;
 - `batocera.conf` changes are written straight to `./dev/batocera.conf`;
 - without `./dev/es_systems.cfg`, a built-in list of common systems is used. Copy the file from a
   console (`/usr/share/emulationstation/es_systems.cfg`) to test with the real list.
@@ -62,6 +63,7 @@ Run `make help` for the full list.
 cmd/batox/                entry point: flags, wiring, graceful shutdown
 internal/
   api/                    HTTP routes, auth, handlers (one file per area)
+  audio/                  sound outputs (PipeWire sinks, HDMI screen names from their ELD)
   batoconf/               batocera.conf reader, grouped by category
   config/                 configuration loading and token generation
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
@@ -129,6 +131,13 @@ docs/                     documentation and images
   - "automatic" must be written as an empty value: `sway-launch` would take `auto` for a screen
     name, turn it on and turn every real screen off;
   - `global.videooutput2=none` keeps every screen but the main one off.
+- **Sound outputs.** The list comes from `pactl -f json list sinks` (PipeWire's socket is in
+  `/var/run`, so BatoX sets `XDG_RUNTIME_DIR`). Switching goes through `batocera-audio set`, the
+  tool EmulationStation and the boot script `S27audioconfig` use, and is saved in `audio.device`;
+  then `batocera-audio setSystemVolume` sets the saved volume, because every output keeps its own
+  and the new one could be much quieter. Every HDMI output of a Raspberry Pi has the same
+  description, so BatoX reads the ELD control of its ALSA card (`amixer -c N cget`) for the name of
+  the screen plugged into it, and matches it with the screens' EDID to tell which one it is.
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 

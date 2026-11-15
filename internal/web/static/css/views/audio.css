@@ -1,0 +1,8 @@
+/* Audio view
+   The sound outputs use .choice (components.css). */
+
+/* Notice with a button: text and button side by side */
+.audio-notice { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.audio-notice > div { flex: 1 1 320px; }
+
+.audio-volume { margin: 14px 0 0; }

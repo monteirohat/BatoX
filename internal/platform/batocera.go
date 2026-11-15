@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
 )
@@ -126,6 +127,67 @@ func (b *Batocera) VideoOutputs() ([]string, error) {
 		return nil, errors.New("batocera-resolution listed no screens: is the display server running?")
 	}
 	return names, nil
+}
+
+// AudioSinks asks PipeWire, through pactl, for the sound outputs and the one
+// in use.
+func (b *Batocera) AudioSinks() ([]audio.Sink, string, error) {
+	out, err := pactl("-f", "json", "list", "sinks")
+	if err != nil {
+		return nil, "", fmt.Errorf("pactl list sinks: %w", err)
+	}
+	sinks, err := audio.ParseSinks(out)
+	if err != nil {
+		return nil, "", err
+	}
+	current, err := pactl("get-default-sink")
+	if err != nil {
+		b.log.Errorf("pactl get-default-sink: %v", err)
+	}
+	return sinks, strings.TrimSpace(string(current)), nil
+}
+
+// SetAudioOutput does what Batocera's boot script (S27audioconfig) does with
+// audio.device: switch with batocera-audio, then set the saved volume, since
+// each output keeps a volume of its own.
+func (b *Batocera) SetAudioOutput(name string) error {
+	if out, err := run("batocera-audio", "set", name); err != nil {
+		return fmt.Errorf("batocera-audio set %s: %w: %s", name, err, out)
+	}
+	b.log.Infof("audio: output set to %s", name)
+	vol, err := b.GetSetting(audio.KeyVolume)
+	if err != nil || vol == "" {
+		return nil
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	// Output not captured: the tool saves the volume from a background
+	// process, and Go would wait for it.
+	if err := exec.CommandContext(ctx, "batocera-audio", "setSystemVolume", vol).Run(); err != nil {
+		b.log.Errorf("batocera-audio setSystemVolume %s: %v", vol, err)
+	}
+	return nil
+}
+
+// TestAudio plays Batocera's test sound.
+func (b *Batocera) TestAudio() error {
+	if out, err := run("batocera-audio", "test"); err != nil {
+		return fmt.Errorf("batocera-audio test: %w: %s", err, out)
+	}
+	return nil
+}
+
+// pactl runs PipeWire's pactl. Its socket is in /var/run on Batocera, and
+// BatoX runs as a service without XDG_RUNTIME_DIR.
+func pactl(args ...string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "pactl", args...)
+	cmd.Env = append(os.Environ(), "LC_ALL=C")
+	if os.Getenv("XDG_RUNTIME_DIR") == "" {
+		cmd.Env = append(cmd.Env, "XDG_RUNTIME_DIR=/var/run")
+	}
+	return cmd.Output()
 }
 
 // displayEnv points Batocera's display tools at the display server. BatoX

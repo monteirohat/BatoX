@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Audio screen: choose where the sound comes out, right away. HDMI outputs are shown by the name
+  of the screen plugged into them (read from their ELD) and whether that screen is the main one;
+  the screen warns when the sound isn't on the main screen and fixes it in one click, and plays a
+  test sound. The choice is saved in `audio.device`, like EmulationStation's menu does, and the
+  saved volume is set on the new output, since each output keeps its own. `GET` and
+  `PUT /api/v1/audio` and `POST /api/v1/audio/test` endpoints.
 - Video screen: choose the screen that shows EmulationStation and the games (the main screen) and
   turn the second screen on or off. It shows each screen with the model name from its EDID and what
   it does now, says when the saved choice needs a restart, and restarts the console. The choice is

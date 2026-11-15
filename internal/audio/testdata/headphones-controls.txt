@@ -1,0 +1,2 @@
+numid=2,iface=MIXER,name='PCM Playback Switch'
+numid=1,iface=MIXER,name='PCM Playback Volume'

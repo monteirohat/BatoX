@@ -96,3 +96,16 @@ dialog:not(.modal) p { margin: 0 0 20px; color: var(--ink-2); }
 .chip-muted { color: var(--ink-2); border-style: dashed; }
 .chip-static { cursor: default; font-family: var(--font-code); font-size: 12px; }
 .chip-static:hover { border-color: var(--line); }
+
+/* Choices: large radio buttons with a title and a hint (Video and Audio views) */
+.choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.choice {
+  display: grid; gap: 4px; align-content: start; padding: 12px 14px; text-align: left; cursor: pointer;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m); color: var(--ink); font: inherit;
+}
+.choice b { font-size: 14px; overflow-wrap: anywhere; }
+.choice span { color: var(--ink-2); font-size: 13px; line-height: 1.4; }
+.choice span:empty { display: none; }
+.choice:hover { border-color: var(--brand-text); }
+.choice[aria-checked="true"] { background: var(--brand-soft); border-color: var(--brand); }
+.choice[aria-checked="true"] b { color: var(--brand-text); }

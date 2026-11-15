@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/batoconf"
 	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
@@ -54,3 +55,28 @@ func (d *Dev) SetSetting(key, value string) error {
 func (d *Dev) VideoOutputs() ([]string, error) {
 	return []string{"HDMI-A-1", "HDMI-A-2"}, nil
 }
+
+// AudioSinks pretends there are a headphone jack and two HDMI outputs, like
+// a Raspberry Pi 4. The one in use is the saved one (audio.device).
+func (d *Dev) AudioSinks() ([]audio.Sink, string, error) {
+	sinks := []audio.Sink{
+		{Name: "alsa_output.dev-headphones.analog-stereo", Description: "Built-in Audio Stereo", Card: 0, CardName: "Headphones", PortType: "Analog", Volume: 80},
+		{Name: "alsa_output.dev-hdmi-0.hdmi-stereo", Description: "Built-in Audio Digital Stereo (HDMI)", Card: 1, CardName: "vc4-hdmi-0", PortType: "HDMI", Volume: 80},
+		{Name: "alsa_output.dev-hdmi-1.hdmi-stereo", Description: "Built-in Audio Digital Stereo (HDMI)", Card: 2, CardName: "vc4-hdmi-1", PortType: "HDMI", Volume: 80},
+	}
+	current := sinks[1].Name
+	if saved, err := d.GetSetting(audio.KeyDevice); err == nil {
+		for _, s := range sinks {
+			if s.Name == saved {
+				current = saved
+			}
+		}
+	}
+	return sinks, current, nil
+}
+
+func (d *Dev) SetAudioOutput(name string) error {
+	return d.action("switch the sound output to " + name)
+}
+
+func (d *Dev) TestAudio() error { return d.action("play a test sound") }

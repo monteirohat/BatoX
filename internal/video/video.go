@@ -120,12 +120,7 @@ func ParseEDID(b []byte) (manufacturer, monitor string) {
 	if len(b) < 128 || !bytes.Equal(b[:8], edidHeader) {
 		return "", ""
 	}
-	// Three letters, five bits each, 1 = 'A'.
-	id := uint16(b[8])<<8 | uint16(b[9])
-	code := []byte{byte(id>>10&0x1f) + '@', byte(id>>5&0x1f) + '@', byte(id&0x1f) + '@'}
-	if isUpper(code) {
-		manufacturer = string(code)
-	}
+	manufacturer = PNPID(b[8], b[9])
 	// Four 18-byte descriptors; 0xFC is the monitor name, ended by a line feed.
 	for off := 54; off+18 <= 126; off += 18 {
 		d := b[off : off+18]
@@ -133,22 +128,27 @@ func ParseEDID(b []byte) (manufacturer, monitor string) {
 			continue
 		}
 		name, _, _ := bytes.Cut(d[5:], []byte{0x0a})
-		monitor = printable(strings.TrimSpace(string(name)))
+		monitor = Printable(strings.TrimSpace(string(name)))
 		break
 	}
 	return manufacturer, monitor
 }
 
-func isUpper(b []byte) bool {
-	for _, c := range b {
+// PNPID decodes the three-letter manufacturer code that EDID and ELD store in
+// two bytes (five bits per letter, 1 = 'A'), or returns "" when invalid.
+func PNPID(hi, lo byte) string {
+	id := uint16(hi)<<8 | uint16(lo)
+	code := []byte{byte(id>>10&0x1f) + '@', byte(id>>5&0x1f) + '@', byte(id&0x1f) + '@'}
+	for _, c := range code {
 		if c < 'A' || c > 'Z' {
-			return false
+			return ""
 		}
 	}
-	return true
+	return string(code)
 }
 
-func printable(s string) string {
+// Printable keeps the printable ASCII characters of s.
+func Printable(s string) string {
 	return strings.Map(func(r rune) rune {
 		if r < 0x20 || r > 0x7e {
 			return -1

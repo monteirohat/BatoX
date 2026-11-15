@@ -17,6 +17,7 @@ set the `baseUrl` and `token` variables.
 - [Timer](#timer)
 - [EmulationStation](#emulationstation)
 - [Video](#video)
+- [Audio](#audio)
 - [Batocera settings](#batocera-settings)
 
 ## Authentication
@@ -594,6 +595,48 @@ Saves the choice. A missing field keeps its saved value.
 `auto` (the other screen stays on), `none` (it turns off) or a screen name, different from `main`;
 a specific second screen needs a specific main screen. Answers like `GET /video`. `400` for an
 unknown screen or an invalid pair, `503` when Batocera can't list its screens (nothing is saved).
+
+## Audio
+
+Where the sound comes out. The change is **immediate**: BatoX switches the output with Batocera's
+`batocera-audio` and saves it in `batocera.conf` (`audio.device`), which Batocera applies again at
+every start. Each output keeps a volume of its own, so the saved volume (`audio.volume`) is set on
+the new output, as Batocera does at boot.
+
+### `GET /audio`
+
+```json
+{ "outputs": [
+    { "name": "alsa_output._sys_devices_platform_soc_fe00b840.mailbox_bcm2835-audio_sound_card0.stereo-fallback",
+      "label": "Headphone jack", "kind": "headphones", "description": "Built-in Audio Stereo", "current": false },
+    { "name": "alsa_output._sys_devices_platform_soc_fef05700.hdmi_sound_card2.hdmi-stereo",
+      "label": "SKY TV", "kind": "hdmi", "description": "Built-in Audio Digital Stereo (HDMI)",
+      "monitor": "SKY TV", "screen": "HDMI-A-2", "screenRole": "main", "connected": true, "current": true } ],
+  "setting": "alsa_output._sys_devices_platform_soc_fef05700.hdmi_sound_card2.hdmi-stereo",
+  "current": "alsa_output._sys_devices_platform_soc_fef05700.hdmi_sound_card2.hdmi-stereo",
+  "volume": 79 }
+```
+
+- `outputs`: PipeWire's outputs (`pactl list sinks`). `kind` is `hdmi`, `headphones`, `speakers`,
+  `analog`, `bluetooth`, `usb` or `other`. For an HDMI output, `monitor` is the screen plugged into
+  it, read from its ELD, and `screen` and `screenRole` tell which video output that screen is and
+  what it does now (see [Video](#video)). `connected` is missing when unknown; `current` marks the
+  output in use.
+- `setting`: what is saved, `auto` or an output. `current`: the output in use.
+- `volume`: the saved volume, in percent.
+
+When the sound server doesn't answer, `outputs` is empty and a `warning` says why.
+
+### `PUT /audio`
+
+Switches the output and saves it: `{"device": "<name from GET /audio>"}`, or `{"device": "auto"}`
+to let Batocera choose (it switches to a Bluetooth headset when one connects). Answers like
+`GET /audio`. `400` for an unknown output, `503` when the outputs can't be listed, `500` when the
+switch fails (then nothing is saved).
+
+### `POST /audio/test`
+
+Plays Batocera's short test sound on the output in use. `{"status": "ok"}`.
 
 ## Batocera settings
 

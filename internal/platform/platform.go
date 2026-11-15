@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/logx"
@@ -29,6 +30,14 @@ type Platform interface {
 	// VideoOutputs lists the screens by the names Batocera's video settings
 	// use (global.videooutput), such as "HDMI-A-1".
 	VideoOutputs() ([]string, error)
+
+	// AudioSinks lists the sound outputs and returns the one in use.
+	AudioSinks() (sinks []audio.Sink, current string, err error)
+	// SetAudioOutput switches the sound output right away ("auto" or a sink
+	// name) and sets the saved volume (audio.volume) on it.
+	SetAudioOutput(name string) error
+	// TestAudio plays a short sound on the output in use.
+	TestAudio() error
 
 	// ES returns the client for EmulationStation's web API, or nil when there
 	// is no EmulationStation (dev mode).
