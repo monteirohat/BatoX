@@ -64,7 +64,7 @@ cmd/batox/                entry point: flags, wiring, graceful shutdown
 internal/
   api/                    HTTP routes, auth, handlers (one file per area)
   audio/                  sound outputs (PipeWire sinks, HDMI screen names from their ELD)
-  batoconf/               batocera.conf reader, grouped by category
+  batoconf/               batocera.conf reader, grouped by category, with a control per key
   config/                 configuration loading and token generation
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys
@@ -138,6 +138,13 @@ docs/                     documentation and images
   and the new one could be much quieter. Every HDMI output of a Raspberry Pi has the same
   description, so BatoX reads the ELD control of its ALSA card (`amixer -c N cget`) for the name of
   the screen plugged into it, and matches it with the screens' EDID to tell which one it is.
+- **Settings controls.** `batoconf.Read` picks a control for every key (`controls.go`) from the
+  comments above it: `value -> meaning` lines become a list (or suggestions when the comments say
+  "examples"), `(0-100)` a slider, `0`/`1` a switch unless the comments talk about seconds or a
+  delay, whole numbers a number field. `batoconf.Features` (`features.go`) then applies what
+  EmulationStation's `es_features.cfg` says about the shared emulator options, for `global.*`,
+  per-system and per-game keys, and fills the lists of shader sets, decorations and time zones
+  from the console. Copy `es_features.cfg` to `./dev` to see its names and choices in dev mode.
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 

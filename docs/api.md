@@ -643,8 +643,9 @@ Plays Batocera's short test sound on the output in use. `{"status": "ok"}`.
 ### `GET /batocera/settings`
 
 Every key in `batocera.conf`, grouped by prefix (`system`, `global`, `audio`, `gba`...). Keys
-that are commented out in the file (`#key=value`) are returned with `"active": false`; Batocera
-ships them as suggestions with their default value. Comments right above a key become its
+that are commented out in the file (`#key=value`) are returned with `"active": false`: they are
+not set, so Batocera uses its default, and the value is the example Batocera ships. Lines that
+start with `##` are documentation, never keys. Comments right above a key become its
 `description`. Keys that look like passwords are flagged as `sensitive` (the value is still
 returned; the web app masks it).
 
@@ -655,13 +656,36 @@ returned; the web app masks it).
     {
       "name": "system",
       "settings": [
-        { "key": "system.hostname", "value": "BATOCERA", "active": true, "description": "Hostname of the system on the network." },
-        { "key": "system.power.switch", "value": "ATX_RASPI_R2_6", "active": false }
+        { "key": "system.hostname", "value": "BATOCERA", "active": true,
+          "description": "Set system hostname, accessible via network share.", "control": { "type": "text" } },
+        { "key": "system.suspendmode", "value": "suspend", "active": false,
+          "description": "Power button behavior Change what the power button does when pressed.",
+          "control": { "type": "select", "choices": [
+            { "value": "shutdown", "label": "Immediately shutdown the system." },
+            { "value": "suspend", "label": "Enter low-power standby mode." } ] } }
       ]
     }
   ]
 }
 ```
+
+`control` tells how to edit the key:
+
+| `type` | Meaning |
+|---|---|
+| `toggle` | `1` (on) or `0` (off) |
+| `select` | one of `choices` |
+| `combo` | `choices` are suggestions; other values are accepted (language, time zone) |
+| `range` | a number from `min` to `max`, in `step`s, with an optional `unit` |
+| `number` | a whole number |
+| `text`, `password` | free text; `password` is masked |
+| `screen` | edited on another screen: `screen` is `audio` or `video` |
+
+It also has a readable `label` for emulator options. The control comes, in this order, from
+EmulationStation's `es_features.cfg` (for `global.*`, per-system and per-game keys: names,
+choices, switches and sliders; installed shader sets and decorations), from the comments in
+`batocera.conf` (`value -> meaning` lines, ranges such as `(0-100)`, `(0,1)`), and from the value
+(`0` or `1`, a number).
 
 ### `PUT /batocera/settings`
 

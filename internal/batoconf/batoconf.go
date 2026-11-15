@@ -18,11 +18,14 @@ import (
 )
 
 type Setting struct {
-	Key         string `json:"key"`
-	Value       string `json:"value"`
-	Active      bool   `json:"active"`
-	Description string `json:"description,omitempty"`
-	Sensitive   bool   `json:"sensitive,omitempty"`
+	Key         string  `json:"key"`
+	Value       string  `json:"value"`
+	Active      bool    `json:"active"`
+	Description string  `json:"description,omitempty"`
+	Sensitive   bool    `json:"sensitive,omitempty"`
+	Control     Control `json:"control"`
+
+	lines []string // the comment lines above the key
 }
 
 type Category struct {
@@ -34,7 +37,9 @@ type Category struct {
 // That tells "#audio.volume=90" apart from plain comments such as "# Choose: a=b".
 var lineRe = regexp.MustCompile(`^(#*)\s*([A-Za-z0-9_][^=\s]*)=(.*)$`)
 
-var sensitiveRe = regexp.MustCompile(`(?i)(pass|key|secret|token|pwd)`)
+// "key" counts only as a whole part of the name (wifi.key, wifi.hidden.key),
+// not inside a word such as global.exithotkeyonly.
+var sensitiveRe = regexp.MustCompile(`(?i)(pass|secret|token|pwd|(^|[._])key($|[._]))`)
 
 // ValidKey rejects keys that would corrupt the file or be read as a command-line
 // option by batocera-settings-set.
@@ -81,6 +86,11 @@ func Read(path string) ([]Category, error) {
 			continue
 		}
 		m := lineRe.FindStringSubmatch(line)
+		// "##" starts documentation, even when it looks like a key
+		// ("## map=1 -> For one controller."); disabled keys have one "#".
+		if m != nil && len(m[1]) > 1 {
+			m = nil
+		}
 		if m == nil {
 			if strings.HasPrefix(line, "#") {
 				text := strings.TrimSpace(strings.TrimLeft(line, "#"))
@@ -106,13 +116,19 @@ func Read(path string) ([]Category, error) {
 			s.Value = value
 			s.Active = s.Active || active
 		}
-		if len(desc) > 0 && s.Description == "" {
-			s.Description = strings.Join(desc, " ")
+		if len(desc) > 0 && s.lines == nil {
+			s.lines = desc
 		}
 		desc = nil
 	}
 	if err := sc.Err(); err != nil {
 		return nil, err
+	}
+	// The value is final only now: a key may be active at the end of the file.
+	for _, s := range byKey {
+		var rest []string
+		s.Control, rest = inferControl(s.Key, s.Value, s.Sensitive, s.lines)
+		s.Description = strings.Join(rest, " ")
 	}
 
 	groups := map[string]*Category{}

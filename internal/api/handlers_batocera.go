@@ -6,13 +6,21 @@ import (
 	"github.com/monteirohat/batox/internal/batoconf"
 )
 
-// listBatoceraSettings returns every batocera.conf key, grouped by category.
+// listBatoceraSettings returns every batocera.conf key, grouped by category,
+// with the control that suits it (switch, list, slider...).
 func (s *Server) listBatoceraSettings(w http.ResponseWriter, _ *http.Request) {
 	cats, err := batoconf.Read(s.Config.BatoceraConfFile)
 	if err != nil {
 		s.internalError(w, err)
 		return
 	}
+	s.Features.Annotate(cats, func(prefix string) bool {
+		if s.Systems == nil {
+			return false
+		}
+		_, ok := s.Systems.Get(prefix)
+		return ok
+	})
 	writeJSON(w, http.StatusOK, map[string]any{
 		"file":       s.Config.BatoceraConfFile,
 		"categories": cats,

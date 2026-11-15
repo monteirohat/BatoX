@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/monteirohat/batox/internal/audio"
+	"github.com/monteirohat/batox/internal/batoconf"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
@@ -45,6 +46,8 @@ type Deps struct {
 	// Audio reads the screen behind each HDMI sound output; its zero value
 	// reads nothing.
 	Audio audio.Probe
+	// Features refines the controls of the Batocera settings; nil skips it.
+	Features *batoconf.Features
 }
 
 // Onscreen shows message cards on top of the screen, games included

@@ -35,6 +35,7 @@ type Config struct {
 	MusicDir  string `json:"musicDir"`  // EmulationStation background music
 
 	ESSystemsFile  string `json:"esSystemsFile"`  // es_systems.cfg (systems and extensions)
+	ESFeaturesFile string `json:"esFeaturesFile"` // es_features.cfg (emulator options, for the settings controls)
 	ESSettingsFile string `json:"esSettingsFile"` // es_settings.cfg
 	ESLogFile      string `json:"esLogFile"`      // EmulationStation log
 	ESAPIURL       string `json:"esApiUrl"`       // EmulationStation built-in web server
@@ -56,6 +57,7 @@ func batoceraDefaults() Config {
 		ThemesDir:        "/userdata/themes",
 		MusicDir:         "/userdata/music",
 		ESSystemsFile:    "/usr/share/emulationstation/es_systems.cfg",
+		ESFeaturesFile:   "/usr/share/emulationstation/es_features.cfg",
 		ESSettingsFile:   "/userdata/system/configs/emulationstation/es_settings.cfg",
 		ESLogFile:        "/userdata/system/configs/emulationstation/es_log.txt",
 		ESAPIURL:         "http://127.0.0.1:1234",
@@ -76,6 +78,7 @@ func devDefaults() Config {
 		ThemesDir:        "./dev/themes",
 		MusicDir:         "./dev/music",
 		ESSystemsFile:    "./dev/es_systems.cfg",
+		ESFeaturesFile:   "./dev/es_features.cfg",
 		ESSettingsFile:   "./dev/es_settings.cfg",
 		ESLogFile:        "./dev/es_log.txt",
 		BatoceraConfFile: "./dev/batocera.conf",

@@ -63,8 +63,10 @@ clicks, no terminal needed.
 - **Audio**: choose where the sound comes out (each HDMI output shown by the name of the screen
   plugged into it, the headphone jack, USB or Bluetooth), right away, with a test sound and a
   warning when the sound isn't on the screen the games are on.
-- **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions, search,
-  and the commented-out defaults that Batocera ships as suggestions.
+- **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions and
+  search, each with the control that suits it: On/Off switches, lists of choices (with
+  EmulationStation's names for emulator options, and the shader sets and decorations installed),
+  sliders, numbers and time zone suggestions.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).
 - Works on **Raspberry Pi (arm64)** and **x86_64 PCs** running Batocera v38 or newer.
 

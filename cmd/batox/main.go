@@ -13,6 +13,7 @@ import (
 
 	"github.com/monteirohat/batox/internal/api"
 	"github.com/monteirohat/batox/internal/audio"
+	"github.com/monteirohat/batox/internal/batoconf"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/logx"
@@ -98,6 +99,14 @@ func run(cfgPath string) error {
 		Roms:     romSvc,
 		Music:    music.NewService(cfg.MusicDir, logger),
 	}
+	// Controls of the Batocera settings: emulator options from es_features.cfg,
+	// and the shader sets, decorations and time zones found on the console.
+	deps.Features = batoconf.NewFeatures(batoconf.Sources{
+		FeaturesFile:   cfg.ESFeaturesFile,
+		ShaderDirs:     []string{"/usr/share/batocera/shaders/configs", "/userdata/shaders/configs"},
+		DecorationDirs: []string{"/usr/share/batocera/datainit/decorations", "/userdata/decorations"},
+		ZoneTab:        "/usr/share/zoneinfo/zone1970.tab",
+	})
 	if cfg.Platform == config.PlatformBatocera {
 		deps.Onscreen = onscreen.New(logger) // messages on top of games, through sway
 		deps.Video = video.DefaultProbe()    // screens, from /sys/class/drm

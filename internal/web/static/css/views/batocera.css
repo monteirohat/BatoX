@@ -1,5 +1,6 @@
 /* Batocera view
-   batocera.conf categories and keys. */
+   batocera.conf categories and keys, each with its control (On/Off, list,
+   slider, number or text). */
 
 .bat-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 20px; align-items: start; }
 .cat-list { position: sticky; top: 16px; display: grid; gap: 2px; max-height: calc(100vh - 32px); overflow: auto; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); }
@@ -14,10 +15,33 @@
 .bset:first-child { border-top: 0; padding-top: 4px; }
 .bkey b { font-weight: 650; overflow-wrap: anywhere; }
 .bkey small { display: block; color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
-.bkey p { margin: 6px 0 0; font-size: 13px; color: var(--ink-2); max-width: 60ch; }
+.bkey p { margin: 6px 0 0; font-size: 13px; color: var(--ink-2); max-width: 60ch; overflow-wrap: anywhere; }
 .bset[data-active="false"] .bkey b { color: var(--ink-2); }
-.bval { display: flex; gap: 8px; }
-.bval input { min-height: 38px; }
+.bval { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
+.bval input, .bval select { min-height: 38px; }
+.bval input[type="text"], .bval input[type="password"], .bval input[type="number"], .bval select { flex: 1 1 180px; min-width: 0; }
+.bval input[type="number"] {
+  width: 100%; padding: 8px 12px; font-weight: 400;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+}
+
+/* On/Off: neither is pressed while the key isn't set */
+.seg { display: inline-flex; gap: 3px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; }
+.seg button { min-width: 58px; padding: 6px 16px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 600; cursor: pointer; }
+.seg button:hover { color: var(--ink); }
+.seg button[data-set="1"][aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
+.seg button[data-set="0"][aria-pressed="true"] { background: var(--line); color: var(--ink); }
+
+/* Slider and its value; faded while the key isn't set */
+.bc-range { display: flex; flex: 1 1 220px; align-items: center; gap: 12px; }
+.bc-range input[type="range"] { flex: 1; min-width: 0; accent-color: var(--brand); }
+.bc-range output { min-width: 64px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.bc-range[data-unset="true"] input { opacity: .45; }
+.bc-range[data-unset="true"] output { color: var(--ink-2); font-weight: 400; }
+
+/* Keys edited on another screen */
+.bc-screen { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.bc-screen span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bgroup-title { margin: 22px 0 4px; font: 650 15px/1.3 var(--font-display); }
 .bgroup-title:first-child { margin-top: 0; }
 @media (max-width: 760px) {

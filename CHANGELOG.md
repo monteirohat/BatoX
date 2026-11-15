@@ -6,6 +6,26 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- Batocera settings: each key has the control that suits it instead of a text field. On/Off
+  switches, lists of choices, sliders for ranges such as the volume, number fields, and text with
+  suggestions for the language and the time zone. Switches, lists and sliders save as soon as they
+  change. Emulator options (`global.*`, per system and per game) take their readable names,
+  choices and sliders from EmulationStation's `es_features.cfg`, and the lists of shader sets and
+  decorations show the ones installed. `audio.device` and `global.videooutput*` link to the Audio
+  and Video screens. The API returns a `control` for every key; the new `esFeaturesFile` option
+  points to `es_features.cfg`.
+- Batocera settings: a key that isn't set says so, and Batocera's commented value is shown as an
+  example instead of a "suggested default" (often it is not the default: `#system.ssh.enabled=0`
+  shows how to turn SSH off). A switch that isn't set has neither On nor Off selected.
+
+### Fixed
+
+- Batocera settings: documentation lines that look like a key (`## map=1 -> For one controller.`)
+  are no longer listed as keys, and keys with "key" inside a word (`global.exithotkeyonly`) are no
+  longer masked like passwords.
+
 ## [1.5.0] - 2026-11-15
 
 ### Added
