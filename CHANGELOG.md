@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-15
+
 ### Added
 
 - Audio screen: choose where the sound comes out, right away. HDMI outputs are shown by the name
@@ -20,16 +22,36 @@ All notable changes to this project are documented here. The format follows
   saved in `global.videooutput` and `global.videooutput2`; "automatic" is written as an empty value,
   never `auto`, which Batocera's `sway-launch` would take for a screen name at boot.
   `GET` and `PUT /api/v1/video` endpoints.
+
+## [1.4.1] - 2026-10-30
+
+### Added
+
 - Timer screen: limit play time with a countdown in a chosen corner of the TV, on top of the game.
   At zero, BatoX closes the game or turns the console off. Time can be added or the timer
   cancelled, and the screen shows how the last timer ended. The timer runs inside BatoX, using the
   `ui.Countdown` of BatoX Apps v0.2.0. `GET`, `POST` and `DELETE /api/v1/timer` and
   `POST /api/v1/timer/extend` endpoints.
+
+## [1.4.0] - 2026-10-30
+
+### Added
+
 - Consoles screen: every system Batocera can emulate, with the theme's logo, manufacturer, release
   year, type, games and play statistics, filters by type, search and sorting, and shortcuts to its
   games and to uploading games. `GET /api/v1/consoles` and `GET /api/v1/consoles/{name}/logo`
   endpoints. The systems list now reads the manufacturer, release year and hardware type from
   `es_systems.cfg`.
+
+### Changed
+
+- Phones: the bottom navigation scrolls sideways when its items don't fit, keeping every label
+  readable and the current screen in sight.
+
+## [1.3.0] - 2026-10-29
+
+### Added
+
 - Play button in the games list, next to the details button: opens the game on the console after a
   confirmation, and checks that it started. When another game is running, the confirmation says it
   will be closed, losing unsaved progress, and BatoX switches games. `POST /api/v1/roms/{id}/launch`
@@ -38,6 +60,16 @@ All notable changes to this project are documented here. The format follows
   has been played and how many times before, and shortcuts to send a message, see its details and
   close it. `GET /api/v1/now-playing`, `GET /api/v1/now-playing/cover` and
   `POST /api/v1/now-playing/quit` endpoints.
+
+### Changed
+
+- BatoX's version is shown on the dashboard's console card and at the bottom of the menu, linked
+  to its release notes on GitHub.
+
+## [1.2.0] - 2026-10-29
+
+### Added
+
 - Messages screen, in the menu: send a message to the console screen, with quick messages, title
   suggestions (including the last titles typed) and a history, and see first whether a game is
   running.
@@ -49,20 +81,23 @@ All notable changes to this project are documented here. The format follows
   `GET /api/v1/emulationstation/status` endpoints.
 - `internal/esapi`: a client for every route of EmulationStation's web API (port 1234), read from
   batocera-emulationstation's `HttpServerThread.cpp` and `HttpApi.cpp`, with tests.
+
+### Changed
+
+- Phones: the bottom navigation fits its nine items down to 360 px wide screens, and scrolls on
+  narrower ones.
+- Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the
+  console's lists and collections right away, without a full reload. When EmulationStation is not
+  running or doesn't know the game, BatoX deletes the file itself, as before.
+
+## [1.1.0] - 2026-10-29
+
+### Added
+
 - Game details: a details button (or a click on the game name) opens a modal with the scraped
   description, artwork gallery, video, manual, developer, publisher, genre, release date, rating,
   play count, last played and every other `gamelist.xml` field, plus the file data.
 - `GET /api/v1/roms/{id}/details` and `GET /api/v1/roms/{id}/media/{kind}` endpoints.
-
-### Changed
-
-- BatoX's version is shown on the dashboard's console card and at the bottom of the menu, linked
-  to its release notes on GitHub.
-- Phones: the bottom navigation scrolls sideways when its items don't fit, keeping every label
-  readable and the current screen in sight.
-- Deleting a game now goes through EmulationStation's `/removegames` route, so the game leaves the
-  console's lists and collections right away, without a full reload. When EmulationStation is not
-  running or doesn't know the game, BatoX deletes the file itself, as before.
 
 ## [1.0.0] - 2026-10-29
 
@@ -90,5 +125,11 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/monteirohat/batox/compare/v1.4.1...v1.5.0
+[1.4.1]: https://github.com/monteirohat/batox/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/monteirohat/batox/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/monteirohat/batox/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/monteirohat/batox/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/monteirohat/batox/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/monteirohat/batox/releases/tag/v1.0.0
