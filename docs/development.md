@@ -33,6 +33,7 @@ In dev mode:
 - everything lives under `./dev` (database, logs, `roms/`, `music/`, `themes/`,
   `es_settings.cfg`, `batocera.conf`), which is git-ignored;
 - EmulationStation actions, reboot and shutdown are only logged;
+- the Video screen lists two pretend screens, `HDMI-A-1` and `HDMI-A-2`, without models or state;
 - `batocera.conf` changes are written straight to `./dev/batocera.conf`;
 - without `./dev/es_systems.cfg`, a built-in list of common systems is used. Copy the file from a
   console (`/usr/share/emulationstation/es_systems.cfg`) to test with the real list.
@@ -77,6 +78,7 @@ internal/
   platform/               OS-specific actions: Batocera vs. dev
   roms/                   upload, deletion and sync of games
   systems/                systems and extensions from es_systems.cfg
+  video/                  screens (from /sys/class/drm and their EDID) and the video output settings
   web/                    embedded web app (static/)
 scripts/
   batox                   Batocera service script
@@ -116,6 +118,17 @@ docs/                     documentation and images
   compiled into the BatoX binary: nothing else is installed on the console. To update them, run
   `go get github.com/monteirohat/batox-apps@latest` and commit `go.mod` and `go.sum`. The overlay
   uses Linux-only system calls, so BatoX builds for Linux only (which is every target it has).
+- **Video outputs.** Screen names come from `batocera-resolution listOutputs`, so they are the
+  ones Batocera's scripts expect (sway and X11 name them differently). BatoX runs as a service
+  without the graphical session's variables, so `platform.Batocera` points the tool at sway's
+  socket (`SWAYSOCK`); without it, the tool prints an error and still exits with 0. Notes from
+  Batocera's `sway-launch` and `emulationstation-standalone`:
+  - the choice applies only when sway starts, so it needs a restart of the console: restarting
+    EmulationStation leaves sway's layout and focus as they were, and EmulationStation opens on
+    the old screen;
+  - "automatic" must be written as an empty value: `sway-launch` would take `auto` for a screen
+    name, turn it on and turn every real screen off;
+  - `global.videooutput2=none` keeps every screen but the main one off.
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 

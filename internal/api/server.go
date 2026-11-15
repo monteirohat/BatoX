@@ -20,6 +20,7 @@ import (
 	"github.com/monteirohat/batox/internal/playtimer"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
+	"github.com/monteirohat/batox/internal/video"
 	"github.com/monteirohat/batox/internal/web"
 )
 
@@ -38,6 +39,8 @@ type Deps struct {
 	NowPlaying *nowplaying.Tracker
 	// Timer counts down play time on the screen.
 	Timer *playtimer.Manager
+	// Video reads the screens from the kernel; its zero value reads nothing.
+	Video video.Probe
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -134,6 +137,10 @@ func (s *Server) routes() chi.Router {
 			r.Post("/now-playing/quit", s.quitGame)
 			r.Post("/messages/notify", s.message("notify"))
 			r.Post("/messages/messagebox", s.message("messagebox"))
+
+			// Screens (batocera.conf video outputs)
+			r.Get("/video", s.videoState)
+			r.Put("/video", s.setVideo)
 
 			// batocera.conf
 			r.Get("/batocera/settings", s.listBatoceraSettings)

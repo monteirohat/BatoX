@@ -57,6 +57,9 @@ clicks, no terminal needed.
 - **Messages to the console**: send a message to the TV screen ("Dinner is ready!"), drawn on top
   of the game too, with a choice of position, duration and title. Uses the
   [BatoX Apps](https://github.com/monteirohat/batox-apps) overlay, built into BatoX.
+- **Video**: with two screens (a small panel and a TV, say), choose the one that shows
+  EmulationStation and the games, and turn the other one off or keep it as a second screen. The
+  change applies when the console restarts, from the same screen.
 - **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions, search,
   and the commented-out defaults that Batocera ships as suggestions.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).

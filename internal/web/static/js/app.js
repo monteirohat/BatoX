@@ -11,6 +11,7 @@ import * as music from "./views/music.js";
 import * as messages from "./views/messages.js";
 import * as timer from "./views/timer.js";
 import * as es from "./views/es.js";
+import * as video from "./views/video.js";
 import * as batocera from "./views/batocera.js";
 import * as logs from "./views/logs.js";
 import * as access from "./views/access.js";
@@ -25,6 +26,7 @@ const views = {
   messages: messages.render,
   timer: timer.render,
   es: es.render,
+  video: video.render,
   batocera: batocera.render,
   logs: logs.render,
   access: access.render,

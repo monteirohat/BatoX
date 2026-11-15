@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -97,6 +99,53 @@ func (b *Batocera) SetSetting(key, value string) error {
 	}
 	b.log.Infof("batocera.conf: %s changed", key)
 	return nil
+}
+
+// VideoOutputs asks batocera-resolution, Batocera's own tool, so the names
+// match what its scripts expect (they differ between sway and X11).
+func (b *Batocera) VideoOutputs() ([]string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "batocera-resolution", "listOutputs")
+	cmd.Env = displayEnv()
+	// Only stdout: when it can't reach the display server, the tool prints
+	// the error on stderr and still exits with 0.
+	out, err := cmd.Output()
+	if err != nil {
+		return nil, fmt.Errorf("batocera-resolution listOutputs: %w", err)
+	}
+	var names []string
+	seen := map[string]bool{}
+	for _, l := range strings.Split(string(out), "\n") {
+		if l = strings.TrimSpace(l); l != "" && !seen[l] {
+			seen[l] = true
+			names = append(names, l)
+		}
+	}
+	if len(names) == 0 {
+		return nil, errors.New("batocera-resolution listed no screens: is the display server running?")
+	}
+	return names, nil
+}
+
+// displayEnv points Batocera's display tools at the display server. BatoX
+// runs as a service, without the variables of the graphical session.
+func displayEnv() []string {
+	env := os.Environ()
+	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
+	if runtimeDir == "" {
+		runtimeDir = "/var/run"
+		env = append(env, "XDG_RUNTIME_DIR="+runtimeDir)
+	}
+	if os.Getenv("SWAYSOCK") == "" {
+		if socks, _ := filepath.Glob(filepath.Join(runtimeDir, "sway-ipc.*.sock")); len(socks) > 0 {
+			env = append(env, "SWAYSOCK="+socks[0])
+		}
+	}
+	if os.Getenv("DISPLAY") == "" {
+		env = append(env, "DISPLAY=:0") // X11 builds
+	}
+	return env
 }
 
 func run(name string, args ...string) (string, error) {

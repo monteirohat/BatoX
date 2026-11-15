@@ -26,6 +26,10 @@ type Platform interface {
 	GetSetting(key string) (string, error) // batocera.conf
 	SetSetting(key, value string) error
 
+	// VideoOutputs lists the screens by the names Batocera's video settings
+	// use (global.videooutput), such as "HDMI-A-1".
+	VideoOutputs() ([]string, error)
+
 	// ES returns the client for EmulationStation's web API, or nil when there
 	// is no EmulationStation (dev mode).
 	ES() *esapi.Client

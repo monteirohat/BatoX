@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Video screen: choose the screen that shows EmulationStation and the games (the main screen) and
+  turn the second screen on or off. It shows each screen with the model name from its EDID and what
+  it does now, says when the saved choice needs a restart, and restarts the console. The choice is
+  saved in `global.videooutput` and `global.videooutput2`; "automatic" is written as an empty value,
+  never `auto`, which Batocera's `sway-launch` would take for a screen name at boot.
+  `GET` and `PUT /api/v1/video` endpoints.
 - Timer screen: limit play time with a countdown in a chosen corner of the TV, on top of the game.
   At zero, BatoX closes the game or turns the console off. Time can be added or the timer
   cancelled, and the screen shows how the last timer ended. The timer runs inside BatoX, using the

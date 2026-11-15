@@ -1052,6 +1052,56 @@
       ]
     },
     {
+      "name": "Video",
+      "item": [
+        {
+          "name": "Screens and video settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "video"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Choose the screens",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/video",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "video"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"main\": \"HDMI-A-2\", \"second\": \"none\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Batocera settings",
       "item": [
         {

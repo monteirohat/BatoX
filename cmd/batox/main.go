@@ -22,6 +22,7 @@ import (
 	"github.com/monteirohat/batox/internal/playtimer"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
+	"github.com/monteirohat/batox/internal/video"
 
 	"github.com/monteirohat/batox-apps/overlay"
 )
@@ -98,6 +99,7 @@ func run(cfgPath string) error {
 	}
 	if cfg.Platform == config.PlatformBatocera {
 		deps.Onscreen = onscreen.New(logger) // messages on top of games, through sway
+		deps.Video = video.DefaultProbe()    // screens, from /sys/class/drm
 	}
 	if es := plat.ES(); es != nil {
 		deps.NowPlaying = nowplaying.New(es) // started below, with the shutdown context

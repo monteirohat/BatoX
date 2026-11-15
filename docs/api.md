@@ -16,6 +16,7 @@ set the `baseUrl` and `token` variables.
 - [Messages](#messages)
 - [Timer](#timer)
 - [EmulationStation](#emulationstation)
+- [Video](#video)
 - [Batocera settings](#batocera-settings)
 
 ## Authentication
@@ -547,6 +548,52 @@ same name is replaced.
 ```
 
 A `warning` field is added when the theme was installed but could not be activated.
+
+## Video
+
+Which screen shows EmulationStation and the games (the main screen), and whether another screen
+stays on as a second screen, where Batocera shows its backglass. The choice is saved in
+`batocera.conf` (`global.videooutput` and `global.videooutput2`) and **applies when the console
+restarts** (`POST /reboot`): Batocera sets the screens up when its display server starts, and
+restarting EmulationStation is not enough.
+
+### `GET /video`
+
+```json
+{ "outputs": [
+    { "name": "HDMI-A-1", "monitor": "MPI7002", "manufacturer": "MPI", "preferredMode": "1920x1080",
+      "active": true, "role": "second" },
+    { "name": "HDMI-A-2", "monitor": "SKY TV", "manufacturer": "SKY", "preferredMode": "3840x2160",
+      "active": true, "role": "main" } ],
+  "settings": { "main": "HDMI-A-2", "second": "none" },
+  "next": { "main": "HDMI-A-2" },
+  "restartNeeded": true }
+```
+
+- `outputs`: the screens, listed by Batocera (`batocera-resolution listOutputs`), with the model
+  name and preferred resolution from their EDID. `role` is what each one does now: `main`,
+  `second` or `off`. `active`, `role` and the EDID fields are missing when unknown.
+- `settings`: what is saved. `main` is `auto` or a screen; `second` is `auto` (on), `none` (off)
+  or a screen.
+- `next`: the screens Batocera will use after the next restart; `second` is missing when the other
+  screens will be off.
+- `restartNeeded`: the screens in use differ from `next`.
+
+When Batocera can't list its screens, the connected screens the system reports are returned with
+a `warning`.
+
+### `PUT /video`
+
+Saves the choice. A missing field keeps its saved value.
+
+```json
+{ "main": "HDMI-A-2", "second": "none" }
+```
+
+`main`: `auto` (Batocera picks the first screen) or a screen name from `GET /video`. `second`:
+`auto` (the other screen stays on), `none` (it turns off) or a screen name, different from `main`;
+a specific second screen needs a specific main screen. Answers like `GET /video`. `400` for an
+unknown screen or an invalid pair, `503` when Batocera can't list its screens (nothing is saved).
 
 ## Batocera settings
 

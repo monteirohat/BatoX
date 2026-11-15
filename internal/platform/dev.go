@@ -48,3 +48,9 @@ func (d *Dev) GetSetting(key string) (string, error) {
 func (d *Dev) SetSetting(key, value string) error {
 	return batoconf.Set(d.confFile, key, value)
 }
+
+// VideoOutputs pretends there are two screens, so the Video view can be
+// worked on without a console.
+func (d *Dev) VideoOutputs() ([]string, error) {
+	return []string{"HDMI-A-1", "HDMI-A-2"}, nil
+}
