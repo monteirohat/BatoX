@@ -16,6 +16,7 @@ import (
 	"github.com/monteirohat/batox/internal/batoconf"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
+	"github.com/monteirohat/batox/internal/extensions"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
 	"github.com/monteirohat/batox/internal/nowplaying"
@@ -118,6 +119,11 @@ func run(cfgPath string) error {
 	// Play-time timer: drawn with the BatoX Apps overlay, then closes the game
 	// through EmulationStation or powers the console off.
 	deps.Timer = playtimer.New(overlay.Run, playtimer.NewActor(plat.ES(), plat.Shutdown), logger)
+	// Extensions from the official catalog; the enabled ones start now and
+	// are stopped before BatoX exits.
+	deps.Extensions = extensions.New(cfg.ExtensionsDir, cfg.ExtensionsCatalogURL, logger)
+	deps.Extensions.Start()
+	defer deps.Extensions.StopAll()
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{

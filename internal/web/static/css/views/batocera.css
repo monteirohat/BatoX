@@ -20,24 +20,7 @@
 .bval { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
 .bval input, .bval select { min-height: 38px; }
 .bval input[type="text"], .bval input[type="password"], .bval input[type="number"], .bval select { flex: 1 1 180px; min-width: 0; }
-.bval input[type="number"] {
-  width: 100%; padding: 8px 12px; font-weight: 400;
-  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
-}
-
-/* On/Off: neither is pressed while the key isn't set */
-.seg { display: inline-flex; gap: 3px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; }
-.seg button { min-width: 58px; padding: 6px 16px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 600; cursor: pointer; }
-.seg button:hover { color: var(--ink); }
-.seg button[data-set="1"][aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
-.seg button[data-set="0"][aria-pressed="true"] { background: var(--line); color: var(--ink); }
-
-/* Slider and its value; faded while the key isn't set */
-.bc-range { display: flex; flex: 1 1 220px; align-items: center; gap: 12px; }
-.bc-range input[type="range"] { flex: 1; min-width: 0; accent-color: var(--brand); }
-.bc-range output { min-width: 64px; font-variant-numeric: tabular-nums; font-weight: 600; }
-.bc-range[data-unset="true"] input { opacity: .45; }
-.bc-range[data-unset="true"] output { color: var(--ink-2); font-weight: 400; }
+/* The On/Off switch (.seg) and the slider (.bc-range) are in components.css. */
 
 /* Keys edited on another screen */
 .bc-screen { display: flex; align-items: center; gap: 10px; min-width: 0; }

@@ -14,6 +14,7 @@ import (
 	"github.com/monteirohat/batox/internal/batoconf"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
+	"github.com/monteirohat/batox/internal/extensions"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
 	"github.com/monteirohat/batox/internal/nowplaying"
@@ -48,6 +49,8 @@ type Deps struct {
 	Audio audio.Probe
 	// Features refines the controls of the Batocera settings; nil skips it.
 	Features *batoconf.Features
+	// Extensions installs and runs extensions; nil turns the routes off.
+	Extensions *extensions.Manager
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -153,6 +156,15 @@ func (s *Server) routes() chi.Router {
 			r.Get("/audio", s.audioState)
 			r.Put("/audio", s.setAudio)
 			r.Post("/audio/test", s.testAudio)
+
+			// Extensions (github.com/monteirohat/batox-extensions)
+			r.Get("/extensions", s.extensionsList)
+			r.Post("/extensions/{id}/install", s.extensionAction(s.installExtension))
+			r.Delete("/extensions/{id}", s.extensionAction(s.uninstallExtension))
+			r.Put("/extensions/{id}/enabled", s.extensionAction(s.enableExtension))
+			r.Put("/extensions/{id}/settings", s.extensionAction(s.extensionSettings))
+			r.Post("/extensions/{id}/restart", s.extensionAction(s.restartExtension))
+			r.Get("/extensions/{id}/log", s.extensionLog)
 
 			// batocera.conf
 			r.Get("/batocera/settings", s.listBatoceraSettings)

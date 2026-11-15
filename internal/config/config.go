@@ -22,6 +22,10 @@ const (
 	PlatformDev      = "dev"
 )
 
+// DefaultCatalogURL is the official extensions catalog, published by
+// github.com/monteirohat/batox-extensions.
+const DefaultCatalogURL = "https://github.com/monteirohat/batox-extensions/releases/download/catalog/catalog.json"
+
 type Config struct {
 	Platform string `json:"platform"` // "batocera" or "dev"
 	Listen   string `json:"listen"`   // HTTP address, e.g. ":8080"
@@ -43,6 +47,9 @@ type Config struct {
 
 	BatoceraConfFile string `json:"batoceraConfFile"` // batocera.conf (system settings)
 
+	ExtensionsDir        string `json:"extensionsDir"`        // installed extensions
+	ExtensionsCatalogURL string `json:"extensionsCatalogUrl"` // the official catalog ("" turns the catalog off)
+
 	MaxUploadMB int64 `json:"maxUploadMB"` // per-file upload limit (ROMs and music)
 	MaxThemeMB  int64 `json:"maxThemeMB"`  // theme ZIP limit
 	SyncOnStart bool  `json:"syncOnStart"` // sync the ROM catalog on startup
@@ -50,41 +57,45 @@ type Config struct {
 
 func batoceraDefaults() Config {
 	return Config{
-		Platform:         PlatformBatocera,
-		Listen:           ":8080",
-		DataDir:          "/userdata/system/batox",
-		RomsDir:          "/userdata/roms",
-		ThemesDir:        "/userdata/themes",
-		MusicDir:         "/userdata/music",
-		ESSystemsFile:    "/usr/share/emulationstation/es_systems.cfg",
-		ESFeaturesFile:   "/usr/share/emulationstation/es_features.cfg",
-		ESSettingsFile:   "/userdata/system/configs/emulationstation/es_settings.cfg",
-		ESLogFile:        "/userdata/system/configs/emulationstation/es_log.txt",
-		ESAPIURL:         "http://127.0.0.1:1234",
-		ESInitScript:     "/etc/init.d/S31emulationstation",
-		BatoceraConfFile: "/userdata/system/batocera.conf",
-		MaxUploadMB:      8192,
-		MaxThemeMB:       512,
-		SyncOnStart:      true,
+		Platform:             PlatformBatocera,
+		Listen:               ":8080",
+		DataDir:              "/userdata/system/batox",
+		RomsDir:              "/userdata/roms",
+		ThemesDir:            "/userdata/themes",
+		MusicDir:             "/userdata/music",
+		ESSystemsFile:        "/usr/share/emulationstation/es_systems.cfg",
+		ESFeaturesFile:       "/usr/share/emulationstation/es_features.cfg",
+		ESSettingsFile:       "/userdata/system/configs/emulationstation/es_settings.cfg",
+		ESLogFile:            "/userdata/system/configs/emulationstation/es_log.txt",
+		ESAPIURL:             "http://127.0.0.1:1234",
+		ESInitScript:         "/etc/init.d/S31emulationstation",
+		BatoceraConfFile:     "/userdata/system/batocera.conf",
+		ExtensionsDir:        "/userdata/system/batox/extensions",
+		ExtensionsCatalogURL: DefaultCatalogURL,
+		MaxUploadMB:          8192,
+		MaxThemeMB:           512,
+		SyncOnStart:          true,
 	}
 }
 
 func devDefaults() Config {
 	return Config{
-		Platform:         PlatformDev,
-		Listen:           ":8080",
-		DataDir:          "./dev/data",
-		RomsDir:          "./dev/roms",
-		ThemesDir:        "./dev/themes",
-		MusicDir:         "./dev/music",
-		ESSystemsFile:    "./dev/es_systems.cfg",
-		ESFeaturesFile:   "./dev/es_features.cfg",
-		ESSettingsFile:   "./dev/es_settings.cfg",
-		ESLogFile:        "./dev/es_log.txt",
-		BatoceraConfFile: "./dev/batocera.conf",
-		MaxUploadMB:      8192,
-		MaxThemeMB:       512,
-		SyncOnStart:      true,
+		Platform:             PlatformDev,
+		Listen:               ":8080",
+		DataDir:              "./dev/data",
+		RomsDir:              "./dev/roms",
+		ThemesDir:            "./dev/themes",
+		MusicDir:             "./dev/music",
+		ESSystemsFile:        "./dev/es_systems.cfg",
+		ESFeaturesFile:       "./dev/es_features.cfg",
+		ESSettingsFile:       "./dev/es_settings.cfg",
+		ESLogFile:            "./dev/es_log.txt",
+		BatoceraConfFile:     "./dev/batocera.conf",
+		ExtensionsDir:        "./dev/extensions",
+		ExtensionsCatalogURL: DefaultCatalogURL,
+		MaxUploadMB:          8192,
+		MaxThemeMB:           512,
+		SyncOnStart:          true,
 	}
 }
 

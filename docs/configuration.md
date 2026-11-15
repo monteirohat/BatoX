@@ -39,6 +39,8 @@ batocera-services stop batox && batocera-services start batox
 | `esApiUrl` | `http://127.0.0.1:1234` | EmulationStation's built-in web server, used to reload game lists. |
 | `esInitScript` | `/etc/init.d/S31emulationstation` | Init script used to start and stop EmulationStation. |
 | `batoceraConfFile` | `/userdata/system/batocera.conf` | Batocera system settings. |
+| `extensionsDir` | `/userdata/system/batox/extensions` | Where extensions are installed, with their settings and data. |
+| `extensionsCatalogUrl` | the [batox-extensions](https://github.com/monteirohat/batox-extensions) catalog | The extensions catalog. Packages are only downloaded from its host. `""` turns the catalog off. |
 | `maxUploadMB` | `8192` | Maximum size of a single ROM or music upload, in MB. |
 | `maxThemeMB` | `512` | Maximum size of a theme ZIP, in MB. The extracted content may be up to 4x this. |
 | `syncOnStart` | `true` | Sync the game catalog with the disk on startup. |

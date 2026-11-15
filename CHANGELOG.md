@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Extensions screen: install extensions from the official catalog,
+  [batox-extensions](https://github.com/monteirohat/batox-extensions), with a click, after seeing
+  what they can do; turn them on and off, change their settings (with the same controls as the
+  Batocera settings), read their log, restart, update and remove them. BatoX downloads only from
+  the catalog's host, refuses a package whose SHA-256 doesn't match, unpacks it safely, switches
+  versions atomically, starts the enabled extensions with the console, starts them again if they
+  stop, and stops them, with everything they started, before it exits. `GET /api/v1/extensions`,
+  `POST /api/v1/extensions/{id}/install`, `PUT .../enabled`, `PUT .../settings`, `POST .../restart`,
+  `DELETE /api/v1/extensions/{id}` and `GET .../log` endpoints, and the `extensionsDir` and
+  `extensionsCatalogUrl` options.
+
 ### Changed
 
 - Batocera settings: each key has the control that suits it instead of a text field. On/Off

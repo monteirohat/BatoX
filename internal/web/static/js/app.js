@@ -13,6 +13,7 @@ import * as timer from "./views/timer.js";
 import * as es from "./views/es.js";
 import * as video from "./views/video.js";
 import * as audio from "./views/audio.js";
+import * as extensions from "./views/extensions.js";
 import * as batocera from "./views/batocera.js";
 import * as logs from "./views/logs.js";
 import * as access from "./views/access.js";
@@ -30,6 +31,7 @@ const views = {
   video: video.render,
   audio: audio.render,
   batocera: batocera.render,
+  extensions: extensions.render,
   logs: logs.render,
   access: access.render,
 };

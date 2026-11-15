@@ -63,6 +63,10 @@ clicks, no terminal needed.
 - **Audio**: choose where the sound comes out (each HDMI output shown by the name of the screen
   plugged into it, the headphone jack, USB or Bluetooth), right away, with a test sound and a
   warning when the sound isn't on the screen the games are on.
+- **Extensions**: add features from the official
+  [catalog](https://github.com/monteirohat/batox-extensions), such as an AirPlay receiver: install
+  them with a click, turn them on and off, change their settings, read their log, update and
+  remove them. BatoX checks every package before installing it and keeps the extensions running.
 - **Batocera settings**: every `batocera.conf` key grouped by category, with descriptions and
   search, each with the control that suits it: On/Off switches, lists of choices (with
   EmulationStation's names for emulator options, and the shader sets and decorations installed),

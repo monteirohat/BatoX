@@ -18,6 +18,7 @@ set the `baseUrl` and `token` variables.
 - [EmulationStation](#emulationstation)
 - [Video](#video)
 - [Audio](#audio)
+- [Extensions](#extensions)
 - [Batocera settings](#batocera-settings)
 
 ## Authentication
@@ -637,6 +638,62 @@ switch fails (then nothing is saved).
 ### `POST /audio/test`
 
 Plays Batocera's short test sound on the output in use. `{"status": "ok"}`.
+
+## Extensions
+
+Extensions from the official catalog,
+[batox-extensions](https://github.com/monteirohat/batox-extensions), whose
+[format](https://github.com/monteirohat/batox-extensions/blob/main/docs/manifest.md) describes the
+manifest, the packages and how BatoX runs them. BatoX installs them in `extensionsDir`, refuses a
+package whose size or SHA-256 doesn't match the catalog, starts the enabled ones with the console
+and starts them again if they stop.
+
+### `GET /extensions`
+
+The installed extensions, then the catalog's. `?refresh=true` fetches the catalog again (it is
+otherwise reused for 10 minutes).
+
+```json
+{ "platform": "arm64",
+  "items": [
+    { "id": "airplay", "name": "AirPlay receiver", "summary": "...", "permissions": ["network", "audio"],
+      "settings": [ { "key": "name", "label": "Name in AirPlay", "default": "Batocera", "control": { "type": "text" } } ],
+      "installed": "1.0.0", "available": "1.1.0", "update": true, "supported": true, "enabled": true,
+      "status": { "state": "running", "pid": 2310, "since": "2026-11-15T20:00:24Z", "restarts": 0 },
+      "values": { "name": "Batocera" } } ],
+  "catalogUpdated": "2026-11-15T19:44:10Z" }
+```
+
+- Each item has the manifest's fields (`id`, `name`, `version`, `summary`, `description`,
+  `permissions`, `settings`...), plus `installed` and `available` (the catalog's version),
+  `update`, `supported` (it runs on this console's `platform`), `enabled`, `status` and `values`
+  (the settings in use, for installed extensions).
+- `status.state` is `running`, `stopped` or `restarting` (it stopped on its own and starts again
+  shortly); `error` says why it last stopped.
+- `catalogError` says why the catalog couldn't be fetched; the last copy is used meanwhile.
+
+### `POST /extensions/{id}/install`
+
+Installs the catalog's version, or updates to it, keeping the settings. A new extension starts
+enabled. Answers like `GET /extensions`. `404` when it isn't in the catalog, `409` when it doesn't
+run on this console, `502` when the catalog can't be fetched.
+
+### `PUT /extensions/{id}/enabled`
+
+`{"enabled": false}` stops it, and keeps it stopped across restarts; `true` starts it.
+
+### `PUT /extensions/{id}/settings`
+
+`{"values": {"name": "Living room"}}` saves the values (checked against each setting's control) and
+restarts the extension to apply them. `400` for an unknown setting or an invalid value.
+
+### `POST /extensions/{id}/restart` and `DELETE /extensions/{id}`
+
+Restarts it; or stops it and deletes it, with its settings and data.
+
+### `GET /extensions/{id}/log`
+
+Its output, like `GET /logs`: `?tail=200`.
 
 ## Batocera settings
 

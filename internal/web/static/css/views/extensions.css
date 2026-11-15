@@ -1,0 +1,34 @@
+/* Extensions view
+   Installed and catalog cards, and the settings form. The On/Off switch
+   (.seg) and the slider (.bc-range) are in components.css. */
+
+.ext-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 14px; }
+.ext-card {
+  display: grid; gap: 10px; align-content: start; padding: 16px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+}
+.ext-card p { margin: 0; }
+.ext-head { display: flex; align-items: center; gap: 12px; }
+.ext-icon {
+  display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 11px;
+  background: var(--grad); color: #fff; font: 800 15px/1 var(--font-display); letter-spacing: .02em;
+}
+.ext-title { display: grid; flex: 1; min-width: 0; }
+.ext-title b { overflow-wrap: anywhere; }
+
+/* Status, with a dot in the state's color */
+.ext-status { display: flex; align-items: baseline; gap: 8px; color: var(--ink-2); font-size: 13px; }
+.ext-status i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ink-2); transform: translateY(-1px); }
+.ext-status[data-state="running"] i { background: var(--ok); }
+.ext-status[data-state="restarting"] i { background: var(--signal); }
+.ext-status[data-state="restarting"] { color: var(--signal); }
+
+/* Permissions, shown before installing */
+.ext-perms { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ext-perms li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); font-size: 12px; }
+
+/* Settings form, in a modal */
+.ext-form { display: grid; gap: 18px; }
+.ext-field { display: grid; gap: 8px; }
+.ext-field label { display: grid; gap: 2px; }
+.ext-field .seg { justify-self: start; }

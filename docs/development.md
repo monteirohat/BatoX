@@ -35,6 +35,8 @@ In dev mode:
 - EmulationStation actions, reboot and shutdown are only logged;
 - the Video screen lists two pretend screens, `HDMI-A-1` and `HDMI-A-2`, without models or state;
 - the Audio screen lists a pretend headphone jack and two HDMI outputs; switching is only logged;
+- extensions are real: installing one downloads it to `./dev/extensions` and runs it, so set
+  `extensionsCatalogUrl` to a test catalog (or `""`) if you don't want that;
 - `batocera.conf` changes are written straight to `./dev/batocera.conf`;
 - without `./dev/es_systems.cfg`, a built-in list of common systems is used. Copy the file from a
   console (`/usr/share/emulationstation/es_systems.cfg`) to test with the real list.
@@ -69,6 +71,7 @@ internal/
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys
   esapi/                  client for EmulationStation's web API (port 1234)
+  extensions/             extensions: catalog, safe installs and updates, process supervisor
   nowplaying/             follows the running game and when it started
   onscreen/               queue of message cards drawn on top of the screen (BatoX Apps)
   playtimer/              play-time timer: countdown on the screen, then close the game or power off
@@ -145,6 +148,19 @@ docs/                     documentation and images
   EmulationStation's `es_features.cfg` says about the shared emulator options, for `global.*`,
   per-system and per-game keys, and fills the lists of shader sets, decorations and time zones
   from the console. Copy `es_features.cfg` to `./dev` to see its names and choices in dev mode.
+- **Extensions.** `internal/extensions` follows the format of
+  [batox-extensions](https://github.com/monteirohat/batox-extensions/blob/main/docs/manifest.md):
+  - the catalog is trusted only for packages on its own host, with a SHA-256 and a size; a package
+    is downloaded to a temporary folder, checked, and unpacked accepting only folders and regular
+    files inside it (no links, devices or `..`), with exact modes whatever the umask (Batocera's is
+    077); `<id>/current` is then switched to it with one rename;
+  - each extension runs in a process group of its own, so stopping it (`SIGTERM`, then `SIGKILL`)
+    also stops what it started; one that stops on its own starts again after 1, 2, 4... seconds,
+    up to a minute;
+  - its environment drops BatoX's own `BATOX_*` variables (`BATOX_TOKEN` among them) and adds the
+    `BATOX_EXTENSION_*` and `BATOX_SETTING_*` ones;
+  - its pid is kept in `data/pid`, so a copy left running by a BatoX that didn't stop it (a crash)
+    is stopped before a new one starts.
 - **Logging.** `info.log` records changes and failures; successful reads are skipped so the
   dashboard's periodic refresh doesn't flood it. Files rotate at 5 MB.
 
