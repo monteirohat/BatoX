@@ -661,7 +661,7 @@ otherwise reused for 10 minutes).
       "installed": "1.0.0", "available": "1.1.0", "update": true, "supported": true, "enabled": true,
       "status": { "state": "running", "pid": 2310, "since": "2026-11-15T20:00:24Z", "restarts": 0 },
       "values": { "name": "Batocera" } } ],
-  "catalogUpdated": "2026-11-15T19:44:10Z" }
+  "catalogState": "ok", "catalogUpdated": "2026-11-15T19:44:10Z" }
 ```
 
 - Each item has the manifest's fields (`id`, `name`, `version`, `summary`, `description`,
@@ -670,7 +670,9 @@ otherwise reused for 10 minutes).
   (the settings in use, for installed extensions).
 - `status.state` is `running`, `stopped` or `restarting` (it stopped on its own and starts again
   shortly); `error` says why it last stopped.
-- `catalogError` says why the catalog couldn't be fetched; the last copy is used meanwhile.
+- `catalogState` is `ok`, `unpublished` (the catalog's address answers 404: nothing has been
+  released yet) or `unreachable` (offline, or the server failed); `catalogError` gives the details.
+  Meanwhile, the last copy of the catalog is used.
 
 ### `POST /extensions/{id}/install`
 

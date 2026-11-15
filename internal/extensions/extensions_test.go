@@ -445,6 +445,29 @@ func TestCatalogFallsBackToTheLastCopy(t *testing.T) {
 	}
 }
 
+func TestCatalogStates(t *testing.T) {
+	missing := httptest.NewServer(http.NotFoundHandler())
+	t.Cleanup(missing.Close)
+	l := New(t.TempDir(), missing.URL+"/catalog.json", testLog(t)).List(context.Background(), true)
+	if l.CatalogState != CatalogUnpublished || l.CatalogError == "" {
+		t.Errorf("404: state %q, error %q", l.CatalogState, l.CatalogError)
+	}
+
+	failing := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		http.Error(w, "boom", http.StatusInternalServerError)
+	}))
+	t.Cleanup(failing.Close)
+	if l := New(t.TempDir(), failing.URL+"/catalog.json", testLog(t)).List(context.Background(), true); l.CatalogState != CatalogUnreachable {
+		t.Errorf("500: state %q", l.CatalogState)
+	}
+
+	cat := newFakeCatalog(t)
+	cat.publish("1.0.0", false)
+	if l := New(t.TempDir(), cat.srv.URL+"/catalog.json", testLog(t)).List(context.Background(), true); l.CatalogState != CatalogOK || l.CatalogError != "" {
+		t.Errorf("ok: state %q, error %q", l.CatalogState, l.CatalogError)
+	}
+}
+
 func TestLogWriterRotates(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "log")
 	w := &logWriter{path: path, max: 10}

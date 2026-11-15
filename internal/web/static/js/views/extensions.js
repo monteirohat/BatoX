@@ -128,8 +128,13 @@ function draw() {
   if (!body) return;
   const installed = data.items.filter(x => x.installed);
   const available = data.items.filter(x => !x.installed);
+  const unreachable = data.catalogState === "unreachable";
+  const empty = {
+    unpublished: "No extensions have been published yet.",
+    unreachable: "The catalog isn't available right now.",
+  }[data.catalogState] || "Every extension in the catalog is installed.";
   body.innerHTML = `
-    ${data.catalogError ? `<div class="notice"><b>Couldn't reach the catalog</b>${esc(data.catalogError)}${installed.length ? " Installed extensions keep working." : ""}</div>` : ""}
+    ${unreachable ? `<div class="notice info"><b>Couldn't reach the catalog</b>Check that the console is connected to the internet.${installed.length ? " Installed extensions keep working." : ""}<span class="ext-detail">${esc(data.catalogError)}</span></div>` : ""}
     <section class="panel">
       <header><div><h2>Installed</h2><p>When on, they start with the console.</p></div></header>
       ${installed.length ? `<div class="ext-list">${installed.map(installedCard).join("")}</div>`
@@ -138,7 +143,7 @@ function draw() {
     <section class="panel">
       <header><div><h2>Catalog</h2><p>Official extensions, from <a href="https://github.com/monteirohat/batox-extensions" target="_blank" rel="noopener">batox-extensions</a>.</p></div></header>
       ${available.length ? `<div class="ext-list">${available.map(catalogCard).join("")}</div>`
-        : `<p class="muted">${data.catalogError ? "The catalog isn't available right now." : "Every extension in the catalog is installed."}</p>`}
+        : `<p class="muted">${esc(empty)}</p>`}
     </section>`;
 
   $$("[data-act]", body).forEach(b => b.onclick = () => {

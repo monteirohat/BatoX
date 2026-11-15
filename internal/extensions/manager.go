@@ -23,6 +23,16 @@ var (
 	ErrNotInCatalog       = errors.New("extension not in the catalog")
 	ErrUnsupported        = errors.New("extension not available for this console")
 	ErrCatalogUnavailable = errors.New("couldn't fetch the extensions catalog")
+	// ErrCatalogUnpublished means the catalog's address answers 404: nothing
+	// has been released yet. It comes wrapped in ErrCatalogUnavailable.
+	ErrCatalogUnpublished = errors.New("the catalog hasn't been published yet")
+)
+
+// Catalog states in List.
+const (
+	CatalogOK          = "ok"
+	CatalogUnpublished = "unpublished" // nothing released yet
+	CatalogUnreachable = "unreachable" // offline, or the server failed
 )
 
 // Manager installs extensions from the catalog and keeps the enabled ones
@@ -388,16 +398,20 @@ type Item struct {
 type List struct {
 	Platform     string `json:"platform"`
 	Items        []Item `json:"items"`
-	CatalogError string `json:"catalogError,omitempty"`
+	CatalogState string `json:"catalogState"`           // CatalogOK, CatalogUnpublished or CatalogUnreachable
+	CatalogError string `json:"catalogError,omitempty"` // the details, when not ok
 	CatalogDate  string `json:"catalogUpdated,omitempty"`
 }
 
 // List returns the installed extensions and the catalog's, installed first.
 func (m *Manager) List(ctx context.Context, refresh bool) List {
-	out := List{Platform: m.platform, Items: []Item{}}
+	out := List{Platform: m.platform, Items: []Item{}, CatalogState: CatalogOK}
 	cat, err := m.Catalog(ctx, refresh)
-	if err != nil {
-		out.CatalogError = err.Error()
+	switch {
+	case errors.Is(err, ErrCatalogUnpublished):
+		out.CatalogState, out.CatalogError = CatalogUnpublished, err.Error()
+	case err != nil:
+		out.CatalogState, out.CatalogError = CatalogUnreachable, err.Error()
 	}
 	if cat != nil {
 		out.CatalogDate = cat.Updated

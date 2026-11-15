@@ -44,7 +44,7 @@ func (m *Manager) Catalog(ctx context.Context, refresh bool) (*Catalog, error) {
 	if cached == nil {
 		cached = m.savedCatalog()
 	}
-	return cached, fmt.Errorf("%w: %v", ErrCatalogUnavailable, err)
+	return cached, fmt.Errorf("%w: %w", ErrCatalogUnavailable, err)
 }
 
 func (m *Manager) fetchCatalog(ctx context.Context) (*Catalog, error) {
@@ -62,6 +62,9 @@ func (m *Manager) fetchCatalog(ctx context.Context) (*Catalog, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, fmt.Errorf("%w (%s answered %s)", ErrCatalogUnpublished, m.catalogURL, resp.Status)
+	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("%s answered %s", m.catalogURL, resp.Status)
 	}

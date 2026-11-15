@@ -27,6 +27,9 @@
 .ext-perms { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .ext-perms li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); font-size: 12px; }
 
+/* The technical reason under a notice */
+.ext-detail { display: block; margin-top: 6px; color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
+
 /* Settings form, in a modal */
 .ext-form { display: grid; gap: 18px; }
 .ext-field { display: grid; gap: 8px; }
