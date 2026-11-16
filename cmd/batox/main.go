@@ -17,6 +17,7 @@ import (
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/extensions"
+	"github.com/monteirohat/batox/internal/library"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
 	"github.com/monteirohat/batox/internal/nowplaying"
@@ -124,6 +125,8 @@ func run(cfgPath string) error {
 	deps.Extensions = extensions.New(cfg.ExtensionsDir, cfg.ExtensionsCatalogURL, logger)
 	deps.Extensions.Start()
 	defer deps.Extensions.StopAll()
+	// The user's own game library, at the address they choose.
+	deps.Library = library.New(cfg.DataDir, reg, romSvc, plat.ES, cfg.MaxUploadMB<<20, logger)
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{
@@ -140,6 +143,8 @@ func run(cfgPath string) error {
 	if deps.NowPlaying != nil {
 		go deps.NowPlaying.Run(ctx)
 	}
+	// Game details EmulationStation couldn't take during a game.
+	go deps.Library.Run(ctx)
 
 	if cfg.SyncOnStart {
 		go func() {

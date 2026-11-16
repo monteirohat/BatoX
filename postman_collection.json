@@ -324,6 +324,26 @@
           }
         },
         {
+          "name": "Download a game's file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roms/{{romId}}/file",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roms",
+                "{{romId}}",
+                "file"
+              ]
+            }
+          }
+        },
+        {
           "name": "Play a game on the console",
           "request": {
             "method": "POST",
@@ -1355,6 +1375,162 @@
                 "extensions",
                 "airplay"
               ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Library",
+      "item": [
+        {
+          "name": "Games in the library",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Read library.json again",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library?refresh=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library"
+              ],
+              "query": [
+                {
+                  "key": "refresh",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "A game's cover",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library/cover?file=snes/Super Game (USA).sfc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library",
+                "cover"
+              ],
+              "query": [
+                {
+                  "key": "file",
+                  "value": "snes/Super Game (USA).sfc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set the address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library/source",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library",
+                "source"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"url\": \"https://raw.githubusercontent.com/USER/REPO/main/library.json\"}"
+            }
+          }
+        },
+        {
+          "name": "Forget the address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library/source",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library",
+                "source"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"url\": \"\"}"
+            }
+          }
+        },
+        {
+          "name": "Download a game",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/library/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "library",
+                "download"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"file\": \"snes/Super Game (USA).sfc\", \"overwrite\": false}"
             }
           }
         }

@@ -46,6 +46,10 @@ clicks, no terminal needed.
 - **Play on the console** from the games list, switching from the game being played when needed.
 - **Consoles**: every system Batocera can emulate, with the theme's logo, manufacturer, release
   year, type and the games you have, filtered by type and searchable.
+- **Library**: download games from your own library, at an address only you know (a GitHub
+  repository, a NAS or a web server): browse them with their covers, pick some, and they land on
+  the console with their cover and details. See [how to make a library](docs/library.md): scripts
+  find covers and details for your ROMs, or copy a console's games into one.
 - **Game uploads** of many files at once, with progress bars. Accepted extensions come straight
   from Batocera's own `es_systems.cfg`, so BatoX accepts exactly what EmulationStation can list.
 - **Background music** for EmulationStation: upload to the main folder or to a per-system folder,
@@ -153,6 +157,7 @@ troubleshooting.
 | [Installation](docs/installation.md) | SSH access, installing, upgrading (including from MyMine), uninstalling, troubleshooting |
 | [Configuration](docs/configuration.md) | `config.json` options, environment variables, file locations |
 | [API reference](docs/api.md) | Authentication, error format and every endpoint |
+| [Game library](docs/library.md) | How to lay out and index your own library for the Library screen |
 | [Development](docs/development.md) | Project layout, dev mode, tests, frontend architecture, releases |
 
 A [Postman collection](postman_collection.json) with every endpoint is included.

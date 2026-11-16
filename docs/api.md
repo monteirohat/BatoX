@@ -11,6 +11,7 @@ set the `baseUrl` and `token` variables.
 - [Service and device](#service-and-device)
 - [Systems and games](#systems-and-games)
 - [Consoles](#consoles)
+- [Library](#library)
 - [Music](#music)
 - [Now playing](#now-playing)
 - [Messages](#messages)
@@ -220,6 +221,18 @@ Media kinds: `boxart`, `thumbnail`, `image`, `mix`, `titleshot`, `marquee`, `whe
 Downloads one media file of a game (supports HTTP range requests, so videos can be streamed).
 Only files inside `romsDir` are served; paths in `gamelist.xml` pointing elsewhere return `404`.
 
+### `GET /roms/{id}/file`
+
+Downloads the game's file itself, as an attachment with its file name (supports HTTP range
+requests). Its SHA-1 is the game's `id`, so a copy can be checked. `404` if the game is unknown, if
+its file is no longer on the console (sync the games) or is outside `romsDir`.
+[`scripts/export-library.py`](library.md#making-a-library-from-a-console) uses it to copy a
+console's games into a library.
+
+```bash
+curl -OJ -H "Authorization: Bearer $TOKEN" "http://batocera.local:8080/api/v1/roms/2f1d0c8e9a.../file"
+```
+
 ### `POST /roms/{id}/launch`
 
 Opens the game on the console screen, on top of whatever is shown. EmulationStation answers before
@@ -289,6 +302,64 @@ Reconciles the catalog with the disk, including subfolders (media folders such a
   "durationMs": 1830
 }
 ```
+
+## Library
+
+Games from the user's own library: a folder with a `library.json` index at an address the user
+sets ([format](library.md)). BatoX has no library or address of its own.
+
+### `GET /library`
+
+The library's games and their status on the console. `?refresh=true` reads `library.json` again
+(it is otherwise reused for 5 minutes).
+
+```json
+{ "source": "https://raw.githubusercontent.com/user/repo/main/library.json", "name": "My games",
+  "games": [
+    { "system": "snes", "systemName": "Super Nintendo Entertainment System", "name": "Super Game",
+      "file": "snes/Super Game (USA).sfc", "size": 524288, "sha256": "...",
+      "image": "snes/images/Super Game (USA)-image.png", "coverUrl": "https://raw.githubusercontent.com/.../Super%20Game%20(USA)-image.png",
+      "year": "1993", "genre": "Platform", "status": "available" } ],
+  "skipped": 0, "pending": 0 }
+```
+
+- `status`: `available`, `installed` (a file with that name and size is in the system's folder),
+  `conflict` (a different file with that name is there) or `unsupported` (the console has no such
+  system, or the system doesn't accept the file's extension).
+- `skipped`: entries of `library.json` left out because they are invalid (a path outside the
+  library, a malformed checksum...). `pending`: downloaded games whose details wait for
+  EmulationStation (see below). `error`: why the library couldn't be read; the last copy is shown.
+- `coverUrl`: the cover at the library's host. The web app shows covers through
+  `GET /library/cover` instead, so the browser never needs to reach that host.
+
+### `GET /library/cover`
+
+`?file=snes/Super Game (USA).sfc` (a game's `file`): its cover, read by BatoX from the library's
+host. Only PNG and JPEG content is returned (`502` otherwise, or when the host can't be reached);
+`404` if the game isn't in the library or has no cover.
+
+### `PUT /library/source`
+
+`{"url": "https://.../library.json"}` reads the library there and keeps the address (`http` or
+`https`). `{"url": ""}` forgets it. Answers like `GET /library`. `400` for an invalid address or
+library, `502` when it can't be reached.
+
+### `POST /library/download`
+
+`{"file": "snes/Super Game (USA).sfc", "overwrite": false}` downloads one game: the ROM, checked
+against the library's size and SHA-256 before it takes its name, into the system's folder and the
+catalog; its cover, to `images/`; and its details, to EmulationStation.
+
+```json
+{ "status": "installed", "rom": { "id": "...", "system": "snes", "path": "/userdata/roms/snes/Super Game (USA).sfc" },
+  "cover": true, "pending": false }
+```
+
+`pending` is `true` when a game was being played: EmulationStation doesn't take new games then, so
+their details wait in a queue, kept across restarts, and are sent once it is idle. `warning` says
+what failed besides the ROM. `404` for a game not in the library, `409` for an unsupported game, a
+file with the same name (use `"overwrite": true`) or the same content already on the console,
+`502` when the download fails or doesn't match the library.
 
 ## Consoles
 

@@ -2,7 +2,10 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/fs"
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -128,6 +131,50 @@ func (s *Server) gameMedia(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Cache-Control", "private, max-age=300")
+	http.ServeContent(w, r, filepath.Base(p), st.ModTime(), f)
+}
+
+// romFile: GET /roms/{id}/file -> the game's file itself, to keep a copy of it
+// (scripts/export-library.py makes a library of a console's games this way).
+func (s *Server) romFile(w http.ResponseWriter, r *http.Request) {
+	rom, err := s.DB.GetRom(chi.URLParam(r, "id"))
+	if err != nil {
+		s.internalError(w, err)
+		return
+	}
+	if rom == nil {
+		writeError(w, http.StatusNotFound, roms.ErrNotFound.Error())
+		return
+	}
+	// The catalog only holds files found in the ROM folder, but its paths are
+	// checked again rather than trusted.
+	p, err := filepath.Abs(rom.Path)
+	base, berr := filepath.Abs(s.Config.RomsDir)
+	if err != nil || berr != nil || !strings.HasPrefix(p, base+string(os.PathSeparator)) {
+		writeError(w, http.StatusNotFound, "the game's file is outside the ROM folder")
+		return
+	}
+	f, err := os.Open(p)
+	if errors.Is(err, fs.ErrNotExist) {
+		writeError(w, http.StatusNotFound, "the game's file is no longer on the console: sync the games")
+		return
+	}
+	if err != nil {
+		s.internalError(w, err)
+		return
+	}
+	defer f.Close()
+	st, err := f.Stat()
+	if err != nil {
+		s.internalError(w, err)
+		return
+	}
+	if !st.Mode().IsRegular() {
+		writeError(w, http.StatusNotFound, "the game is not a single file")
+		return
+	}
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": filepath.Base(p)}))
 	http.ServeContent(w, r, filepath.Base(p), st.ModTime(), f)
 }
 

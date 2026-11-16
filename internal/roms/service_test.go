@@ -142,3 +142,25 @@ func TestDeleteUnknownROM(t *testing.T) {
 		t.Errorf("got %v, want ErrNotFound", err)
 	}
 }
+
+func TestUploadCheckThrowsTheFileAway(t *testing.T) {
+	f := newFixture(t, nil)
+	dir := filepath.Dir(f.file)
+	_, err := f.svc.Upload(UploadInput{System: "gba", Check: func() error { return io.ErrUnexpectedEOF }},
+		"Bad.gba", strings.NewReader("not what was expected"))
+	if err != io.ErrUnexpectedEOF {
+		t.Fatalf("got %v, want the check's error", err)
+	}
+	entries, _ := os.ReadDir(dir)
+	for _, e := range entries {
+		if e.Name() != "Golden Sun.gba" {
+			t.Errorf("left behind: %s", e.Name())
+		}
+	}
+
+	rom, err := f.svc.Upload(UploadInput{System: "gba", Check: func() error { return nil }},
+		"Good.gba", strings.NewReader("a good rom"))
+	if err != nil || rom == nil || rom.Name != "Good.gba" {
+		t.Fatalf("a passing check: %v %+v", err, rom)
+	}
+}

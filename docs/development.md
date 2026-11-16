@@ -78,6 +78,7 @@ internal/
   essettings/             es_settings.cfg reader and writer
   fsutil/                 safe file names, hashing, safe unzip
   gamelist/               reader for EmulationStation's gamelist.xml (scraped metadata)
+  library/                the user's own game library: library.json, checked downloads, details queue
   logx/                   rotating JSON logs
   music/                  background music folder
   platform/               OS-specific actions: Batocera vs. dev
@@ -88,6 +89,9 @@ internal/
 scripts/
   batox                   Batocera service script
   deploy.sh               SSH deploy, migration, logs, token
+  make-library.py         writes library.json for a game library (docs/library.md)
+  scrape-library.py       finds covers and details for a library's ROMs in libretro's databases
+  export-library.py       copies a console's games into a library, through the API
 docs/                     documentation and images
 ```
 
@@ -148,6 +152,14 @@ docs/                     documentation and images
   EmulationStation's `es_features.cfg` says about the shared emulator options, for `global.*`,
   per-system and per-game keys, and fills the lists of shader sets, decorations and time zones
   from the console. Copy `es_features.cfg` to `./dev` to see its names and choices in dev mode.
+- **Library.** `internal/library` reads the user's `library.json` (only from the address they set)
+  and downloads a game through `roms.Service.Upload`, whose `Check` hook verifies the size and
+  SHA-256 before the file takes its name, so a bad download never shows up in the ROM folder. The
+  cover is saved as `images/<ROM name>-image.<ext>`, the name Batocera's scraper uses, and the
+  details go to EmulationStation through `/addgames`, so EmulationStation itself writes its
+  `gamelist.xml`. While a game is being played, EmulationStation answers `/addgames` with 204 and
+  adds nothing, so BatoX asks `/isIdle` first and keeps the details in `library-pending.json`,
+  retried every 15 seconds once it is idle.
 - **Extensions.** `internal/extensions` follows the format of
   [batox-extensions](https://github.com/monteirohat/batox-extensions/blob/main/docs/manifest.md):
   - the catalog is trusted only for packages on its own host, with a SHA-256 and a size; a package

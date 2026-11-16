@@ -1,0 +1,42 @@
+/* Library view
+   The library's address, filters, and a grid of game cards with their covers. */
+
+.lib-source { display: flex; flex-wrap: wrap; gap: 8px; }
+.lib-source input { flex: 1 1 320px; min-width: 0; }
+#lib-forget[hidden] { display: none; } /* .btn sets a display */
+
+.lib-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+
+.lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 12px; }
+.lib-card {
+  display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 10px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+}
+.lib-card[data-status="unsupported"] { opacity: .6; }
+
+/* The cover, or the system's name when there is none */
+.lib-cover {
+  position: relative; display: grid; place-items: center; aspect-ratio: 3 / 4; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-s);
+}
+.lib-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lib-cover span { color: var(--ink-2); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+/* Green check on the cover of a game that is on the console */
+.lib-badge {
+  position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 22px; height: 22px;
+  color: var(--ok-soft); background: var(--ok); border-radius: 50%; box-shadow: 0 1px 3px rgb(0 0 0 / .5);
+}
+.lib-badge svg { width: 14px; height: 14px; }
+.lib-state svg { width: 16px; height: 16px; flex: none; }
+
+.lib-info { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.lib-pick { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+.lib-pick input { flex: none; width: 17px; height: 17px; margin-top: 2px; accent-color: var(--brand); }
+.lib-pick b { overflow-wrap: anywhere; }
+.lib-file { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-desc { margin: 2px 0 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lib-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.lib-state { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-size: 13px; }
+.lib-state[data-ok="true"] { color: var(--ok); }
+.lib-state[data-warn="true"] { color: var(--signal); }
+.lib-more { display: flex; justify-content: center; margin-top: 14px; }

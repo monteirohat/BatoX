@@ -66,6 +66,10 @@ type UploadInput struct {
 	System    string
 	Language  string
 	Overwrite bool
+	// Check, when set, runs once the content is written and before the file
+	// takes its name; an error throws the file away. Downloads use it to
+	// check the size and checksum they expect.
+	Check func() error
 }
 
 // Upload writes the content straight into the system folder (as a hidden
@@ -109,6 +113,11 @@ func (s *Service) Upload(in UploadInput, filename string, body io.Reader) (*db.R
 	}
 	if size == 0 {
 		return nil, ErrEmptyFile
+	}
+	if in.Check != nil {
+		if err := in.Check(); err != nil {
+			return nil, err
+		}
 	}
 	id := hex.EncodeToString(h.Sum(nil))
 

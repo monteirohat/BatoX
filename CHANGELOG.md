@@ -6,6 +6,30 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Library screen: download games from your own library, a folder with a `library.json` index at
+  an address you choose (a GitHub repository, a NAS or a web server); BatoX has no library or
+  address of its own. Games are listed by name with their covers and file names, filtered by
+  system, with search and their status on the console (a green check for those already there).
+  Covers are read through BatoX, so the browser never needs to reach the library's host. Selected
+  games are downloaded one at a time, checked against the library's size and SHA-256, and land in
+  their system's folder with their cover and details in EmulationStation. While a game is being
+  played, their details wait in a queue until it ends. `GET /api/v1/library`,
+  `GET /api/v1/library/cover`, `PUT /api/v1/library/source` and `POST /api/v1/library/download`
+  endpoints. `scripts/make-library.py` writes `library.json` for a folder, and
+  [docs/library.md](docs/library.md) describes the format.
+- `scripts/scrape-library.py` finds covers and details (name, developer, publisher, year, genre,
+  players) for a library's ROMs in libretro's public databases, recognizing each ROM by its CRC32
+  or else by its name, and keeps the details already in `gamelist.xml`. SNES, Satellaview and
+  Sufami Turbo for now.
+  `make-library.py` leaves out the saves, notes and pictures next to the games.
+- `scripts/export-library.py` copies a console's games into a library, with their covers and
+  scraped details, through BatoX's API, checking every file; it lists the systems first and can
+  copy a few games of each, or leave out large ones.
+- `GET /api/v1/roms/{id}/file` endpoint: downloads a game's file.
+- Uploads can be checked before the file takes its name (used by the Library to check downloads).
+
 ## [1.6.0] - 2026-11-15
 
 ### Added

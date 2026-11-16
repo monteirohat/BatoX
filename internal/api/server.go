@@ -15,6 +15,7 @@ import (
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/extensions"
+	"github.com/monteirohat/batox/internal/library"
 	"github.com/monteirohat/batox/internal/logx"
 	"github.com/monteirohat/batox/internal/music"
 	"github.com/monteirohat/batox/internal/nowplaying"
@@ -51,6 +52,9 @@ type Deps struct {
 	Features *batoconf.Features
 	// Extensions installs and runs extensions; nil turns the routes off.
 	Extensions *extensions.Manager
+	// Library downloads games from the user's own library; nil turns the
+	// routes off.
+	Library *library.Service
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -116,8 +120,15 @@ func (s *Server) routes() chi.Router {
 			r.Get("/roms/{id}", s.getRom)
 			r.Get("/roms/{id}/details", s.gameDetails)
 			r.Get("/roms/{id}/media/{kind}", s.gameMedia)
+			r.Get("/roms/{id}/file", s.romFile)
 			r.Post("/roms/{id}/launch", s.launchGame)
 			r.Delete("/roms/{id}", s.deleteRom)
+
+			// The user's own game library (docs/library.md)
+			r.Get("/library", s.libraryView)
+			r.Get("/library/cover", s.libraryCover)
+			r.Put("/library/source", s.setLibrarySource)
+			r.Post("/library/download", s.downloadFromLibrary)
 
 			// Background music
 			r.Get("/music", s.listMusic)
