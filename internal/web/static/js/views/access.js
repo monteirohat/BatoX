@@ -8,7 +8,7 @@ import { state, DEFAULT_BASE } from "../state.js";
 export async function render(page) {
   page.innerHTML = `
     <div class="access-hero">
-      <img src="img/logo.svg" width="148" height="148" alt="BatoX">
+      <img src="img/logo.svg" width="200" height="80" alt="BatoX">
       <div><h1>API access</h1><p class="muted">Manage the games, music, themes and settings of your Batocera over the network. The address and token are saved in this browser only.</p></div>
     </div>
     <div class="stack">

@@ -49,7 +49,6 @@ async function refresh() {
 
   body.innerHTML = `
     <section class="plate" aria-label="Console">
-      <div class="plate-dots" aria-hidden="true"><i></i><i></i><i></i></div>
       <div>
         <p class="plate-host">${esc(dev.hostname || "batocera")}</p>
         <h1 class="plate-model">${esc(dev.model || "Batocera console")}</h1>

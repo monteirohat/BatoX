@@ -8,8 +8,8 @@
   padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px;
 }
 .track:first-child { border-top: 0; }
-.track-name { font-weight: 600; overflow-wrap: anywhere; }
-.track[data-playing="true"] .track-name { color: var(--brand-text); }
+.track-name { overflow-wrap: anywhere; }
+.track[data-playing="true"] .track-name { font-weight: 600; }
 .play-btn { width: 36px; min-height: 36px; padding: 0; }
 .play-btn:disabled { visibility: hidden; }
-.track[data-playing="true"] .play-btn { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.track[data-playing="true"] .play-btn { background: var(--selected); border-color: var(--frame); box-shadow: inset 0 0 0 1px var(--frame); }

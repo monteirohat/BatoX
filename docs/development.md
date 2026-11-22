@@ -183,9 +183,11 @@ The web app lives in `internal/web/static/`:
 ```
 index.html              page shell and navigation
 favicon.svg
-img/                    logo, monogram and wordmark (dark-background variants)
+img/                    wordmark and logo (the name in a pink script), the placeholder for a
+                        missing cover, and the sunset pictures (page backdrop, dashboard plate)
+fonts/                  Inter in three weights (SIL Open Font License), served by BatoX itself
 css/
-  base.css              dark theme tokens (from the logo), typography, reset
+  base.css              tokens of the look, typography, reset
   layout.css            navigation and main area
   components.css        buttons, forms, tabs, notices, logs, dialog, toasts
   components/           styles for JS components (upload queue, modal)
@@ -200,6 +202,16 @@ js/
   views/                one module per view; each exports render(page)
                         (game-details.js is the modal opened from the games view)
 ```
+
+### The look
+
+The look is the one of [batox-theme](https://github.com/monteirohat/batox-theme), the
+EmulationStation theme, so the console and its web page read as one piece: flat dark indigo
+surfaces over a sunset picture, white type, square corners, no shadows. A surface at rest is
+translucent (`--surface`); what is selected is the lighter surface in a white frame (`--selected`
+with `--frame-on`), never the accent color. Labels are small capitals over their values, and
+titles and large figures are Inter Light. Views name tokens from `base.css` instead of writing
+colors.
 
 ### Adding a view
 

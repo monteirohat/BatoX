@@ -1,6 +1,7 @@
 // Consoles view: every system Batocera can emulate, with what es_systems.cfg
 // says about it (manufacturer, release year, type), the games BatoX knows and,
-// when EmulationStation is running, its statistics and the theme's logo.
+// when EmulationStation is running, its statistics. Each has its logo: the
+// current theme's, or else the one of Batocera's default theme.
 
 import { esc, plural } from "../format.js";
 import { $, $$, errorBox } from "../ui.js";
@@ -28,6 +29,13 @@ const SORTS = [
 
 // Kept while the page is open.
 const view = { search: "", type: "", withGames: true, sort: "name" };
+// Logos are drawn in white, as on batox-theme's home. In Batocera's default theme
+// these come on a dark or a gray plate, which is cut off first (the theme's
+// logoCutDark and logoCutGray lists).
+const CUT_DARK = new Set("megadrive megadrive-japan gba msx msx1 msx2 msx2+ msxturbor msxlaserdisk pygame 3do atarilynx dragon32 dynax enterprise epic fallout1-ce gx4000 gzdoom lowresnx vis coleco lcdgames".split(" "));
+const CUT_GRAY = new Set("c64 c16 c20 c128 plus4 cplus4 atari gong kaneko msu-md neogeomvs segacd snesh trs-80 arduboy nintendo auto-strategy".split(" "));
+const cut = name => CUT_DARK.has(name) ? "dark" : CUT_GRAY.has(name) ? "gray" : "";
+
 const logos = new Map(); // system name -> object URL ("" when there is none)
 let data = null;
 
@@ -106,7 +114,7 @@ function draw() {
   body.innerHTML = `
     <p class="muted small consoles-summary">
       ${plural(withGames, "console", "consoles")} with games, out of ${all.length} that Batocera can emulate.
-      ${data.emulationStation ? "" : "Start EmulationStation to see logos and play statistics."}
+      ${data.emulationStation ? "" : "Start EmulationStation to see play statistics."}
     </p>
     ${list.length ? `<div class="console-grid">${list.map(card).join("")}</div>`
       : `<div class="empty"><p>No console matches.</p>${view.withGames ? `<p class="muted small">Untick "Only consoles with games" to see every system.</p>` : ""}</div>`}`;
@@ -118,7 +126,7 @@ function draw() {
 function card(c) {
   return `
     <button class="console-card${c.games ? "" : " console-empty"}" data-name="${esc(c.name)}" aria-label="${esc(c.fullName)}: ${plural(c.games, "game", "games")}">
-      <span class="console-logo" data-logo="${c.hasLogo ? esc(c.name) : ""}">
+      <span class="console-logo" data-logo="${c.hasLogo ? esc(c.name) : ""}" data-cut="${cut(c.theme || c.name)}">
         <span class="console-logo-text">${esc(c.fullName)}</span>
       </span>
       <span class="console-name">${esc(c.fullName)}</span>
@@ -179,7 +187,7 @@ function showDetails(c) {
     title: c.fullName,
     body: `
       <div class="console-detail">
-        <div class="console-detail-logo">${logo ? `<img src="${logo}" alt="">` : `<span class="console-logo-text">${esc(c.fullName)}</span>`}</div>
+        <div class="console-detail-logo" data-cut="${cut(c.theme || c.name)}">${logo ? `<img src="${logo}" alt="">` : `<span class="console-logo-text">${esc(c.fullName)}</span>`}</div>
         <dl class="kv">
           <dt>Short name</dt><dd><code>${esc(c.name)}</code></dd>
           ${c.manufacturer ? `<dt>Manufacturer</dt><dd>${esc(c.manufacturer)}</dd>` : ""}

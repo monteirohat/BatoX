@@ -7,18 +7,17 @@
   padding: 0; border: 0; background: transparent; color: var(--ink);
 }
 .modal-wide { max-width: min(980px, calc(100vw - 24px)); }
-.modal::backdrop { background: rgba(5, 8, 18, .72); backdrop-filter: blur(2px); }
+.modal::backdrop { background: var(--page); }
 .modal-frame {
   display: flex; flex-direction: column; max-height: calc(100vh - 32px);
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .5); overflow: hidden;
+  background: var(--surface-solid); overflow: hidden;
 }
 .modal[open] .modal-frame { animation: modal-in .18s ease-out; }
 @keyframes modal-in { from { transform: translateY(12px) scale(.985); opacity: 0; } }
 .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px 14px 22px; border-bottom: 1px solid var(--line); }
 .modal-head h2 { margin: 0; overflow-wrap: anywhere; }
 .modal-body { padding: 22px; overflow: auto; }
-.modal-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 14px 22px; border-top: 1px solid var(--line); background: var(--surface-2); }
+.modal-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 14px 22px; border-top: 1px solid var(--line); }
 
 @media (max-width: 760px) {
   .modal { max-width: 100vw; margin: auto 0 0; }

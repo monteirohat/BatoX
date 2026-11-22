@@ -5,33 +5,37 @@
 .consoles-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin: 4px 0 18px; }
 .consoles-summary { margin: 0 0 14px; }
 
-.console-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.console-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 5px; }
 .console-card {
   display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 14px; text-align: left;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); color: var(--ink);
-  font: inherit; cursor: pointer; transition: border-color .15s, transform .15s;
+  background: var(--surface); border: 0; color: var(--ink);
+  font: inherit; cursor: pointer;
 }
-.console-card:hover { border-color: var(--brand-text); transform: translateY(-2px); }
+.console-card:hover, .console-card:focus-visible { background: var(--selected); box-shadow: var(--frame-on); outline: 0; }
 .console-empty { opacity: .6; }
 .console-empty:hover { opacity: 1; }
 
 .console-logo {
-  display: grid; place-items: center; height: 72px; margin-bottom: 8px; padding: 8px;
-  background: var(--surface-2); border-radius: var(--r-m); overflow: hidden;
+  display: grid; place-items: center; height: 84px; margin-bottom: 8px; padding: 8px; overflow: hidden;
 }
 /* An explicit height: theme logos are often SVGs with no size of their own */
-.console-logo img { height: 52px; width: auto; max-width: 100%; object-fit: contain; }
-.console-logo-text { font: 700 15px/1.2 var(--font-display); color: var(--ink-2); text-align: center; overflow-wrap: anywhere; }
-.console-name { font-weight: 650; overflow-wrap: anywhere; }
+.console-logo img { height: 52px; width: auto; max-width: 86%; object-fit: contain; }
+/* Logos in white, as on the console's home (batox-theme). A logo drawn on a dark
+   or gray plate loses that plate first: the filters are in index.html */
+.console-logo img, .console-detail-logo img { filter: brightness(0) invert(1); }
+[data-cut="dark"] img { filter: url(#logo-cut-dark); }
+[data-cut="gray"] img { filter: url(#logo-cut-gray); }
+.console-logo-text { font: 600 17px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); text-align: center; overflow-wrap: anywhere; }
+.console-name { overflow-wrap: anywhere; }
 .console-sub { color: var(--ink-2); font-size: 13px; }
 .console-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font-size: 13px; }
-.console-games { font-weight: 650; }
+.console-games { color: var(--ink); }
 .console-fav { color: var(--signal); }
-.console-type { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; }
+.console-type { margin-left: auto; color: var(--ink-2); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
 
-.console-detail-logo { display: grid; place-items: center; height: 110px; margin-bottom: 18px; padding: 12px; background: var(--surface-2); border-radius: var(--r-m); }
+.console-detail-logo { display: grid; place-items: center; height: 110px; margin-bottom: 18px; padding: 12px; background: var(--strip); }
 .console-detail-logo img { height: 84px; width: auto; max-width: 100%; object-fit: contain; }
-.console-detail h3 { margin: 18px 0 8px; font: 650 15px/1.3 var(--font-display); }
+.console-detail h3 { margin: 20px 0 8px; font: 600 15px/1.3 var(--font-display); }
 
 @media (max-width: 760px) {
   .console-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }

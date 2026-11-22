@@ -6,22 +6,21 @@
   position: sticky; top: 0; height: 100vh;
   display: flex; flex-direction: column; gap: 4px;
   padding: 22px 14px;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
+  background: var(--page);
 }
-.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px 22px; text-decoration: none; }
+.brand { display: flex; align-items: center; padding: 0 8px 14px; text-decoration: none; }
 .brand img { display: block; flex: none; }
 .nav-link {
   display: flex; align-items: center; gap: 12px;
-  padding: 9px 12px; border-radius: var(--r-m);
-  color: var(--ink-2); text-decoration: none; font-weight: 550;
+  padding: 9px 12px;
+  color: var(--ink-2); text-decoration: none; font-weight: 400;
 }
 .nav-link svg { width: 20px; height: 20px; flex: none; }
 .nav-link:hover { background: var(--surface-2); color: var(--ink); }
-.nav-link[aria-current="page"] { background: var(--brand-soft); color: var(--brand-text); }
+.nav-link[aria-current="page"] { background: var(--selected); color: var(--ink); box-shadow: var(--frame-on); }
 .rail-foot { display: grid; gap: 6px; margin-top: auto; padding: 12px; font-size: 13px; color: var(--ink-2); }
 .rail-version { padding-left: 17px; color: var(--ink-2); font-size: 12px; text-decoration: none; }
-.rail-version:hover { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; }
+.rail-version:hover { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .conn { display: flex; align-items: center; gap: 8px; }
 .conn i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-2); }
 .conn[data-state="ok"] i { background: var(--ok); }
@@ -30,15 +29,15 @@
 main { padding: 32px clamp(16px, 4vw, 48px) 96px; min-width: 0; }
 .page { max-width: 1080px; margin: 0 auto; }
 .page-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 20px; margin-bottom: 22px; }
-.page-head h1 { margin: 0; font: 700 clamp(26px, 3.4vw, 34px)/1.1 var(--font-display); letter-spacing: -0.02em; }
+.page-head h1 { margin: 0; font: 300 clamp(30px, 3.8vw, 42px)/1.1 var(--font-display); letter-spacing: -0.01em; }
 .page-head p { margin: 4px 0 0; color: var(--ink-2); max-width: 60ch; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .stack { display: grid; gap: 20px; }
-h2 { font: 650 18px/1.25 var(--font-display); margin: 0 0 4px; }
+h2 { font: 600 17px/1.25 var(--font-display); margin: 0 0 4px; }
 .muted { color: var(--ink-2); }
 .small { font-size: 13px; }
 
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 20px; }
+.panel { background: var(--surface); padding: 22px 24px; }
 .panel > header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .panel > header p { margin: 2px 0 0; color: var(--ink-2); font-size: 14px; }
 
@@ -48,7 +47,7 @@ h2 { font: 650 18px/1.25 var(--font-display); margin: 0 0 4px; }
     position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: auto; z-index: 10;
     flex-direction: row; gap: 2px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
     padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
-    border-right: 0; border-top: 1px solid var(--line);
+    background: var(--surface-solid); border-top: 1px solid var(--line);
   }
   .brand, .rail-foot { display: none; }
   /* The items don't fit side by side on a phone: each keeps a readable width,
@@ -69,9 +68,9 @@ h2 { font: 650 18px/1.25 var(--font-display); margin: 0 0 4px; }
 /* Access view hero: the full logo next to the title */
 .access-hero { display: flex; align-items: center; gap: 24px; margin-bottom: 24px; }
 .access-hero img { flex: none; }
-.access-hero h1 { margin: 0 0 6px; font: 700 clamp(26px, 3.4vw, 34px)/1.1 var(--font-display); letter-spacing: -0.02em; }
+.access-hero h1 { margin: 0 0 6px; font: 300 clamp(30px, 3.8vw, 42px)/1.1 var(--font-display); letter-spacing: -0.01em; }
 .access-hero p { margin: 0; max-width: 56ch; }
 @media (max-width: 760px) {
   .access-hero { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .access-hero img { width: 112px; height: 112px; }
+  .access-hero img { width: 180px; height: auto; }
 }

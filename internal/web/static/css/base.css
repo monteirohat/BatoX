@@ -1,39 +1,60 @@
 /* Base
-   Dark theme tokens (colors taken from the BatoX logo), typography, reset and
-   global utilities. */
+   The look of batox-theme (its docs/STYLE.md), on a page: flat dark indigo
+   surfaces over a sunset picture, white type, one white frame on what is
+   selected, square corners, no glow and no shadow. Tokens, typography, reset
+   and global utilities. */
+
+@font-face { font-family: "Inter"; font-weight: 300; font-style: normal; font-display: swap; src: url(../fonts/Inter-Light.woff2) format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-style: normal; font-display: swap; src: url(../fonts/Inter-Regular.woff2) format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: normal; font-display: swap; src: url(../fonts/Inter-SemiBold.woff2) format("woff2"); }
 
 :root {
-  /* Surfaces: the navy of the logo's "B" */
-  --bg: #0B1120;
-  --surface: #121A2C;
-  --surface-2: #19243B;
-  --line: #26344F;
-  --ink: #E9EEF8;
-  --ink-2: #93A2BF;
+  /* Surfaces: translucent at rest, so the picture shows a little through them;
+     solid where a surface floats over others (dialogs, the phone's bar) */
+  --bg: #050B1A;
+  --surface: rgba(21, 18, 43, .82);
+  --surface-2: rgba(30, 25, 64, .84);
+  --surface-solid: #15122B;
+  --strip: #1E1940;           /* behind a cover or a drawing: solid, one step lighter */
+  --page: rgba(11, 10, 24, .88);
+  --line: rgba(255, 255, 255, .12);
+  --ink: #FFFFFF;
+  --ink-2: #A9B7CC;
+  --ink-3: #6B7A90;
 
-  /* Brand: the blue of the logo's "X"; --brand-text is the readable variant on dark */
-  --brand: #1767EE;
-  --brand-text: #6AA8FF;
-  --brand-soft: #16295A;
+  /* Selection: the selected surface's color, in a white frame */
+  --selected: #2E2659;
+  --selected-hover: #3A3170;
+  --frame: #F2F4F8;
+  --frame-on: inset 0 0 0 2px var(--frame);
+
+  /* Older names, kept for the views: what was "brand" is now the selection */
+  --brand: var(--selected);
+  --brand-text: #FFFFFF;
+  --brand-soft: var(--selected);
   --brand-ink: #FFFFFF;
-  --accent: #12C6F5;
-  --grad: linear-gradient(135deg, #12C6F5 0%, #1767EE 43%, #4530EC 78%, #A100EE 100%);
 
-  /* Status: the three window dots of the logo */
+  /* The accent is rare: links, checkboxes, sliders */
+  --accent: #3B8CFF;
+  --link: #8FBCFF;
+
+  /* Status */
   --ok: #4DD98B;
-  --ok-soft: #12332A;
+  --ok-soft: rgba(77, 217, 139, .16);
+  --ok-ink: #06301A;
   --signal: #FFBF4C;
-  --signal-soft: #3A2D12;
+  --signal-soft: rgba(255, 191, 76, .16);
   --danger: #FC6C69;
   --danger-strong: #D93A3F;
-  --danger-soft: #3D1A22;
+  --danger-soft: rgba(252, 108, 105, .16);
 
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
-  --font-display: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Ubuntu, sans-serif;
+  --font-display: var(--font);
   --font-code: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Ubuntu Mono", "DejaVu Sans Mono", monospace;
-  --r-s: 6px;
-  --r-m: 12px;
-  --r-l: 20px;
+  /* Square corners everywhere */
+  --r-s: 0;
+  --r-m: 0;
+  --r-l: 0;
   --nav-w: 232px;
   color-scheme: dark;
 }
@@ -47,11 +68,24 @@ body {
   font: 15px/1.5 var(--font);
   -webkit-font-smoothing: antialiased;
 }
+/* The picture behind everything, fixed: a sunset over the water, dark at the top */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1;
+  background: var(--bg) url(../img/backdrop.jpg) center bottom / cover no-repeat;
+}
 :root { padding-top: env(safe-area-inset-top, 0px); }
 button, input, select, textarea { font: inherit; color: inherit; }
-a { color: var(--brand-text); }
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: var(--r-s); }
+a { color: var(--link); }
+:focus-visible { outline: 2px solid var(--frame); outline-offset: 2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* A label: small capitals, one step down, over its value */
+.label, .kv dt, .meter dt, .rom-head, label.field, div.field, .cat-list h3, .bgroup-title {
+  font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2);
+}
+label.field > *, div.field > * { letter-spacing: 0; text-transform: none; }
+div.field > label:first-child:not(.check) { letter-spacing: .06em; text-transform: uppercase; }
+input, select, textarea, button { text-transform: none; letter-spacing: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

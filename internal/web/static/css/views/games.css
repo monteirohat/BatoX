@@ -1,44 +1,43 @@
 /* Games view
    System "shelf", ROM list, sync summary and the game details modal. */
 
-.shelf { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 10px; margin-bottom: 14px; scrollbar-width: thin; }
+.shelf { display: flex; gap: 5px; overflow-x: auto; padding: 2px 2px 10px; margin-bottom: 14px; scrollbar-width: thin; }
 .spine {
   flex: none; display: grid; gap: 2px; min-width: 92px; padding: 10px 12px 9px;
-  border: 1px solid var(--line); border-radius: var(--r-s) var(--r-s) 3px 3px;
-  border-top: 5px solid var(--sys, var(--brand));
-  background: var(--surface); text-align: left; cursor: pointer;
+  border: 0; background: var(--surface); color: var(--ink-2); text-align: left; cursor: pointer;
 }
-.spine b { font: 650 14px/1.2 var(--font-display); }
+/* A system on the shelf is a tile of the console's home: the selected one is the
+   lighter surface in the white frame */
+.spine b { font: 600 14px/1.2 var(--font-display); text-transform: uppercase; letter-spacing: .03em; }
 .spine span { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.spine[aria-pressed="true"] { background: var(--sys, var(--brand)); border-color: var(--sys, var(--brand)); color: #fff; }
-.spine[aria-pressed="true"] span { color: rgba(255,255,255,.85); }
+.spine:hover { color: var(--ink); }
+.spine[aria-pressed="true"] { background: var(--selected); color: var(--ink); box-shadow: var(--frame-on); }
 
 
-.rom-list { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; }
+.rom-list { display: grid; background: var(--surface); overflow: hidden; }
 .rom {
-  display: grid; grid-template-columns: minmax(0, 1fr) 110px 90px 70px 104px 128px; gap: 12px; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 1fr) 110px 90px 96px 104px 128px; gap: 12px; align-items: center;
   padding: 10px 14px; border-top: 1px solid var(--line); font-size: 14px;
 }
 .rom:first-child { border-top: 0; }
-.rom-head { background: var(--surface-2); color: var(--ink-2); font-size: 13px; font-weight: 600; }
-.rom-name { font-weight: 600; overflow-wrap: anywhere; }
-.rom-open { display: block; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
-.rom-open:hover { color: var(--brand-text); text-decoration: underline; text-underline-offset: 3px; }
+.rom-head { padding-block: 12px; }
+.rom:not(.rom-head):hover { background: var(--surface-2); }
+.rom-name { overflow-wrap: anywhere; }
+.rom-open { display: block; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.rom-open:hover { text-decoration: underline; text-underline-offset: 3px; }
 .rom-actions { display: flex; gap: 8px; justify-content: flex-end; }
-.rom-play { color: var(--brand-text); }
-.rom-play:hover:not(:disabled) { background: var(--brand); border-color: var(--brand); color: #fff; }
 .rom-path { display: block; font-weight: 400; color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
-.sys-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
-.sys-tag::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--sys, var(--brand)); }
+.sys-tag { display: inline-flex; align-items: center; gap: 6px; }
+.sys-tag::before { content: ""; width: 8px; height: 8px; background: var(--sys, var(--ink-3)); }
 
 
 .summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
-.pill { padding: 4px 12px; border-radius: 999px; background: var(--surface-2); font-size: 13px; font-weight: 600; }
+.pill { padding: 4px 12px; background: var(--surface-2); font-size: 13px; }
 .pill.ok { background: var(--ok-soft); color: var(--ok); }
 .pill.warn { background: var(--signal-soft); color: var(--signal); }
 .pill.err { background: var(--danger-soft); color: var(--danger); }
 details { margin-top: 8px; }
-details summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+details summary { cursor: pointer; font-size: 14px; }
 details ul { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
 
 @media (max-width: 760px) {
@@ -56,25 +55,25 @@ details ul { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--
 .game-media { display: grid; gap: 10px; position: sticky; top: 0; }
 .game-cover {
   position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
-  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+  background: var(--strip);
 }
 /* Absolute so any artwork proportion fits inside the frame without cropping */
 .game-cover > img, .game-cover > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .game-cover-empty { padding: 20px; text-align: center; color: var(--ink-2); font-size: 13px; }
-.game-cover-empty img { width: 96px; height: 96px; opacity: .55; margin-bottom: 10px; }
+.game-cover-empty img { width: 96px; height: 96px; opacity: .22; margin-bottom: 10px; }
 .game-thumbs { display: flex; flex-wrap: wrap; gap: 6px; }
 .game-thumb {
   width: 54px; height: 54px; padding: 0; overflow: hidden; cursor: pointer;
-  background: var(--surface-2); border: 2px solid var(--line); border-radius: var(--r-s);
+  background: var(--strip); border: 2px solid transparent;
 }
 .game-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.game-thumb[aria-pressed="true"] { border-color: var(--accent); }
+.game-thumb[aria-pressed="true"] { border-color: var(--frame); }
 .game-media-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .game-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-bottom: 16px; color: var(--ink-2); font-size: 14px; }
 .stars { color: var(--signal); letter-spacing: 2px; font-size: 15px; }
 .game-desc { margin: 0 0 6px; max-width: 68ch; line-height: 1.65; white-space: pre-line; }
-.game h3 { margin: 22px 0 8px; font: 650 15px/1.3 var(--font-display); }
+.game h3 { margin: 24px 0 8px; font: 600 15px/1.3 var(--font-display); }
 .game .kv { font-size: 14px; }
 .game code { font: 12px/1.5 var(--font-code); overflow-wrap: anywhere; }
 .game-unscraped { margin-bottom: 4px; }

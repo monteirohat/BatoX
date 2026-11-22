@@ -16,11 +16,12 @@
 .video-screen b { overflow-wrap: anywhere; }
 .video-tv {
   display: grid; place-items: center; aspect-ratio: 16 / 9; margin-bottom: 8px;
-  background: linear-gradient(160deg, #0f1830, #070b16); border: 3px solid var(--line); border-radius: 10px;
+  background: var(--strip);
 }
-.video-tv span { color: var(--ink-2); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.video-screen[data-role="main"] .video-tv { border-color: var(--brand); box-shadow: 0 0 18px rgba(23, 103, 238, .45); }
-.video-screen[data-role="main"] .video-tv span { color: var(--brand-text); }
+/* The main screen is the selected one: lighter, in the white frame */
+.video-tv span { color: var(--ink-2); font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; }
+.video-screen[data-role="main"] .video-tv { background: var(--selected); box-shadow: var(--frame-on); }
+.video-screen[data-role="main"] .video-tv span { color: var(--ink); }
 .video-screen[data-role="second"] .video-tv span { color: var(--ink); }
-.video-screen[data-role="off"] .video-tv { background: #04060c; border-style: dashed; }
+.video-screen[data-role="off"] .video-tv { background: none; border: 1px dashed var(--ink-3); }
 .video-screen[data-role="off"] b { color: var(--ink-2); }

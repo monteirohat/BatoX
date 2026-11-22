@@ -12,9 +12,10 @@
 .msg-form > p { margin: -6px 0 0; }
 .msg-count { justify-self: end; font-variant-numeric: tabular-nums; }
 
-.segmented { display: inline-flex; justify-self: start; gap: 4px; padding: 4px; background: var(--surface-2); border-radius: 999px; }
-.segmented button { min-height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); font-weight: 650; cursor: pointer; }
-.segmented button[aria-checked="true"] { background: var(--brand); color: var(--brand-ink); }
+.segmented { display: inline-flex; justify-self: start; gap: 3px; }
+.segmented button { min-height: 36px; padding: 0 16px; border: 0; background: var(--surface-2); color: var(--ink-2); cursor: pointer; }
+.segmented button:hover { color: var(--ink); }
+.segmented button[aria-checked="true"] { background: var(--selected); color: var(--ink); box-shadow: var(--frame-on); }
 
 
 .msg-history { display: grid; margin: 0; padding: 0; list-style: none; }
@@ -29,7 +30,7 @@
 .msg-title-field .presets { margin-top: 2px; }
 .msg-options[hidden] { display: none; }
 /* Same look as label.field, for the group of position buttons */
-.msg-options div.field { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+.msg-options div.field { display: grid; gap: 6px; }
 @media (max-width: 760px) {
   .msg-options { grid-template-columns: 1fr; }
 }

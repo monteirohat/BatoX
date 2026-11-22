@@ -30,6 +30,21 @@ All notable changes to this project are documented here. The format follows
 - `GET /api/v1/roms/{id}/file` endpoint: downloads a game's file.
 - Uploads can be checked before the file takes its name (used by the Library to check downloads).
 
+### Changed
+
+- A new look for the web interface, the one of
+  [batox-theme](https://github.com/monteirohat/batox-theme): dark indigo surfaces over a sunset
+  picture, square corners, white type with titles and figures in Inter Light, labels in small
+  capitals, and a white frame on what is selected (the current section, tabs, choices, switches)
+  in place of the blue. The dashboard's plate shows the console's name over the picture.
+- A new logo: "BatoX" in a pink script, as on the theme's loading screen. New favicon.
+- Inter is served by BatoX itself, so the interface looks the same on every device and still
+  needs nothing from the internet.
+- Consoles: logos are drawn in white, as on the theme's home. When the current theme gives no
+  logo for a system, or EmulationStation is stopped, the logo of Batocera's default theme is
+  shown, so every system has one (`esLogosDir` in the configuration; `GET /consoles` has a
+  system's `theme` name when it differs from its own).
+
 ## [1.6.0] - 2026-11-15
 
 ### Added

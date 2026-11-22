@@ -1,56 +1,55 @@
 /* Dashboard
-   The console "plate" (styled after the BatoX logo) and the hardware meters. */
+   The console "plate" (the sunset picture in full light, the console's name
+   over it) and the hardware meters. */
 
 .plate {
   position: relative; overflow: hidden;
-  display: grid; grid-template-columns: 1fr auto; gap: 18px 28px; align-items: end;
-  padding: 28px 28px 24px;
-  background: var(--grad); color: var(--brand-ink);
-  border-radius: var(--r-l);
+  display: grid; grid-template-columns: 1fr auto; gap: 18px 28px; align-items: stretch;
+  min-height: 270px; padding: 26px 28px 24px;
+  background: var(--surface-solid) url(../../img/plate.jpg) right 70% / cover no-repeat; color: var(--ink);
 }
-/* The three window dots of the logo */
-.plate-dots { grid-column: 1 / -1; display: flex; gap: 8px; margin-bottom: -6px; }
-.plate-dots i { width: 12px; height: 12px; border-radius: 50%; background: #FC6C69; }
-.plate-dots i:nth-child(2) { background: #FFBF4C; }
-.plate-dots i:nth-child(3) { background: #4DD98B; }
-.plate-host { margin: 0; font-weight: 600; opacity: .85; }
-.plate-model { margin: 4px 0 12px; font: 750 clamp(28px, 5vw, 52px)/1 var(--font-display); letter-spacing: -0.03em; }
-.plate-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.plate-tags span { padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand-ink) 16%, transparent); font-size: 13px; font-weight: 600; }
-.plate-power { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 8px; }
-.plate-power .btn { background: transparent; color: var(--brand-ink); border-color: color-mix(in srgb, var(--brand-ink) 45%, transparent); }
-.plate-power .btn:hover { background: color-mix(in srgb, var(--brand-ink) 14%, transparent); }
+/* The name over the sky, at the top; what it runs and the power buttons on the
+   skyline, at the bottom */
+.plate > div:first-child { display: flex; flex-direction: column; min-width: 0; }
+.plate-tags { margin-top: auto; }
+.plate-power { align-self: end; }
+.plate-host { margin: 0; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); opacity: .85; }
+.plate-model { margin: 4px 0 18px; font: 300 clamp(30px, 5vw, 54px)/1 var(--font-display); letter-spacing: -0.01em; }
+.plate-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.plate-tags span { padding: 4px 10px; background: var(--surface); font-size: 13px; }
+.plate-power { display: flex; gap: 8px; flex-wrap: wrap; }
+.plate-power .btn { background: var(--surface); border-color: transparent; }
+.plate-power .btn:hover { background: var(--selected); border-color: var(--frame); }
 
-.meters { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.meter { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 16px; }
-.meter dt { color: var(--ink-2); font-size: 14px; font-weight: 600; }
-.meter dd { margin: 6px 0 0; font: 700 26px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
-.meter dd small { font: 500 13px/1.4 var(--font); color: var(--ink-2); display: block; margin-top: 4px; }
+.meters { display: grid; gap: 5px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.meter { background: var(--surface); padding: 18px 20px; }
+.meter dd { margin: 6px 0 0; font: 300 30px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.meter dd small { font: 400 13px/1.4 var(--font); color: var(--ink-2); display: block; margin-top: 6px; }
 
 @media (max-width: 760px) {
-  .plate { grid-template-columns: 1fr; padding: 22px 20px 24px; }
+  .plate { grid-template-columns: 1fr; min-height: 0; padding: 22px 20px 24px; background-position: 72% 70%; }
 }
 
 /* "Now playing" card: cover on the left, game and actions on the right */
 .now-playing { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; align-items: center; }
 .np-cover {
   display: grid; place-items: center; width: 120px; aspect-ratio: 3 / 4; overflow: hidden;
-  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-m);
+  background: var(--surface-2);
 }
 .np-cover img { width: 100%; height: 100%; object-fit: contain; }
-.np-cover img.np-placeholder { width: 56px; height: 56px; opacity: .45; }
+.np-cover img.np-placeholder { width: 56px; height: 56px; opacity: .22; }
 .np-info { min-width: 0; }
-.np-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.np-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-size: 12px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; }
 .np-label i { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); animation: np-live 1.6s ease-in-out infinite; }
 @keyframes np-live { 50% { opacity: .35; } }
-.now-playing h2 { margin: 6px 0 4px; font-size: 26px; overflow-wrap: anywhere; }
+.now-playing h2 { margin: 6px 0 4px; font-size: 30px; font-weight: 300; overflow-wrap: anywhere; }
 .np-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 14px; color: var(--ink-2); font-size: 14px; }
 .np-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 @media (max-width: 760px) {
   .now-playing { grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: start; }
   .np-cover { width: 84px; }
-  .now-playing h2 { font-size: 20px; }
+  .now-playing h2 { font-size: 22px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
