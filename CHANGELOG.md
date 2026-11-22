@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-11-22
+
 ### Added
 
 - Library screen: download games from your own library, a folder with a `library.json` index at
@@ -42,8 +44,12 @@ All notable changes to this project are documented here. The format follows
   needs nothing from the internet.
 - Consoles: logos are drawn in white, as on the theme's home. When the current theme gives no
   logo for a system, or EmulationStation is stopped, the logo of Batocera's default theme is
-  shown, so every system has one (`esLogosDir` in the configuration; `GET /consoles` has a
-  system's `theme` name when it differs from its own).
+  shown in its place (`esLogosDir` in the configuration; `GET /consoles` has a system's `theme`
+  name when it differs from its own).
+
+### Fixed
+
+- A timer test read the result before it was recorded, and could fail on a slow machine.
 
 ## [1.6.0] - 2026-11-15
 
@@ -200,7 +206,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/monteirohat/batox/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/monteirohat/batox/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/monteirohat/batox/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/monteirohat/batox/compare/v1.4.0...v1.4.1

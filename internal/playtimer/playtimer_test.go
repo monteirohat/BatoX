@@ -93,6 +93,10 @@ func TestTimerActsAtZero(t *testing.T) {
 	if f.acted()[0] != CloseGame {
 		t.Errorf("acted %v", f.acted())
 	}
+	// The result is recorded right after the action returns: wait for it.
+	if !waitFor(t, func() bool { return m.Status().Last != nil }) {
+		t.Fatal("the result was never recorded")
+	}
 	st = m.Status()
 	if st.Active || st.Last == nil || st.Last.Outcome != "done" {
 		t.Errorf("after the end: %+v", st)
