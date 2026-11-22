@@ -6,6 +6,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- Messages and the timer drawn on the TV have the new look too, with
+  [BatoX Apps](https://github.com/monteirohat/batox-apps) 0.3.0: a dark indigo card with square
+  corners in a thin white frame, the title as a label in small capitals, and the timer's digits
+  large and light over a thin progress line. Near the end the digits, the line and the frame turn
+  amber, then red.
+
 ## [1.7.0] - 2026-11-22
 
 ### Added
