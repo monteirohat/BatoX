@@ -98,7 +98,7 @@ balenaEtcher. It downloads the BatoX release you choose from GitHub, checks your
 or updates BatoX over SSH, and shows you the address and the API token at the end.
 
 <p align="center">
-  <a href="https://github.com/monteirohat/BatoX_Installer"><img src="https://raw.githubusercontent.com/monteirohat/BatoX_Installer/main/docs/assets/screenshots/steps.png" alt="BatoX Installer" width="720"></a>
+  <a href="https://github.com/monteirohat/BatoX_Installer"><img src="docs/assets/screenshots/installer.png" alt="BatoX Installer" width="720"></a>
 </p>
 
 1. Download it from the [BatoX Installer releases](https://github.com/monteirohat/BatoX_Installer/releases/latest).
