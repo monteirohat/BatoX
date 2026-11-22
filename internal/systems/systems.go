@@ -27,6 +27,17 @@ type System struct {
 	Manufacturer string `json:"manufacturer,omitempty"`
 	ReleaseYear  int    `json:"releaseYear,omitempty"`
 	Hardware     string `json:"hardware,omitempty"` // console, portable, arcade, computer...
+	// Theme is the name themes know the system by (their logo and artwork
+	// files), when it is not the system's own name: "atarilynx" for "lynx".
+	Theme string `json:"theme,omitempty"`
+}
+
+// ThemeName returns the name themes know the system by.
+func (s System) ThemeName() string {
+	if s.Theme != "" {
+		return s.Theme
+	}
+	return s.Name
 }
 
 // Accepts reports whether the file has an extension the system accepts.
@@ -77,6 +88,7 @@ type esSystemList struct {
 		Manufacturer string `xml:"manufacturer"`
 		Release      string `xml:"release"`
 		Hardware     string `xml:"hardware"`
+		Theme        string `xml:"theme"`
 	} `xml:"system"`
 }
 
@@ -111,6 +123,10 @@ func Load(esSystemsFile, romsDir string) (*Registry, error) {
 		if p := strings.TrimSpace(s.Path); p != "" {
 			folder = filepath.Base(p)
 		}
+		theme := strings.ToLower(strings.TrimSpace(s.Theme))
+		if theme == name {
+			theme = ""
+		}
 		reg.byName[name] = System{
 			Name:         name,
 			FullName:     strings.TrimSpace(s.FullName),
@@ -119,6 +135,7 @@ func Load(esSystemsFile, romsDir string) (*Registry, error) {
 			Manufacturer: strings.TrimSpace(s.Manufacturer),
 			ReleaseYear:  parseYear(s.Release),
 			Hardware:     strings.ToLower(strings.TrimSpace(s.Hardware)),
+			Theme:        theme,
 		}
 	}
 	if len(reg.byName) == 0 {

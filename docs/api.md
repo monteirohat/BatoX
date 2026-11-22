@@ -379,12 +379,15 @@ games; the others have `inEmulationStation: false`.
       "mostPlayed": "Golden Sun", "hasLogo": true } ] }
 ```
 
+A system that themes know by another name has it in `theme` (`"theme": "atarilynx"` for `lynx`).
+
 `hardware` is what `es_systems.cfg` says: usually `console`, `portable`, `arcade` or `computer`.
 
 ### `GET /consoles/{name}/logo`
 
-The system logo of the current EmulationStation theme (often SVG). `404` when EmulationStation is
-not running or the theme has no logo for the system.
+The system logo of the current EmulationStation theme (often SVG). When the theme gives none, or
+EmulationStation is not running, the logo of Batocera's default theme (`esLogosDir` in the
+configuration). `404` when there is no logo for the system in either.
 
 ## Music
 

@@ -5,11 +5,15 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/esapi"
 )
@@ -121,5 +125,64 @@ func TestConsoleLogo(t *testing.T) {
 	}
 	if rec := get("../../etc"); rec.Code != http.StatusNotFound {
 		t.Errorf("an unknown system: %d, want 404", rec.Code)
+	}
+}
+
+// A theme that gives no logos (or EmulationStation stopped): the logos of
+// Batocera's default theme stand in, and the current theme's still wins.
+func TestConsoleLogoFromTheDefaultTheme(t *testing.T) {
+	logos := t.TempDir()
+	for name, body := range map[string]string{
+		"snes.svg": `<svg xmlns="http://www.w3.org/2000/svg" id="default-snes"></svg>`,
+		"gba.svg":  `<svg xmlns="http://www.w3.org/2000/svg" id="default-gba"></svg>`,
+		"nes.png":  "\x89PNG\r\n\x1a\n",
+	} {
+		if err := os.WriteFile(filepath.Join(logos, name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	get := func(s *Server, name string) *httptest.ResponseRecorder {
+		rctx := chi.NewRouteContext()
+		rctx.URLParams.Add("name", name)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+		rec := httptest.NewRecorder()
+		s.consoleLogo(rec, req)
+		return rec
+	}
+
+	s := nowPlayingServer(t, esapi.New(consolesES(t).URL, 5*time.Second))
+	s.Config = &config.Config{ESLogosDir: logos}
+	if rec := get(s, "gba"); rec.Code != http.StatusOK || strings.Contains(rec.Body.String(), "default-gba") {
+		t.Errorf("gba: %d %q, want the current theme's logo", rec.Code, rec.Body)
+	}
+	rec := get(s, "snes")
+	if rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), "default-snes") || rec.Header().Get("Content-Type") != "image/svg+xml" {
+		t.Errorf("snes: %d %q %q, want the default theme's logo", rec.Code, rec.Header().Get("Content-Type"), rec.Body)
+	}
+	if rec.Header().Get("Content-Security-Policy") == "" {
+		t.Error("SVG logos need a Content-Security-Policy")
+	}
+	if rec := get(s, "nes"); rec.Code != http.StatusOK || rec.Header().Get("Content-Type") != "image/png" {
+		t.Errorf("nes: %d %q, want a PNG", rec.Code, rec.Header().Get("Content-Type"))
+	}
+	if rec := get(s, "psx"); rec.Code != http.StatusNotFound {
+		t.Errorf("a system with no logo anywhere: %d, want 404", rec.Code)
+	}
+	out := getConsoles(t, s)
+	for name, want := range map[string]bool{"gba": true, "snes": true, "nes": true, "psx": false} {
+		if c := findConsole(out.Consoles, name); c == nil || c.HasLogo != want {
+			t.Errorf("%s: hasLogo %v, want %v", name, c != nil && c.HasLogo, want)
+		}
+	}
+
+	// Without EmulationStation the default theme's logos are still there.
+	dev := nowPlayingServer(t, nil)
+	dev.Config = &config.Config{ESLogosDir: logos}
+	if rec := get(dev, "gba"); rec.Code != http.StatusOK || !strings.Contains(rec.Body.String(), "default-gba") {
+		t.Errorf("gba without EmulationStation: %d %q", rec.Code, rec.Body)
+	}
+	if c := findConsole(getConsoles(t, dev).Consoles, "snes"); c == nil || !c.HasLogo {
+		t.Error("snes without EmulationStation: hasLogo should be true")
 	}
 }

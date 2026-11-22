@@ -33,6 +33,7 @@ batocera-services stop batox && batocera-services start batox
 | `themesDir` | `/userdata/themes` | EmulationStation themes. |
 | `musicDir` | `/userdata/music` | EmulationStation background music. |
 | `esSystemsFile` | `/usr/share/emulationstation/es_systems.cfg` | Source of the systems and accepted extensions. |
+| `esLogosDir` | `/usr/share/emulationstation/themes/es-theme-carbon/art/logos` | System logos of Batocera's default theme, shown on the Consoles screen when the current theme has none. |
 | `esFeaturesFile` | `/usr/share/emulationstation/es_features.cfg` | Emulator options, used to show the Batocera settings with the right controls (names, lists, switches, sliders). |
 | `esSettingsFile` | `/userdata/system/configs/emulationstation/es_settings.cfg` | EmulationStation settings. |
 | `esLogFile` | `/userdata/system/configs/emulationstation/es_log.txt` | EmulationStation log. |

@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -10,6 +12,7 @@ import (
 
 	"github.com/monteirohat/batox/internal/esapi"
 	"github.com/monteirohat/batox/internal/fsutil"
+	"github.com/monteirohat/batox/internal/systems"
 )
 
 // consoleInfo describes one Batocera system: what es_systems.cfg says about
@@ -21,6 +24,7 @@ type consoleInfo struct {
 	Manufacturer string   `json:"manufacturer,omitempty"`
 	ReleaseYear  int      `json:"releaseYear,omitempty"`
 	Hardware     string   `json:"hardware,omitempty"`
+	Theme        string   `json:"theme,omitempty"` // the name themes know it by, when not its own
 	Folder       string   `json:"folder"`
 	FolderExists bool     `json:"folderExists"`
 	Extensions   []string `json:"extensions"`
@@ -36,7 +40,7 @@ type consoleInfo struct {
 }
 
 type consolesResponse struct {
-	// EmulationStation tells whether its statistics and logos are included.
+	// EmulationStation tells whether its statistics are included.
 	EmulationStation bool          `json:"emulationStation"`
 	Consoles         []consoleInfo `json:"consoles"`
 }
@@ -80,6 +84,7 @@ func (s *Server) consoles(w http.ResponseWriter, r *http.Request) {
 			Manufacturer: sys.Manufacturer,
 			ReleaseYear:  sys.ReleaseYear,
 			Hardware:     sys.Hardware,
+			Theme:        sys.Theme,
 			Folder:       sys.Dir,
 			FolderExists: fsutil.DirExists(sys.Dir),
 			Extensions:   sys.Extensions,
@@ -104,26 +109,68 @@ func (s *Server) consoles(w http.ResponseWriter, r *http.Request) {
 				c.Hardware = strings.ToLower(e.HardwareType)
 			}
 		}
+		// A theme may give no logo of its own (it draws Batocera's, or none):
+		// the default theme's stands in, EmulationStation running or not.
+		if !c.HasLogo {
+			c.HasLogo = s.defaultLogo(sys) != ""
+		}
 		out.Consoles = append(out.Consoles, c)
 	}
 	writeJSON(w, http.StatusOK, out)
 }
 
+// defaultLogo returns the file of the system's logo in Batocera's default
+// theme, or "" when there is none. The name comes from es_systems.cfg, and is
+// still only used when it is a plain file name.
+func (s *Server) defaultLogo(sys systems.System) string {
+	name := sys.ThemeName()
+	if s.Config == nil || s.Config.ESLogosDir == "" || name == "" || name != filepath.Base(name) || strings.HasPrefix(name, ".") {
+		return ""
+	}
+	for _, ext := range []string{".svg", ".png"} {
+		p := filepath.Join(s.Config.ESLogosDir, name+ext)
+		if st, err := os.Stat(p); err == nil && st.Mode().IsRegular() {
+			return p
+		}
+	}
+	return ""
+}
+
 // consoleLogo: GET /consoles/{name}/logo -> the system logo of the current
-// EmulationStation theme.
+// EmulationStation theme, or else the one of Batocera's default theme.
 func (s *Server) consoleLogo(w http.ResponseWriter, r *http.Request) {
 	sys, ok := s.Systems.Get(chi.URLParam(r, "name"))
-	es := s.Platform.ES()
-	if !ok || es == nil {
+	if !ok {
 		writeError(w, http.StatusNotFound, "logo not found")
 		return
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
-	defer cancel()
-	data, contentType, err := es.SystemLogo(ctx, sys.Name)
-	if err != nil {
-		writeError(w, http.StatusNotFound, "logo not found")
-		return
+	var data []byte
+	var contentType string
+	if es := s.Platform.ES(); es != nil {
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+		defer cancel()
+		if d, ct, err := es.SystemLogo(ctx, sys.Name); err == nil && len(d) > 0 {
+			data, contentType = d, ct
+		}
+	}
+	if data == nil {
+		p := s.defaultLogo(sys)
+		if p == "" {
+			writeError(w, http.StatusNotFound, "logo not found")
+			return
+		}
+		d, err := os.ReadFile(p)
+		if err != nil || len(d) == 0 {
+			writeError(w, http.StatusNotFound, "logo not found")
+			return
+		}
+		data = d
+		// A file's type is its extension: an SVG may open with a long comment.
+		if strings.EqualFold(filepath.Ext(p), ".svg") {
+			contentType = "image/svg+xml"
+		} else {
+			contentType = "image/png"
+		}
 	}
 	// EmulationStation may send no type, or a text type for SVG files: anything
 	// that isn't an image type is worked out from the content.

@@ -16,6 +16,13 @@ const esSystems = `<?xml version="1.0"?>
     <manufacturer>Nintendo</manufacturer>
     <release>2001</release>
     <hardware>Portable</hardware>
+    <theme>gba</theme>
+  </system>
+  <system>
+    <name>lynx</name>
+    <path>/userdata/roms/lynx</path>
+    <extension>.lnx</extension>
+    <theme>atarilynx</theme>
   </system>
   <system>
     <name>kodi</name>
@@ -75,5 +82,23 @@ func TestParseYear(t *testing.T) {
 		if got := parseYear(in); got != want {
 			t.Errorf("parseYear(%q) = %d, want %d", in, got, want)
 		}
+	}
+}
+
+func TestThemeName(t *testing.T) {
+	cfg := filepath.Join(t.TempDir(), "es_systems.cfg")
+	if err := os.WriteFile(cfg, []byte(esSystems), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	reg, err := Load(cfg, "/roms")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// A theme name equal to the system's is not kept; a different one is.
+	if gba, _ := reg.Get("gba"); gba.Theme != "" || gba.ThemeName() != "gba" {
+		t.Errorf("gba: theme %q, name for themes %q", gba.Theme, gba.ThemeName())
+	}
+	if lynx, _ := reg.Get("lynx"); lynx.Theme != "atarilynx" || lynx.ThemeName() != "atarilynx" {
+		t.Errorf("lynx: theme %q, name for themes %q", lynx.Theme, lynx.ThemeName())
 	}
 }
