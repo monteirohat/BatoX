@@ -201,6 +201,29 @@ Ideas and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 - **[BatoX Installer](https://github.com/monteirohat/BatoX_Installer)**: the desktop app that installs and updates BatoX on a Batocera
   console (Electron, React and TypeScript).
 
+## Support the project
+
+BatoX is free and will stay free. If it is useful to you and you want to support the project, any
+amount helps.
+
+<p>
+  <a href="#support-the-project"><img src="https://img.shields.io/badge/Donate-PIX-32BCAD?style=for-the-badge&logo=pix&logoColor=white" alt="Donate with PIX"></a>
+  <a href="https://revolut.me/andrludegv"><img src="https://img.shields.io/badge/Donate-Revolut-0666EB?style=for-the-badge&logo=revolut&logoColor=white" alt="Donate with Revolut"></a>
+  <a href="https://www.paypal.me/AMonteiro818"><img src="https://img.shields.io/badge/Donate-PayPal-003087?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate with PayPal"></a>
+</p>
+
+- **PIX**, from Brazil: use this random key in the app of your bank.
+
+  ```
+  abf3de6b-bad4-4225-8667-c941ebd31039
+  ```
+
+- **Revolut**, from anywhere: open [revolut.me/andrludegv](https://revolut.me/andrludegv), or send
+  to the tag **@andrludegv** in the app.
+
+- **PayPal**, from anywhere: open [paypal.me/AMonteiro818](https://www.paypal.me/AMonteiro818) and
+  choose the amount.
+
 ## License
 
 [MIT](LICENSE)
