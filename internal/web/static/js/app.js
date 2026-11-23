@@ -18,6 +18,7 @@ import * as extensions from "./views/extensions.js";
 import * as batocera from "./views/batocera.js";
 import * as logs from "./views/logs.js";
 import * as access from "./views/access.js";
+import * as about from "./views/about.js";
 
 // The key is what appears after # in the address.
 const views = {
@@ -36,6 +37,7 @@ const views = {
   extensions: extensions.render,
   logs: logs.render,
   access: access.render,
+  about: about.render,
 };
 
 // Addresses used before the interface was translated, so old bookmarks keep working.

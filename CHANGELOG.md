@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- About screen, last in the menu: the version linked to its release notes, Report a problem (a new
+  GitHub issue with BatoX's version and the browser filled in), the open issues, the project's
+  other parts (BatoX Install, the mobile app, batox-theme), how to support the project, and the
+  license.
+
 ## [1.7.2] - 2026-11-23
 
 ### Fixed
