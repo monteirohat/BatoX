@@ -14,6 +14,8 @@
 @keyframes rec-blink { 50% { opacity: .25; } }
 @media (prefers-reduced-motion: reduce) { .rec-state[data-on="true"] .rec-dot { animation: none; } }
 
+.rec-problem { margin-bottom: 16px; overflow-wrap: anywhere; }
+
 #rec-player video { display: block; width: 100%; max-height: 70vh; background: #000; }
 
 .rec-paths { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 18px; margin: 0 0 8px; font-size: 14px; }

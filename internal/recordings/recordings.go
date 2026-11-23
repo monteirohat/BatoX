@@ -69,7 +69,10 @@ type Recording struct {
 
 // Status is everything the Recordings screen shows.
 type Status struct {
-	Available  bool        `json:"available"`
+	Available bool   `json:"available"`
+	Encoder   string `json:"encoder"` // hardware or batocera
+	// Problem is why the last recording stopped by itself, until the next one
+	Problem    string      `json:"problem,omitempty"`
 	Recording  bool        `json:"recording"`
 	Current    *Recording  `json:"current,omitempty"`
 	Settings   Settings    `json:"settings"`
@@ -82,12 +85,23 @@ type Status struct {
 	Now string `json:"now"`
 }
 
+// Who encodes the video: the board's hardware encoder, driven by BatoX, or
+// whatever batocera-record picks (a PC's graphics card, or the processor).
+const (
+	EncoderHardware = "hardware"
+	EncoderBatocera = "batocera"
+)
+
 // Recorder starts and stops screen recordings.
 type Recorder interface {
 	Available() bool
+	Encoder() string
 	Running() (bool, error)
 	Start(Settings) error
 	Stop() error
+	// Problem says why the last recording ended without being stopped
+	// ("" when it didn't, or when the recorder can't tell).
+	Problem() string
 }
 
 type Service struct {
@@ -121,13 +135,16 @@ func (s *Service) Status() (*Status, error) {
 	if err != nil {
 		return nil, err
 	}
-	st := &Status{Available: available, Recording: running, Settings: s.Settings(), Dir: s.dir, Files: files,
+	st := &Status{Available: available, Encoder: s.rec.Encoder(), Recording: running, Settings: s.Settings(), Dir: s.dir, Files: files,
 		Now: time.Now().UTC().Format(time.RFC3339)}
 	for i := range files {
 		if files[i].Active {
 			st.Current = &files[i]
 			break
 		}
+	}
+	if !running {
+		st.Problem = s.rec.Problem()
 	}
 	if d, err := device.DiskUsage(s.dir); err == nil {
 		st.FreeBytes, st.TotalBytes = &d.FreeBytes, &d.TotalBytes

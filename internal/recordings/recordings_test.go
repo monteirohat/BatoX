@@ -140,6 +140,10 @@ func TestStartFailsWithoutRecorder(t *testing.T) {
 	}
 
 	rec.Unavailable = false
+	rec.Died = "muxer error"
+	if st, _ := s.Status(); st.Problem != "muxer error" {
+		t.Errorf("an unexpected stop is reported: %+v", st)
+	}
 	rec.StartErr = errors.New("wf-recorder failed to start")
 	if _, err := s.Start(nil); err == nil || err.Error() != "wf-recorder failed to start" {
 		t.Errorf("recorder failure: %v", err)

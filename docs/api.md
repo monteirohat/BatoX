@@ -437,11 +437,22 @@ Deletes a track. `?path=snes/World.ogg`.
 
 ## Recordings
 
-Screen recordings, made with Batocera's own recorder (`batocera-record`, which uses `wf-recorder`):
-the TV's picture, menus and games, with the game's sound, the microphone or no sound. Files go to
-`/userdata/recordings` (`recordingsDir`), named after the time they started
-(`rec-2026.11.23-20h36.14.mkv`); recordings made with Batocera's hotkey land there too and are listed.
-The video is H.264 in an MKV file; on a Raspberry Pi it is encoded by the processor.
+Screen recordings of the TV's picture, menus and games, with the game's sound, the microphone or no
+sound, as H.264 in an MKV file. Files go to `/userdata/recordings` (`recordingsDir`), named after
+the time they started (`rec-2026.11.23-20h36.14.mkv`); recordings made with Batocera's hotkey land
+there too and are listed.
+
+Who records depends on the board (`encoder` in the status):
+
+- `hardware`: boards with a hardware H.264 encoder (the Raspberry Pi 4). BatoX runs `wf-recorder`
+  with it, keeping every frame the compositor hands over; the quality is the bitrate (4, 8, 12 or
+  16 Mbps). Batocera's own recorder encodes in software there, which can't keep up: on a Pi 4 its
+  High quality kept about 2 frames a second.
+- `batocera`: everywhere else (PCs, the Raspberry Pi 5), Batocera's `batocera-record`, which picks
+  a PC's graphics card or the processor.
+
+Both share `batocera-record`'s PID file, so BatoX and the hotkey see and stop each other's
+recordings.
 
 ### `GET /recordings`
 
@@ -452,6 +463,7 @@ to count the time from `startedAt`.
 ```json
 {
   "available": true,
+  "encoder": "hardware",
   "recording": true,
   "current": { "name": "rec-2026.11.23-20h48.38.mkv", "size": 1048576, "modified": "2026-11-23T20:48:52Z",
                "startedAt": "2026-11-23T20:48:38Z", "active": true },
@@ -466,7 +478,9 @@ to count the time from `startedAt`.
 ```
 
 `available` is `false` on Batocera versions without `batocera-record`; the other routes then answer
-`501`. `startedAt` is only set for files named by `batocera-record`.
+`501`. `startedAt` is only set for files named by `batocera-record`. When the last recording ended
+without being stopped (the recorder failed midway), `problem` says why, until the next one starts;
+what was recorded until then is kept. Only the `hardware` encoder can tell.
 
 ### `POST /recordings/start`
 
@@ -480,7 +494,7 @@ recorder's message when it can't start (for example, when the display server isn
 
 | Field | Values |
 |---|---|
-| `quality` | `low` (25 fps), `mid` (30 fps), `high` (60 fps), `ultra` (60 fps, larger files) |
+| `quality` | `low`, `mid`, `high`, `ultra`. With the `hardware` encoder: 4, 8, 12 or 16 Mbps. With `batocera`: 25 fps, 30 fps, 60 fps, 60 fps with larger files |
 | `audio` | `game` (the console's sound), `mic` (a microphone), `none` |
 | `allScreens` | `true` records every screen, one file each |
 

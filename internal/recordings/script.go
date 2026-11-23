@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 	"syscall"
@@ -29,6 +28,11 @@ func (r *Script) Available() bool {
 	_, err := exec.LookPath(r.Command)
 	return err == nil
 }
+
+func (r *Script) Encoder() string { return EncoderBatocera }
+
+// Problem: batocera-record doesn't say why a recording ended.
+func (r *Script) Problem() string { return "" }
 
 func (r *Script) Running() (bool, error) {
 	out, err := r.run(10*time.Second, "is_running")
@@ -94,22 +98,4 @@ func (r *Script) run(timeout time.Duration, args ...string) (string, error) {
 
 // lastLogLine is the recorder's last message, which says why it failed
 // (such as "wf-recorder failed to start.") with the line before it.
-func (r *Script) lastLogLine() string {
-	b, err := os.ReadFile(r.LogFile)
-	if err != nil {
-		return ""
-	}
-	lines := strings.Split(strings.TrimSpace(string(b)), "\n")
-	var keep []string
-	for i := len(lines) - 1; i >= 0 && len(keep) < 2; i-- {
-		l := strings.TrimSpace(lines[i])
-		// batocera-record's own lines start with a date: "2026-11-23 20:34:18 - "
-		if len(l) > 22 && l[4] == '-' && l[19:22] == " - " {
-			l = l[22:]
-		}
-		if l != "" {
-			keep = append([]string{l}, keep...)
-		}
-	}
-	return strings.Join(keep, " ")
-}
+func (r *Script) lastLogLine() string { return tailLines(r.LogFile, 2) }

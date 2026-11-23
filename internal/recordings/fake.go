@@ -13,6 +13,8 @@ type Fake struct {
 	Dir         string
 	Unavailable bool
 	StartErr    error
+	// Died is reported as the reason the last recording ended on its own.
+	Died string
 
 	mu      sync.Mutex
 	running bool
@@ -21,6 +23,10 @@ type Fake struct {
 }
 
 func (f *Fake) Available() bool { return !f.Unavailable }
+
+func (f *Fake) Encoder() string { return EncoderBatocera }
+
+func (f *Fake) Problem() string { return f.Died }
 
 func (f *Fake) Running() (bool, error) {
 	f.mu.Lock()

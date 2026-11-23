@@ -128,10 +128,16 @@ func run(cfgPath string) error {
 	defer deps.Extensions.StopAll()
 	// The user's own game library, at the address they choose.
 	deps.Library = library.New(cfg.DataDir, reg, romSvc, plat.ES, cfg.MaxUploadMB<<20, logger)
-	// Screen recordings: Batocera's batocera-record, or a stand-in in dev mode.
+	// Screen recordings: with the board's hardware encoder where it has one
+	// (Raspberry Pi 4), else with Batocera's batocera-record; a stand-in in
+	// dev mode.
 	var recorder recordings.Recorder = &recordings.Fake{Dir: cfg.RecordingsDir}
 	if cfg.Platform == config.PlatformBatocera {
-		recorder = recordings.NewScript(platform.DisplayEnv)
+		if recordings.HardwareEncoder("/sys/class/video4linux") {
+			recorder = recordings.NewDirect(cfg.RecordingsDir, platform.DisplayEnv)
+		} else {
+			recorder = recordings.NewScript(platform.DisplayEnv)
+		}
 	}
 	deps.Recordings = recordings.New(cfg.RecordingsDir, cfg.DataDir, recorder, logger)
 	srv := api.New(deps)

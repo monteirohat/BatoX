@@ -19,6 +19,10 @@ All notable changes to this project are documented here. The format follows
   setting.
 - Signed links for recordings (`POST /api/v1/recordings/link`): a video can play and download
   straight from the console, with seeking, without the browser loading the whole file first.
+- On boards with a hardware H.264 encoder (the Raspberry Pi 4), BatoX records with it instead of
+  Batocera's recorder, which encodes in software there and kept about 2 frames a second at High
+  quality: the recordings are smooth and games keep their speed. The quality is the bitrate, and a
+  recording that stops by itself says why on the Recordings screen.
 
 ### Fixed
 

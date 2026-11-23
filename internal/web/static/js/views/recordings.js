@@ -7,12 +7,27 @@ import { $, $$, toast, confirmDialog, busy, errorBox } from "../ui.js";
 import { api } from "../api.js";
 import { state } from "../state.js";
 
-const QUALITIES = [
-  ["low", "Low", "25 fps, small files"],
-  ["mid", "Medium", "30 fps"],
-  ["high", "High", "60 fps"],
-  ["ultra", "Ultra", "60 fps, large files"],
-];
+// What each quality means, by who encodes the video: Batocera's choice (a
+// PC's graphics card, or the processor), or the board's hardware encoder,
+// which BatoX drives itself and where the quality is the bitrate
+const QUALITIES = {
+  batocera: [
+    ["low", "Low", "25 fps, small files"],
+    ["mid", "Medium", "30 fps"],
+    ["high", "High", "60 fps"],
+    ["ultra", "Ultra", "60 fps, large files"],
+  ],
+  hardware: [
+    ["low", "Low", "4 Mbps, small files"],
+    ["mid", "Medium", "8 Mbps"],
+    ["high", "High", "12 Mbps"],
+    ["ultra", "Ultra", "16 Mbps, large files"],
+  ],
+};
+const ENCODER_NOTE = {
+  batocera: "Batocera picks the encoder: a PC's graphics card when it has one, the processor otherwise, where High and Ultra can slow down demanding games.",
+  hardware: "Recorded with the console's hardware video encoder: games keep their speed, and every frame the console can capture is kept.",
+};
 const AUDIO = [["game", "Game sound"], ["mic", "Microphone"], ["none", "No sound"]];
 
 const ICON_PLAY = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>`;
@@ -95,6 +110,7 @@ function drawLive() {
   const rec = status.recording;
   box.innerHTML = `
     <header><div><h2>Record the screen</h2><p>Everything on the TV, menus and games, until you stop it.</p></div></header>
+    ${!rec && status.problem ? `<div class="notice rec-problem"><b>The last recording stopped by itself</b>${esc(status.problem)} What was recorded until then is in the list below.</div>` : ""}
     <div class="rec-state" data-on="${rec}">
       <span class="rec-dot" aria-hidden="true"></span>
       <div>
@@ -110,7 +126,7 @@ function drawLive() {
     <div class="form-grid">
       <label class="field">Quality
         <select id="rec-quality" ${rec ? "disabled" : ""}>
-          ${QUALITIES.map(([v, label, hint]) => `<option value="${v}" ${s.quality === v ? "selected" : ""}>${label} (${hint})</option>`).join("")}
+          ${(QUALITIES[status.encoder] || QUALITIES.batocera).map(([v, label, hint]) => `<option value="${v}" ${s.quality === v ? "selected" : ""}>${label} (${hint})</option>`).join("")}
         </select>
       </label>
       <label class="field">Sound
@@ -122,7 +138,7 @@ function drawLive() {
         <label class="check"><input type="checkbox" id="rec-all" ${s.allScreens ? "checked" : ""} ${rec ? "disabled" : ""}> Record every screen (one file each)</label>
       </div>
     </div>
-    <p class="muted small">${rec ? "The settings apply to the next recording." : "On a Raspberry Pi the video is encoded by the processor: High and Ultra can slow down demanding games."}</p>`;
+    <p class="muted small">${rec ? "The settings apply to the next recording." : ENCODER_NOTE[status.encoder] || ENCODER_NOTE.batocera}</p>`;
 
   const start = $("#rec-start");
   if (start) start.onclick = () => void startRecording(start);
