@@ -6,6 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- On a computer, the menu stays put: the page no longer scrolls as a whole, so pulling past the top
+  or the bottom (a trackpad's bounce) moves only the content, and the menu, now taller than a small
+  window, scrolls on its own without a bar.
+
 ## [1.9.0] - 2026-11-23
 
 ### Added

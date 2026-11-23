@@ -45,3 +45,11 @@ export function errorBox(err) {
   return `<div class="notice"><b>${auth ? "Access denied" : "Couldn't load this"}</b>${esc(err.message)}${auth ? ' <a href="#access">Enter the token on the Access screen.</a>' : ""}</div>`;
 }
 
+// Back to the top of the page. On a computer the content scrolls inside
+// <main> (the menu beside it stays put); on a phone the page itself scrolls.
+export function scrollToTop(smooth = false) {
+  const behavior = smooth ? "smooth" : "auto";
+  const main = document.getElementById("view");
+  if (main) main.scrollTo({ top: 0, behavior });
+  window.scrollTo({ top: 0, behavior });
+}

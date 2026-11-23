@@ -4,7 +4,7 @@
 // EmulationStation's es_features.cfg.
 
 import { esc } from "../format.js";
-import { $, $$, toast, busy, errorBox } from "../ui.js";
+import { $, $$, toast, busy, errorBox, scrollToTop } from "../ui.js";
 import { api } from "../api.js";
 import { state } from "../state.js";
 
@@ -199,7 +199,7 @@ export async function render(page) {
       state.bcSearch = "";
       $("#bc-search").value = "";
       draw();
-      window.scrollTo({ top: 0 });
+      scrollToTop();
     });
     $("#bc-cat-select").onchange = e => { state.bcCat = e.target.value; draw(); };
     $$(".bset", body).forEach(wireRow);

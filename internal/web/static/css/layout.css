@@ -65,6 +65,21 @@ h2 { font: 600 17px/1.25 var(--font-display); margin: 0 0 4px; }
   .nav-link .short { display: none; }
 }
 
+/* On a computer the menu and the content scroll on their own: the page itself
+   doesn't, so pulling past the top or the bottom (the bounce of a trackpad)
+   moves only the content, and a menu taller than the window scrolls by
+   itself, without a bar. */
+@media (min-width: 761px) {
+  html, body { overflow: hidden; }
+  .app { height: 100vh; height: 100dvh; min-height: 0; }
+  .rail {
+    position: static; height: auto; min-height: 0;
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  main { overflow-y: auto; overscroll-behavior: contain; }
+}
+
 /* Access view hero: the full logo next to the title */
 .access-hero { display: flex; align-items: center; gap: 24px; margin-bottom: 24px; }
 .access-hero img { flex: none; }

@@ -3,7 +3,7 @@
 // so it keeps going when this page is closed.
 
 import { esc, fmtDuration } from "../format.js";
-import { $, $$, toast, confirmDialog, busy, errorBox } from "../ui.js";
+import { $, $$, toast, confirmDialog, busy, errorBox, scrollToTop } from "../ui.js";
 import { api } from "../api.js";
 import { state } from "../state.js";
 
@@ -246,7 +246,7 @@ function wireForm(page) {
       toast(`Timer started: ${when}.`);
       drawActive();
       drawLast();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop(true);
       await refresh();
     } catch (err) {
       toast(err.message, true);

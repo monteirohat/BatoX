@@ -1,7 +1,7 @@
 // Entry point: maps hash navigation (#dashboard, #games...) to views.
 
 import { state, clearTimers } from "./state.js";
-import { $, $$, errorBox } from "./ui.js";
+import { $, $$, errorBox, scrollToTop } from "./ui.js";
 import { api } from "./api.js";
 import * as dashboard from "./views/dashboard.js";
 import * as games from "./views/games.js";
@@ -84,7 +84,7 @@ async function route() {
 window.addEventListener("hashchange", () => {
   route();
   $("#view").focus({ preventScroll: true });
-  window.scrollTo(0, 0);
+  scrollToTop();
 });
 
 const RELEASES = "https://github.com/monteirohat/batox/releases";
