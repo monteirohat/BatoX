@@ -78,6 +78,9 @@ clicks, no terminal needed.
   search, each with the control that suits it: On/Off switches, lists of choices (with
   EmulationStation's names for emulator options, and the shader sets and decorations installed),
   sliders, numbers and time zone suggestions.
+- **Batocera update**: the version available for this console's board and update channel, a
+  download that resumes where it stopped when the connection drops (and after a restart), checked
+  before Batocera installs it.
 - **About**: the version and its release notes, **Report a problem** (a new GitHub issue with the
   version and the browser filled in), the project's other parts and how to support it.
 - **REST API** for everything above, protected by a token. See the [API reference](docs/api.md).

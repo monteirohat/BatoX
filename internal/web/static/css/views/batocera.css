@@ -33,3 +33,10 @@
   .cat-select { display: block; margin-bottom: 12px; }
   .bset { grid-template-columns: 1fr; }
 }
+
+/* Batocera update, above the settings */
+.bc-update { margin-bottom: 20px; }
+.bc-update .bar { height: 8px; margin: 4px 0 10px; }
+.bc-update .bar > i { background: var(--frame); }
+.bc-update .notice { margin: 8px 0 12px; }
+.up-line { margin: 0 0 12px; font-variant-numeric: tabular-nums; }

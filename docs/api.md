@@ -22,6 +22,7 @@ set the `baseUrl` and `token` variables.
 - [Audio](#audio)
 - [Extensions](#extensions)
 - [Batocera settings](#batocera-settings)
+- [Batocera update](#batocera-update)
 
 ## Authentication
 
@@ -940,3 +941,80 @@ keys such as `gba["Game.gba"].core` work.
 
 Read or write a single key whose name fits in a URL (letters, digits, `.`, `_`, `-`). The `PUT`
 body is `{"value": "..."}`. `GET` returns `404` when the key is not set.
+
+## Batocera update
+
+Downloads and installs Batocera's next version. Batocera's own `batocera-upgrade` downloads the
+update (about 2 GB) with a single request and deletes what it got when anything fails, so a
+dropped connection starts it over. Here the download runs on the console, resumes where it stopped
+(HTTP range requests), retries on its own with a growing wait, survives restarts, and is checked
+against the published MD5; then Batocera installs it, with `batocera-upgrade manual`.
+
+The update comes from where `batocera-upgrade` takes it, for every board:
+`<server>/<board>/<channel>/last/` with `boot.tar.xz`, `boot.tar.xz.md5` and `batocera.version`.
+The board is `/boot/boot/batocera.board` (`bcm2711` on a Raspberry Pi 4, `x86_64` on a PC; `rpi4`
+takes `rpi464`'s update), the channel is `updates.type` (`stable`, `unstable` or `butterfly`;
+anything else is `stable`), and the server is `updates.url`, or `https://updates.batocera.org`.
+
+These routes exist only on Batocera.
+
+### `GET /batocera/update`
+
+The installed version, the update on the server and the download or installation in progress.
+The server's answer is kept for ten minutes; `?refresh=1` asks it again.
+
+```json
+{
+  "available": true,
+  "installed": "43.1 2026/05/30 04:34",
+  "source": { "board": "bcm2711", "channel": "stable", "server": "https://updates.batocera.org",
+              "url": "https://updates.batocera.org/bcm2711/stable/last" },
+  "release": { "version": "44 2026/11/16 01:23", "size": 2273163352,
+               "lastModified": "Mon, 16 Nov 2026 04:08:00 GMT" },
+  "upToDate": false,
+  "canInstall": true,
+  "progress": { "state": "downloading", "version": "44 2026/11/16 01:23",
+                "bytes": 734003200, "total": 2273163352, "speed": 4718592 },
+  "freeBytes": 10861682688
+}
+```
+
+`checkError` replaces `release` when the server can't be reached. `canInstall` is `false` on
+Batocera versions whose `batocera-upgrade` has no `manual` mode; those update from EmulationStation.
+
+`progress.state` is one of:
+
+| State | Meaning |
+|---|---|
+| `none` | Nothing downloaded |
+| `downloading` | `bytes` of `total`, at `speed` bytes a second |
+| `retrying` | The connection failed (`error`); tries again at `nextRetry` (attempt `retries`), keeping what was downloaded |
+| `paused` | Stopped by `POST /batocera/update/pause`, or by a restart; `POST /batocera/update/download` resumes it |
+| `verifying` | Checking the MD5 (`bytes` read so far) |
+| `ready` | Downloaded and checked (`checked`): it can be installed |
+| `failed` | Stopped for good (`error`): a damaged file, or the update gone from the server |
+| `installing` | `batocera-upgrade` is installing it; `message` is what it says |
+| `installed` | Done: restart the console (`POST /reboot`) |
+
+### `POST /batocera/update/download`
+
+Starts the download, or resumes it where it stopped. Returns the status. `409` when Batocera is up
+to date, a download or installation is running, or EmulationStation is updating; `507` when the
+download doesn't fit; `502` when the update server can't be reached. A download of another
+version, or of a file that changed on the server, starts over.
+
+### `POST /batocera/update/pause`
+
+Stops the download and keeps what was downloaded. Returns the status.
+
+### `DELETE /batocera/update/download`
+
+Stops the download and deletes what was downloaded. Returns the status.
+
+### `POST /batocera/update/install`
+
+Installs the downloaded update with `batocera-upgrade manual`, which extracts it to `/boot` and
+keeps the boot settings (`config.txt`, `batocera-boot.conf`). Returns the status at once; follow
+it with `GET /batocera/update` until `installed`, then restart the console with `POST /reboot`.
+`409` until the download is `ready`; `501` when this Batocera can't install a downloaded file.
+

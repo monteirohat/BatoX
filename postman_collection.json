@@ -1812,6 +1812,116 @@
           }
         }
       ]
+    },
+    {
+      "name": "Batocera update",
+      "item": [
+        {
+          "name": "Update status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/update?refresh=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "update"
+              ],
+              "query": [
+                {
+                  "key": "refresh",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Download (or resume) the update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/update/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "update",
+                "download"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pause the download",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/update/pause",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "update",
+                "pause"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete the download",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/update/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "update",
+                "download"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Install the update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/batocera/update/install",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "batocera",
+                "update",
+                "install"
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

@@ -25,6 +25,7 @@ import (
 	"github.com/monteirohat/batox/internal/recordings"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
+	"github.com/monteirohat/batox/internal/sysupdate"
 	"github.com/monteirohat/batox/internal/video"
 	"github.com/monteirohat/batox/internal/web"
 )
@@ -59,6 +60,9 @@ type Deps struct {
 	// Recordings records the screen and manages the recordings; nil turns
 	// the routes off.
 	Recordings *recordings.Service
+	// Update downloads and installs Batocera updates; nil turns the routes
+	// off (outside Batocera).
+	Update *sysupdate.Updater
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -201,6 +205,15 @@ func (s *Server) routes() chi.Router {
 			r.Put("/batocera/settings", s.putBatoceraSetting)
 			r.Get("/batocera/settings/{key}", s.getBatoceraSetting)
 			r.Put("/batocera/settings/{key}", s.setBatoceraSetting)
+
+			// Batocera updates: a download that resumes, then batocera-upgrade
+			if s.Update != nil {
+				r.Get("/batocera/update", s.updateStatus)
+				r.Post("/batocera/update/download", s.downloadUpdate)
+				r.Post("/batocera/update/pause", s.pauseUpdate)
+				r.Delete("/batocera/update/download", s.cancelUpdate)
+				r.Post("/batocera/update/install", s.installUpdate)
+			}
 		})
 	})
 	return r

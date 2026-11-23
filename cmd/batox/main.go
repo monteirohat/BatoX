@@ -27,6 +27,7 @@ import (
 	"github.com/monteirohat/batox/internal/recordings"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
+	"github.com/monteirohat/batox/internal/sysupdate"
 	"github.com/monteirohat/batox/internal/video"
 
 	"github.com/monteirohat/batox-apps/overlay"
@@ -140,6 +141,10 @@ func run(cfgPath string) error {
 		}
 	}
 	deps.Recordings = recordings.New(cfg.RecordingsDir, cfg.DataDir, recorder, logger)
+	// Batocera updates, for this board and update channel
+	if cfg.Platform == config.PlatformBatocera {
+		deps.Update = sysupdate.New(sysupdate.BatoceraPaths, plat.GetSetting, logger)
+	}
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{

@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Batocera update, at the top of the Batocera screen: the installed and the available version, for
+  this board and update channel, as Batocera's own updater works them out. The download (about
+  2 GB) runs on the console and resumes where it stopped: when the connection drops it tries again
+  on its own and keeps what it has, and it survives restarts; the file is checked against its MD5
+  and installed by Batocera (`batocera-upgrade manual`), then the console restarts into the new
+  version. New `GET /api/v1/batocera/update`, `POST /api/v1/batocera/update/download`,
+  `POST /api/v1/batocera/update/pause`, `DELETE /api/v1/batocera/update/download` and
+  `POST /api/v1/batocera/update/install` endpoints.
+
 ## [1.9.1] - 2026-11-23
 
 ### Fixed

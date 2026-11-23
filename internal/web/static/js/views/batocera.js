@@ -7,6 +7,7 @@ import { esc } from "../format.js";
 import { $, $$, toast, busy, errorBox, scrollToTop } from "../ui.js";
 import { api } from "../api.js";
 import { state } from "../state.js";
+import { mountUpdate } from "./batocera-update.js";
 
 // Friendly names for the most common batocera.conf prefixes.
 const CATEGORY_LABELS = {
@@ -29,6 +30,7 @@ export async function render(page) {
       <div><h1>Batocera settings</h1><p>Every key in batocera.conf, grouped by category. Switches, lists and sliders save as soon as you change them. Some changes only take effect after restarting EmulationStation or the console.</p></div>
       <div class="actions"><button class="btn" id="bc-reload">Reload</button></div>
     </header>
+    <div id="bc-update" class="bc-update"></div>
     <div class="toolbar">
       <label class="sr-only" for="bc-search">Search settings</label>
       <input type="search" id="bc-search" placeholder="Search by name, key, value or description" value="${esc(state.bcSearch || "")}">
@@ -43,6 +45,8 @@ export async function render(page) {
       </div>
       <div class="actions" style="margin-top:14px"><button class="btn btn-primary" id="bc-new-save">Save key</button></div>
     </section>`;
+
+  void mountUpdate($("#bc-update"));
 
   let data = { file: "", categories: [] };
   let systemNames = {};
