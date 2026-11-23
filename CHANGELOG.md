@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-11-23
+
 ### Fixed
 
 - Consoles screen: the logos that come on a dark or gray plate lose it before turning white, with
@@ -223,7 +225,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.7.2...HEAD
+[1.7.2]: https://github.com/monteirohat/batox/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/monteirohat/batox/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/monteirohat/batox/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/monteirohat/batox/compare/v1.5.0...v1.6.0
