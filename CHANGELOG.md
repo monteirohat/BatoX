@@ -6,17 +6,17 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-11-23
+
 ### Added
 
-- Recordings screen: start and stop a recording of the console's screen with Batocera's own
-  recorder (quality, the game's sound, a microphone or none, every screen), with the time and size
-  while it records; where the files are, on the console and on the network, with the free space;
-  and the recordings, newest first, to watch in the browser, download or delete. Recordings made
-  with Batocera's hotkey are listed too. New `GET /api/v1/recordings`,
-  `POST /api/v1/recordings/start`, `POST /api/v1/recordings/stop`,
-  `PUT /api/v1/recordings/settings`, `POST /api/v1/recordings/link`,
-  `GET /api/v1/recordings/file` and `DELETE /api/v1/recordings` endpoints, and the `recordingsDir`
-  setting.
+- Recordings screen: start and stop a recording of the console's screen (quality, the game's sound,
+  a microphone or none, every screen), with the time and size while it records; where the files are,
+  on the console and on the network, with the free space; and the recordings, newest first, to watch
+  in the browser, download or delete. Recordings made with Batocera's hotkey are listed too. New
+  `GET /api/v1/recordings`, `POST /api/v1/recordings/start`, `POST /api/v1/recordings/stop`,
+  `PUT /api/v1/recordings/settings`, `POST /api/v1/recordings/link`, `GET /api/v1/recordings/file`
+  and `DELETE /api/v1/recordings` endpoints, and the `recordingsDir` setting.
 - Signed links for recordings (`POST /api/v1/recordings/link`): a video can play and download
   straight from the console, with seeking, without the browser loading the whole file first.
 - On boards with a hardware H.264 encoder (the Raspberry Pi 4), BatoX records with it instead of
@@ -257,7 +257,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/monteirohat/batox/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/monteirohat/batox/compare/v1.7.2...v1.8.0
 [1.7.2]: https://github.com/monteirohat/batox/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/monteirohat/batox/compare/v1.7.0...v1.7.1
