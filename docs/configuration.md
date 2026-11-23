@@ -32,6 +32,7 @@ batocera-services stop batox && batocera-services start batox
 | `romsDir` | `/userdata/roms` | ROM root, with one folder per system. |
 | `themesDir` | `/userdata/themes` | EmulationStation themes. |
 | `musicDir` | `/userdata/music` | EmulationStation background music. |
+| `recordingsDir` | `/userdata/recordings` | Screen recordings: where Batocera's recorder saves them. |
 | `esSystemsFile` | `/usr/share/emulationstation/es_systems.cfg` | Source of the systems and accepted extensions. |
 | `esLogosDir` | `/usr/share/emulationstation/themes/es-theme-carbon/art/logos` | System logos of Batocera's default theme, shown on the Consoles screen when the current theme has none. |
 | `esFeaturesFile` | `/usr/share/emulationstation/es_features.cfg` | Emulator options, used to show the Batocera settings with the right controls (names, lists, switches, sliders). |

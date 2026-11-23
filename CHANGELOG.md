@@ -6,6 +6,25 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Recordings screen: start and stop a recording of the console's screen with Batocera's own
+  recorder (quality, the game's sound, a microphone or none, every screen), with the time and size
+  while it records; where the files are, on the console and on the network, with the free space;
+  and the recordings, newest first, to watch in the browser, download or delete. Recordings made
+  with Batocera's hotkey are listed too. New `GET /api/v1/recordings`,
+  `POST /api/v1/recordings/start`, `POST /api/v1/recordings/stop`,
+  `PUT /api/v1/recordings/settings`, `POST /api/v1/recordings/link`,
+  `GET /api/v1/recordings/file` and `DELETE /api/v1/recordings` endpoints, and the `recordingsDir`
+  setting.
+- Signed links for recordings (`POST /api/v1/recordings/link`): a video can play and download
+  straight from the console, with seeking, without the browser loading the whole file first.
+
+### Fixed
+
+- Tools that talk to the screen now get the Wayland display too (`WAYLAND_DISPLAY`), not only
+  sway's socket: BatoX runs as a service, without the graphical session's variables.
+
 ## [1.8.0] - 2026-11-23
 
 ### Added

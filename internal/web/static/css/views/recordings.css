@@ -1,0 +1,41 @@
+/* Recordings view
+   The recorder's state, the player, where the files are, and the list. */
+
+.rec-state {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  padding: 14px 16px; margin-bottom: 16px; background: var(--surface-2, rgba(255, 255, 255, .04));
+  border: 1px solid var(--line);
+}
+.rec-state > div:nth-child(2) { display: grid; gap: 2px; }
+.rec-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--ink-3); }
+.rec-state[data-on="true"] { border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); }
+.rec-state[data-on="true"] .rec-dot { background: var(--danger); animation: rec-blink 1.2s ease-in-out infinite; }
+.rec-time { font: 300 28px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+@keyframes rec-blink { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .rec-state[data-on="true"] .rec-dot { animation: none; } }
+
+#rec-player video { display: block; width: 100%; max-height: 70vh; background: #000; }
+
+.rec-paths { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 18px; margin: 0 0 8px; font-size: 14px; }
+.rec-paths dt { color: var(--ink-2); }
+.rec-paths dd { margin: 0; overflow-wrap: anywhere; }
+.rec-paths code { user-select: all; }
+
+.rec-files { display: grid; }
+.rec-file {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  padding: 10px 0; border-top: 1px solid var(--line);
+}
+.rec-file:first-child { border-top: 0; }
+.rec-info { display: grid; gap: 2px; min-width: 0; }
+.rec-info span { overflow-wrap: anywhere; }
+.rec-file[data-playing="true"] .rec-info b { color: var(--link); }
+.rec-actions { display: flex; gap: 6px; }
+.rec-live-tag { color: var(--danger); font-weight: 600; }
+
+@media (max-width: 760px) {
+  .rec-state { grid-template-columns: auto minmax(0, 1fr); }
+  .rec-state .actions { grid-column: 1 / -1; }
+  .rec-paths { grid-template-columns: 1fr; gap: 2px; }
+  .rec-paths dd { margin-bottom: 8px; }
+}

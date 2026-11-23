@@ -31,6 +31,10 @@ type Info struct {
 	Disk           *Disk    `json:"disk,omitempty"`
 }
 
+// DiskUsage reports the size and free space of the filesystem holding path
+// (Linux only).
+func DiskUsage(path string) (*Disk, error) { return diskUsage(path) }
+
 // Collect gathers whatever is available; anything the machine lacks is left out.
 func Collect(diskPath string) Info {
 	info := Info{Arch: runtime.GOARCH, CPUs: runtime.NumCPU()}

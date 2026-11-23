@@ -22,6 +22,7 @@ import (
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/playtimer"
+	"github.com/monteirohat/batox/internal/recordings"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
 	"github.com/monteirohat/batox/internal/video"
@@ -55,6 +56,9 @@ type Deps struct {
 	// Library downloads games from the user's own library; nil turns the
 	// routes off.
 	Library *library.Service
+	// Recordings records the screen and manages the recordings; nil turns
+	// the routes off.
+	Recordings *recordings.Service
 }
 
 // Onscreen shows message cards on top of the screen, games included
@@ -99,6 +103,11 @@ func (s *Server) routes() chi.Router {
 		// Public
 		r.Get("/ping", s.ping)
 		r.Get("/about", s.about)
+		// A recording's file: with the token, or through a signed link from
+		// POST /recordings/link (for <video> and downloads, which can't send it)
+		if s.Recordings != nil {
+			r.Get("/recordings/file", s.recordingFileRoute)
+		}
 
 		// Token-protected
 		r.Group(func(r chi.Router) {
@@ -135,6 +144,16 @@ func (s *Server) routes() chi.Router {
 			r.Post("/music", s.uploadMusic)
 			r.Get("/music/file", s.musicFile)
 			r.Delete("/music", s.deleteMusic)
+
+			// Screen recordings
+			if s.Recordings != nil {
+				r.Get("/recordings", s.recordingsStatus)
+				r.Post("/recordings/start", s.startRecording)
+				r.Post("/recordings/stop", s.stopRecording)
+				r.Put("/recordings/settings", s.setRecordingSettings)
+				r.Post("/recordings/link", s.recordingLink)
+				r.Delete("/recordings", s.deleteRecording)
+			}
 
 			// EmulationStation
 			r.Post("/emulationstation/start", s.esAction("start", s.Platform.StartES))

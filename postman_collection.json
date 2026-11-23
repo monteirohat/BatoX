@@ -600,6 +600,182 @@
       ]
     },
     {
+      "name": "Recordings",
+      "item": [
+        {
+          "name": "Recordings status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start recording",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings",
+                "start"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quality\": \"mid\",\n  \"audio\": \"game\",\n  \"allScreens\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Stop recording",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings/stop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings",
+                "stop"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save recording settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings",
+                "settings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quality\": \"high\",\n  \"audio\": \"game\",\n  \"allScreens\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Link to a recording",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings/link?name=rec-2026.11.23-20h48.38.mkv",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings",
+                "link"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "rec-2026.11.23-20h48.38.mkv"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Download a recording",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings/file?name=rec-2026.11.23-20h48.38.mkv&download=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings",
+                "file"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "rec-2026.11.23-20h48.38.mkv"
+                },
+                {
+                  "key": "download",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete a recording",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/recordings?name=rec-2026.11.23-20h48.38.mkv",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "recordings"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "rec-2026.11.23-20h48.38.mkv"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Now playing",
       "item": [
         {

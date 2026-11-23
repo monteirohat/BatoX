@@ -9,6 +9,7 @@ import * as consoles from "./views/consoles.js";
 import * as upload from "./views/upload.js";
 import * as library from "./views/library.js";
 import * as music from "./views/music.js";
+import * as recordings from "./views/recordings.js";
 import * as messages from "./views/messages.js";
 import * as timer from "./views/timer.js";
 import * as es from "./views/es.js";
@@ -28,6 +29,7 @@ const views = {
   upload: upload.render,
   library: library.render,
   music: music.render,
+  recordings: recordings.render,
   messages: messages.render,
   timer: timer.render,
   es: es.render,

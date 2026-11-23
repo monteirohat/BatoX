@@ -24,6 +24,7 @@ import (
 	"github.com/monteirohat/batox/internal/onscreen"
 	"github.com/monteirohat/batox/internal/platform"
 	"github.com/monteirohat/batox/internal/playtimer"
+	"github.com/monteirohat/batox/internal/recordings"
 	"github.com/monteirohat/batox/internal/roms"
 	"github.com/monteirohat/batox/internal/systems"
 	"github.com/monteirohat/batox/internal/video"
@@ -127,6 +128,12 @@ func run(cfgPath string) error {
 	defer deps.Extensions.StopAll()
 	// The user's own game library, at the address they choose.
 	deps.Library = library.New(cfg.DataDir, reg, romSvc, plat.ES, cfg.MaxUploadMB<<20, logger)
+	// Screen recordings: Batocera's batocera-record, or a stand-in in dev mode.
+	var recorder recordings.Recorder = &recordings.Fake{Dir: cfg.RecordingsDir}
+	if cfg.Platform == config.PlatformBatocera {
+		recorder = recordings.NewScript(platform.DisplayEnv)
+	}
+	deps.Recordings = recordings.New(cfg.RecordingsDir, cfg.DataDir, recorder, logger)
 	srv := api.New(deps)
 
 	httpSrv := &http.Server{

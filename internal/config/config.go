@@ -38,6 +38,8 @@ type Config struct {
 	ThemesDir string `json:"themesDir"` // EmulationStation themes
 	MusicDir  string `json:"musicDir"`  // EmulationStation background music
 
+	RecordingsDir string `json:"recordingsDir"` // screen recordings (batocera-record's folder)
+
 	ESSystemsFile  string `json:"esSystemsFile"`  // es_systems.cfg (systems and extensions)
 	ESLogosDir     string `json:"esLogosDir"`     // system logos of Batocera's default theme, for when the current theme has none
 	ESFeaturesFile string `json:"esFeaturesFile"` // es_features.cfg (emulator options, for the settings controls)
@@ -64,6 +66,7 @@ func batoceraDefaults() Config {
 		RomsDir:              "/userdata/roms",
 		ThemesDir:            "/userdata/themes",
 		MusicDir:             "/userdata/music",
+		RecordingsDir:        "/userdata/recordings",
 		ESSystemsFile:        "/usr/share/emulationstation/es_systems.cfg",
 		ESLogosDir:           "/usr/share/emulationstation/themes/es-theme-carbon/art/logos",
 		ESFeaturesFile:       "/usr/share/emulationstation/es_features.cfg",
@@ -88,6 +91,7 @@ func devDefaults() Config {
 		RomsDir:              "./dev/roms",
 		ThemesDir:            "./dev/themes",
 		MusicDir:             "./dev/music",
+		RecordingsDir:        "./dev/recordings",
 		ESSystemsFile:        "./dev/es_systems.cfg",
 		ESLogosDir:           "./dev/logos",
 		ESFeaturesFile:       "./dev/es_features.cfg",

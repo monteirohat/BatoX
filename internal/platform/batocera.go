@@ -108,7 +108,7 @@ func (b *Batocera) VideoOutputs() ([]string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "batocera-resolution", "listOutputs")
-	cmd.Env = displayEnv()
+	cmd.Env = DisplayEnv()
 	// Only stdout: when it can't reach the display server, the tool prints
 	// the error on stderr and still exits with 0.
 	out, err := cmd.Output()
@@ -190,9 +190,11 @@ func pactl(args ...string) ([]byte, error) {
 	return cmd.Output()
 }
 
-// displayEnv points Batocera's display tools at the display server. BatoX
-// runs as a service, without the variables of the graphical session.
-func displayEnv() []string {
+// DisplayEnv points Batocera's display tools at the display server. BatoX
+// runs as a service, without the variables of the graphical session: sway's
+// socket for its tools, and the Wayland display for clients such as
+// wf-recorder (the screen recorder).
+func DisplayEnv() []string {
 	env := os.Environ()
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	if runtimeDir == "" {
@@ -202,6 +204,15 @@ func displayEnv() []string {
 	if os.Getenv("SWAYSOCK") == "" {
 		if socks, _ := filepath.Glob(filepath.Join(runtimeDir, "sway-ipc.*.sock")); len(socks) > 0 {
 			env = append(env, "SWAYSOCK="+socks[0])
+		}
+	}
+	if os.Getenv("WAYLAND_DISPLAY") == "" {
+		displays, _ := filepath.Glob(filepath.Join(runtimeDir, "wayland-*"))
+		for _, d := range displays {
+			if !strings.HasSuffix(d, ".lock") {
+				env = append(env, "WAYLAND_DISPLAY="+filepath.Base(d))
+				break
+			}
 		}
 	}
 	if os.Getenv("DISPLAY") == "" {

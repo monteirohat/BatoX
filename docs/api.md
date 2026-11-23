@@ -13,6 +13,7 @@ set the `baseUrl` and `token` variables.
 - [Consoles](#consoles)
 - [Library](#library)
 - [Music](#music)
+- [Recordings](#recordings)
 - [Now playing](#now-playing)
 - [Messages](#messages)
 - [Timer](#timer)
@@ -57,10 +58,11 @@ Errors return an HTTP status and a JSON body:
 | `401` | Missing or invalid token |
 | `404` | Route, ROM, track or setting not found |
 | `405` | Method not allowed on that route |
-| `409` | Conflict: duplicate ROM, file with the same name, sync already running |
+| `409` | Conflict: duplicate ROM, file with the same name, sync already running, a recording already running (or none to stop) |
 | `413` | Upload larger than `maxUploadMB` / `maxThemeMB` |
 | `500` | Unexpected error (details in `/logs?type=error`) |
-| `502` | EmulationStation did not respond or its init script failed |
+| `501` | The console has no screen recorder (`batocera-record`) |
+| `502` | EmulationStation did not respond or its init script failed; the screen recorder failed to start |
 
 ## Service and device
 
@@ -431,6 +433,97 @@ Deletes a track. `?path=snes/World.ogg`.
 
 ```json
 { "status": "deleted", "path": "snes/World.ogg" }
+```
+
+## Recordings
+
+Screen recordings, made with Batocera's own recorder (`batocera-record`, which uses `wf-recorder`):
+the TV's picture, menus and games, with the game's sound, the microphone or no sound. Files go to
+`/userdata/recordings` (`recordingsDir`), named after the time they started
+(`rec-2026.11.23-20h36.14.mkv`); recordings made with Batocera's hotkey land there too and are listed.
+The video is H.264 in an MKV file; on a Raspberry Pi it is encoded by the processor.
+
+### `GET /recordings`
+
+The recorder, the settings for the next recording, the folder and the files, newest first. While
+recording, `current` is the file being written (`active: true`), and `now` is the console's clock,
+to count the time from `startedAt`.
+
+```json
+{
+  "available": true,
+  "recording": true,
+  "current": { "name": "rec-2026.11.23-20h48.38.mkv", "size": 1048576, "modified": "2026-11-23T20:48:52Z",
+               "startedAt": "2026-11-23T20:48:38Z", "active": true },
+  "settings": { "quality": "mid", "audio": "game", "allScreens": false },
+  "dir": "/userdata/recordings",
+  "freeBytes": 10861682688,
+  "totalBytes": 54916243456,
+  "files": [ { "name": "rec-2026.11.23-20h48.38.mkv", "size": 1048576, "modified": "2026-11-23T20:48:52Z",
+               "startedAt": "2026-11-23T20:48:38Z", "active": true } ],
+  "now": "2026-11-23T20:48:53Z"
+}
+```
+
+`available` is `false` on Batocera versions without `batocera-record`; the other routes then answer
+`501`. `startedAt` is only set for files named by `batocera-record`.
+
+### `POST /recordings/start`
+
+Starts recording. The body is optional; when given, the settings are saved for the next
+recordings too. Returns the status. `409` when a recording is already running, `502` with the
+recorder's message when it can't start (for example, when the display server isn't running).
+
+```json
+{ "quality": "mid", "audio": "game", "allScreens": false }
+```
+
+| Field | Values |
+|---|---|
+| `quality` | `low` (25 fps), `mid` (30 fps), `high` (60 fps), `ultra` (60 fps, larger files) |
+| `audio` | `game` (the console's sound), `mic` (a microphone), `none` |
+| `allScreens` | `true` records every screen, one file each |
+
+### `POST /recordings/stop`
+
+Stops the recording and returns the status, with the finished file first in `files`. It takes a
+few seconds: the recorder writes the end of the file. `409` when nothing is recording.
+
+### `PUT /recordings/settings`
+
+Saves the settings for the next recordings (same body as `POST /recordings/start`). Returns them.
+
+### `POST /recordings/link`
+
+An address for a recording that works without the token, for six hours: for a `<video>` element
+or a download link, which can't send the token. `?name=rec-2026.11.23-20h48.38.mkv`.
+
+```json
+{
+  "url": "/api/v1/recordings/file?expires=1795488294&name=rec-2026.11.23-20h48.38.mkv&sig=fdcf40…",
+  "expires": "2026-11-24T02:48:53Z"
+}
+```
+
+The signature covers that file and the expiry, and is made with the API token: changing the token
+turns every link off.
+
+### `GET /recordings/file`
+
+The video, with HTTP range requests (to seek while playing). `?name=rec-2026.11.23-20h48.38.mkv`,
+with the token or the `expires` and `sig` of a link. Add `download=1` to save it instead of playing
+it (`Content-Disposition: attachment`).
+
+```bash
+curl -OJ -H "Authorization: Bearer $TOKEN" "http://batocera.local:8080/api/v1/recordings/file?name=rec-2026.11.23-20h48.38.mkv&download=1"
+```
+
+### `DELETE /recordings`
+
+Deletes a recording. `?name=rec-2026.11.23-20h48.38.mkv`. `409` for the file being recorded.
+
+```json
+{ "status": "deleted", "name": "rec-2026.11.23-20h48.38.mkv" }
 ```
 
 ## Now playing

@@ -54,6 +54,9 @@ clicks, no terminal needed.
   from Batocera's own `es_systems.cfg`, so BatoX accepts exactly what EmulationStation can list.
 - **Background music** for EmulationStation: upload to the main folder or to a per-system folder,
   preview tracks in the browser, and delete them.
+- **Recordings** of the screen, for your videos: start and stop recording from the browser (quality,
+  game sound or microphone, every screen), see where the files are on the network, and watch,
+  download or delete them. Recordings made with Batocera's hotkey show up too.
 - **EmulationStation controls**: reload game lists, restart, stop and start, edit
   `es_settings.cfg`, install themes from a ZIP, and read or clear the log.
 - **Timer**: limit play time with a countdown in a corner of the TV; at zero, BatoX closes the game
