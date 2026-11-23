@@ -101,7 +101,13 @@ or updates BatoX over SSH, and shows you the address and the API token at the en
   <a href="https://github.com/monteirohat/BatoX_Installer"><img src="docs/assets/screenshots/installer.png" alt="BatoX Installer" width="720"></a>
 </p>
 
-1. Download it from the [BatoX Installer releases](https://github.com/monteirohat/BatoX_Installer/releases/latest).
+<p align="center">
+  <a href="https://apps.microsoft.com/detail/9pdjnh3mn0tv"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Get it from Microsoft" width="200"></a>
+</p>
+
+1. On Windows, get [BatoX Install from the Microsoft Store](https://apps.microsoft.com/detail/9pdjnh3mn0tv). For macOS and Linux (or
+   Windows without the Store), download it from the
+   [BatoX Installer releases](https://github.com/monteirohat/BatoX_Installer/releases/latest).
 2. Pick a version (the latest is selected), enter `batocera.local` or the console's IP address,
    and click **Check console**.
 3. Click **Install**. Use the same app later to update to a new version.

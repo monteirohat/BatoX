@@ -37,7 +37,8 @@ This guide also covers SSH access, upgrading, uninstalling and troubleshooting.
 The [BatoX Installer](https://github.com/monteirohat/BatoX_Installer) is a desktop app, in the style of balenaEtcher, that does every step
 of the installation for you over SSH.
 
-1. Download it for your system from the
+1. On Windows, get [BatoX Install from the Microsoft Store](https://apps.microsoft.com/detail/9pdjnh3mn0tv): it is signed by
+   Microsoft and updates on its own. Otherwise download it for your system from the
    [latest installer release](https://github.com/monteirohat/BatoX_Installer/releases/latest): a setup or portable `.exe` for Windows,
    a `.dmg` for macOS (Apple Silicon or Intel), or an `.AppImage` or `.deb` for Linux.
 2. Open it and choose the BatoX **version**. The latest release is selected; choose **Choose**
@@ -54,7 +55,8 @@ binary for the console's processor, verifies it against the release's `SHA256SUM
 MyMine install if there is one, copies the files, starts the service and checks the API. The SSH
 password is never saved.
 
-The installer builds are not code-signed yet, so the first launch shows a warning. See the
+The installer builds on GitHub are not code-signed yet (the Store version is), so the first launch
+shows a warning. See the
 [installer README](https://github.com/monteirohat/BatoX_Installer#download) for how to open it on each system.
 
 ## SSH access to Batocera
