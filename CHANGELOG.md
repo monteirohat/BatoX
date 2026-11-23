@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-11-23
+
 ### Added
 
 - About screen, last in the menu: the version linked to its release notes, Report a problem (a new
@@ -232,7 +234,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.7.2...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/monteirohat/batox/compare/v1.7.2...v1.8.0
 [1.7.2]: https://github.com/monteirohat/batox/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/monteirohat/batox/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/monteirohat/batox/compare/v1.6.0...v1.7.0
