@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-11-23
+
 ### Added
 
 - Batocera update, at the top of the Batocera screen: the installed and the available version, for
@@ -276,7 +278,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/monteirohat/batox/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/monteirohat/batox/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/monteirohat/batox/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/monteirohat/batox/compare/v1.7.2...v1.8.0
