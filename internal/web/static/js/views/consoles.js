@@ -30,10 +30,12 @@ const SORTS = [
 // Kept while the page is open.
 const view = { search: "", type: "", withGames: true, sort: "name" };
 // Logos are drawn in white, as on batox-theme's home. In Batocera's default theme
-// these come on a dark or a gray plate, which is cut off first (the theme's
-// logoCutDark and logoCutGray lists).
-const CUT_DARK = new Set("megadrive megadrive-japan gba msx msx1 msx2 msx2+ msxturbor msxlaserdisk pygame 3do atarilynx dragon32 dynax enterprise epic fallout1-ce gx4000 gzdoom lowresnx vis coleco lcdgames".split(" "));
-const CUT_GRAY = new Set("c64 c16 c20 c128 plus4 cplus4 atari gong kaneko msu-md neogeomvs segacd snesh trs-80 arduboy nintendo auto-strategy".split(" "));
+// these come on a dark or a gray plate, which is cut off first; and these can't be
+// whitened at all, so their name stands in. The lists are batox-theme's
+// (_inc/variables.xml: logoCutDark, logoCutGray and logoAsName).
+const CUT_DARK = new Set("megadrive megadrive-japan gba msx msx1 msx2 msx2+ msxturbor msxlaserdisk pygame 3do atarilynx dragon32 dynax enterprise epic fallout1-ce gx4000 gzdoom lowresnx vis coleco lcdgames odyssey2 arcadia auto-retroachievements auto-verticalarcade cdogs colecovision eduke32 etlegacy fallout2-ce gbah genesis genh ggh gp32 hcl hurrican irem megacd model2 model3 mrboom neogeo64 openjazz pokemini powerbomberman pyxel residualvm retrobat scv solarus sonic3-air starship superbroswar teknoparrot thextech vpinball zaccariapinball".split(" "));
+const CUT_GRAY = new Set("c64 c16 c20 c128 plus4 cplus4 atari gong kaneko msu-md neogeomvs segacd snesh trs-80 arduboy nintendo auto-strategy advision auto-favorites auto-lightgun lightgun bennugd capcom cps2 gbch internet nesh openbor pinballfx3 plugnplay prboom sonic-mania tvgames".split(" "));
+const AS_NAME = new Set("auto-allgames pinballfx2".split(" "));
 const cut = name => CUT_DARK.has(name) ? "dark" : CUT_GRAY.has(name) ? "gray" : "";
 
 const logos = new Map(); // system name -> object URL ("" when there is none)
@@ -126,7 +128,7 @@ function draw() {
 function card(c) {
   return `
     <button class="console-card${c.games ? "" : " console-empty"}" data-name="${esc(c.name)}" aria-label="${esc(c.fullName)}: ${plural(c.games, "game", "games")}">
-      <span class="console-logo" data-logo="${c.hasLogo ? esc(c.name) : ""}" data-cut="${cut(c.theme || c.name)}">
+      <span class="console-logo" data-logo="${c.hasLogo && !AS_NAME.has(c.theme || c.name) ? esc(c.name) : ""}" data-cut="${cut(c.theme || c.name)}">
         <span class="console-logo-text">${esc(c.fullName)}</span>
       </span>
       <span class="console-name">${esc(c.fullName)}</span>

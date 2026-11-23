@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- Consoles screen: the logos that come on a dark or gray plate lose it before turning white, with
+  batox-theme's newer lists. Odyssey2, PrBoom, Genesis, Mega-CD, Neo Geo 64, CPS2, OpenBOR and
+  46 other systems no longer show as a white block; Pinball FX2 shows its name, as its logo can't be
+  whitened.
+
 ## [1.7.1] - 2026-11-22
 
 ### Changed
