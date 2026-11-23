@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-11-23
+
 ### Fixed
 
 - On a computer, the menu stays put: the page no longer scrolls as a whole, so pulling past the top
@@ -263,7 +265,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/monteirohat/batox/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/monteirohat/batox/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/monteirohat/batox/compare/v1.7.2...v1.8.0
 [1.7.2]: https://github.com/monteirohat/batox/compare/v1.7.1...v1.7.2
