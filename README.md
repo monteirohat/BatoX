@@ -222,6 +222,7 @@ amount helps.
 
 <p>
   <a href="#support-the-project"><img src="https://img.shields.io/badge/Donate-PIX-32BCAD?style=for-the-badge&logo=pix&logoColor=white" alt="Donate with PIX"></a>
+  <a href="https://ko-fi.com/monteirohat"><img src="https://img.shields.io/badge/Donate-Ko--fi-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white" alt="Donate with Ko-fi"></a>
   <a href="https://revolut.me/andrludegv"><img src="https://img.shields.io/badge/Donate-Revolut-0666EB?style=for-the-badge&logo=revolut&logoColor=white" alt="Donate with Revolut"></a>
   <a href="https://www.paypal.me/AMonteiro818"><img src="https://img.shields.io/badge/Donate-PayPal-003087?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate with PayPal"></a>
 </p>
@@ -231,6 +232,9 @@ amount helps.
   ```
   abf3de6b-bad4-4225-8667-c941ebd31039
   ```
+
+- **Ko-fi**, from anywhere: open [ko-fi.com/monteirohat](https://ko-fi.com/monteirohat) and
+  choose the amount.
 
 - **Revolut**, from anywhere: open [revolut.me/andrludegv](https://revolut.me/andrludegv), or send
   to the tag **@andrludegv** in the app.
