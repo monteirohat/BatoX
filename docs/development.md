@@ -40,6 +40,9 @@ In dev mode:
 - `batocera.conf` changes are written straight to `./dev/batocera.conf`;
 - without `./dev/es_systems.cfg`, a built-in list of common systems is used. Copy the file from a
   console (`/usr/share/emulationstation/es_systems.cfg`) to test with the real list.
+- BIOS files live in `./dev/userdata/bios`, and their list needs `./dev/batocera-systems`: copy it
+  from a console (`/usr/bin/batocera-systems`; it is read with `python3`). Without it, `GET /bios`
+  answers `503`.
 
 Static files are embedded at build time, so restart `make run-dev` to see changes to the web app.
 
@@ -67,6 +70,7 @@ internal/
   api/                    HTTP routes, auth, handlers (one file per area)
   audio/                  sound outputs (PipeWire sinks, HDMI screen names from their ELD)
   batoconf/               batocera.conf reader, grouped by category, with a control per key
+  bios/                   BIOS files: Batocera's list, their state, uploads placed by MD5
   config/                 configuration loading and token generation
   db/                     SQLite catalog of games (pure-Go driver, no CGO)
   device/                 hardware info from /proc and /sys

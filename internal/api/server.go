@@ -12,6 +12,7 @@ import (
 
 	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/batoconf"
+	"github.com/monteirohat/batox/internal/bios"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/extensions"
@@ -40,6 +41,8 @@ type Deps struct {
 	Systems  *systems.Registry
 	Roms     *roms.Service
 	Music    *music.Service
+	// Bios lists the BIOS files the systems need and receives them.
+	Bios     *bios.Service
 	Onscreen Onscreen // nil when there is no screen to draw on (dev mode)
 	// NowPlaying follows the running game; nil without EmulationStation (dev mode).
 	NowPlaying *nowplaying.Tracker
@@ -136,6 +139,10 @@ func (s *Server) routes() chi.Router {
 			r.Get("/roms/{id}/file", s.romFile)
 			r.Post("/roms/{id}/launch", s.launchGame)
 			r.Delete("/roms/{id}", s.deleteRom)
+
+			// BIOS files, checked against Batocera's list (docs/api.md)
+			r.Get("/bios", s.listBios)
+			r.Post("/bios", s.uploadBios)
 
 			// The user's own game library (docs/library.md)
 			r.Get("/library", s.libraryView)

@@ -490,6 +490,73 @@
       ]
     },
     {
+      "name": "BIOS",
+      "item": [
+        {
+          "name": "List BIOS files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bios?system=&all=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bios"
+              ],
+              "query": [
+                {
+                  "key": "system",
+                  "value": ""
+                },
+                {
+                  "key": "all",
+                  "value": "false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload a BIOS file",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bios?overwrite=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bios"
+              ],
+              "query": [
+                {
+                  "key": "overwrite",
+                  "value": "false"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Music",
       "item": [
         {

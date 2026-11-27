@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- BIOS files in the API: each system's BIOS files and whether they are in place, from Batocera's
+  own list (the one behind EmulationStation's Missing BIOS Check), and uploads that go where
+  Batocera looks for them, found by their MD5, else by their name. New `GET /api/v1/bios` and
+  `POST /api/v1/bios` endpoints, and `userdataDir` and `biosCheckScript` settings.
+
 ## [1.10.0] - 2026-11-23
 
 ### Added

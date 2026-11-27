@@ -33,6 +33,8 @@ batocera-services stop batox && batocera-services start batox
 | `themesDir` | `/userdata/themes` | EmulationStation themes. |
 | `musicDir` | `/userdata/music` | EmulationStation background music. |
 | `recordingsDir` | `/userdata/recordings` | Screen recordings: where Batocera's recorder saves them. |
+| `userdataDir` | `/userdata` | The folder the BIOS paths start from (`bios/`, and a few under `saves/`). |
+| `biosCheckScript` | `/usr/bin/batocera-systems` | Batocera's Missing BIOS Check, which holds the list of BIOS files each system needs (read with `python3`). |
 | `esSystemsFile` | `/usr/share/emulationstation/es_systems.cfg` | Source of the systems and accepted extensions. |
 | `esLogosDir` | `/usr/share/emulationstation/themes/es-theme-carbon/art/logos` | System logos of Batocera's default theme, shown on the Consoles screen when the current theme has none. |
 | `esFeaturesFile` | `/usr/share/emulationstation/es_features.cfg` | Emulator options, used to show the Batocera settings with the right controls (names, lists, switches, sliders). |

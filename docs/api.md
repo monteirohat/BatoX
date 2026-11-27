@@ -11,6 +11,7 @@ set the `baseUrl` and `token` variables.
 - [Service and device](#service-and-device)
 - [Systems and games](#systems-and-games)
 - [Consoles](#consoles)
+- [BIOS](#bios)
 - [Library](#library)
 - [Music](#music)
 - [Recordings](#recordings)
@@ -391,6 +392,64 @@ A system that themes know by another name has it in `theme` (`"theme": "atarilyn
 The system logo of the current EmulationStation theme (often SVG). When the theme gives none, or
 EmulationStation is not running, the logo of Batocera's default theme (`esLogosDir` in the
 configuration). `404` when there is no logo for the system in either.
+
+## BIOS
+
+Some systems need BIOS files from the original hardware, kept in `/userdata/bios`. The list of
+what each system needs is Batocera's own: the one behind EmulationStation's **Missing BIOS Check**
+(`/usr/bin/batocera-systems`), so a Batocera update brings its changes. BatoX doesn't provide any
+BIOS files.
+
+### `GET /bios`
+
+Each system's BIOS files and whether they are in place, sorted by system. Like the Missing BIOS
+Check, it leaves out the systems and files of emulators this board doesn't have; `?all=true`
+lists every one. `?system=psx` returns that system only.
+
+```json
+{ "dir": "/userdata/bios",
+  "systems": [
+    { "name": "psx", "title": "PSX", "fullName": "PlayStation", "games": 12, "found": 1, "total": 2,
+      "files": [
+        { "path": "bios/scph5501.bin", "name": "scph5501.bin", "md5": "490f666e1afb15b7362b406ed1cea246", "status": "ok" },
+        { "path": "bios/scph1001.bin", "name": "scph1001.bin", "md5": "dc2b9bf8da62ec93e868cfd29f0d067d", "status": "missing" } ] },
+    { "name": "pc60", "title": "PC-6001", "fullName": "PC-6001", "games": 0, "found": 0, "total": 1,
+      "files": [
+        { "path": "bios/pc6001.zip", "name": "pc6001.zip", "inside": ["basicrom.60", "cgrom60.60"], "status": "mismatch" } ] } ] }
+```
+
+- `path` is relative to `/userdata` (a few files live outside `bios/`, such as
+  `saves/dolphin-emu/Triforce/segaboot.gcm`).
+- `status`: `ok` (there, with the content Batocera checks for), `missing`, or `mismatch` (there,
+  but another version: it may or may not work).
+- `md5` is the content Batocera checks for; without it, any content passes.
+- A ZIP that is checked file by file has those files in `inside`, and is `ok` when all of them are.
+- `games` is the system's games in the BatoX catalog; `title` is the name in Batocera's list.
+
+Some systems list alternatives (several PlayStation BIOS versions, for example) where one is
+enough; the list doesn't say which, just as the Missing BIOS Check doesn't.
+
+`503` when the list is not available (no `batocera-systems`, as in dev mode).
+
+### `POST /bios`
+
+Uploads a BIOS file (`multipart/form-data`, `file` field); it goes where Batocera looks for it,
+whatever its name:
+
+1. when its MD5 is in the list, under every name that asks for that content (the same Amiga
+   Kickstart is both `kick34005.A500` and `amiga-os-130.rom`): `match: "md5"`;
+2. else, when its name is in the list (without case), under that name, though it may not pass the
+   check: `match: "name"`;
+3. else in `/userdata/bios`: `match: "none"`.
+
+```json
+{ "name": "SCPH-5501 (USA).bin", "md5": "490f666e1afb15b7362b406ed1cea246", "match": "md5",
+  "saved": ["bios/scph5501.bin"], "unchanged": [], "systems": ["psx"] }
+```
+
+`201` when something was written, `200` when every place already had this very file (in
+`unchanged`). A different file already in one of the places is only replaced with
+`?overwrite=true`; otherwise `409`, and nothing is written.
 
 ## Music
 

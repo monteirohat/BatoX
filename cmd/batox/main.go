@@ -14,6 +14,7 @@ import (
 	"github.com/monteirohat/batox/internal/api"
 	"github.com/monteirohat/batox/internal/audio"
 	"github.com/monteirohat/batox/internal/batoconf"
+	"github.com/monteirohat/batox/internal/bios"
 	"github.com/monteirohat/batox/internal/config"
 	"github.com/monteirohat/batox/internal/db"
 	"github.com/monteirohat/batox/internal/extensions"
@@ -102,6 +103,7 @@ func run(cfgPath string) error {
 		Systems:  reg,
 		Roms:     romSvc,
 		Music:    music.NewService(cfg.MusicDir, logger),
+		Bios:     bios.New(cfg.UserdataDir, cfg.BiosCheckScript, cfg.ESSystemsFile, logger),
 	}
 	// Controls of the Batocera settings: emulator options from es_features.cfg,
 	// and the shader sets, decorations and time zones found on the console.

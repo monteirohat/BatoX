@@ -40,6 +40,9 @@ type Config struct {
 
 	RecordingsDir string `json:"recordingsDir"` // screen recordings (batocera-record's folder)
 
+	UserdataDir     string `json:"userdataDir"`     // the folder BIOS paths start from (bios/, saves/)
+	BiosCheckScript string `json:"biosCheckScript"` // batocera-systems, which holds Batocera's BIOS list
+
 	ESSystemsFile  string `json:"esSystemsFile"`  // es_systems.cfg (systems and extensions)
 	ESLogosDir     string `json:"esLogosDir"`     // system logos of Batocera's default theme, for when the current theme has none
 	ESFeaturesFile string `json:"esFeaturesFile"` // es_features.cfg (emulator options, for the settings controls)
@@ -67,6 +70,8 @@ func batoceraDefaults() Config {
 		ThemesDir:            "/userdata/themes",
 		MusicDir:             "/userdata/music",
 		RecordingsDir:        "/userdata/recordings",
+		UserdataDir:          "/userdata",
+		BiosCheckScript:      "/usr/bin/batocera-systems",
 		ESSystemsFile:        "/usr/share/emulationstation/es_systems.cfg",
 		ESLogosDir:           "/usr/share/emulationstation/themes/es-theme-carbon/art/logos",
 		ESFeaturesFile:       "/usr/share/emulationstation/es_features.cfg",
@@ -92,6 +97,8 @@ func devDefaults() Config {
 		ThemesDir:            "./dev/themes",
 		MusicDir:             "./dev/music",
 		RecordingsDir:        "./dev/recordings",
+		UserdataDir:          "./dev/userdata",
+		BiosCheckScript:      "./dev/batocera-systems",
 		ESSystemsFile:        "./dev/es_systems.cfg",
 		ESLogosDir:           "./dev/logos",
 		ESFeaturesFile:       "./dev/es_features.cfg",
