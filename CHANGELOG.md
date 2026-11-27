@@ -6,19 +6,24 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-11-27
+
 ### Added
 
-- BIOS files in the API: each system's BIOS files and whether they are in place, from Batocera's
-  own list (the one behind EmulationStation's Missing BIOS Check), and uploads that go where
-  Batocera looks for them, found by their MD5, else by their name. New `GET /api/v1/bios` and
-  `POST /api/v1/bios` and `DELETE /api/v1/bios` endpoints, and `userdataDir` and
-  `biosCheckScript` settings.
-- BIOS screen: each system's BIOS files with a green check on those in place, filtered by
-  status, by the consoles that have games, or by a search. A file in another version than the one
-  Batocera checks for can be deleted. Files dropped at the top, or on a
-  system's Upload, go where Batocera looks for them, and each says where it went. The details of
-  a console on the Consoles screen show how many of its BIOS files are in place, with a button to
-  them.
+- BIOS screen: each system's BIOS files, from Batocera's own list (the one behind
+  EmulationStation's Missing BIOS Check), with a green check on those in place, filtered by
+  status, by the consoles that have games, or by a search. Files dropped at the top, or on a
+  system's Upload, go where Batocera looks for them whatever their name, found by their MD5, else
+  by their name, and each says where it went. A file in another version than the one Batocera
+  checks for can be deleted. The details of a console on the Consoles screen show how many of its
+  BIOS files are in place, with a button to them.
+- BIOS files in the API: new `GET /api/v1/bios`, `POST /api/v1/bios` and `DELETE /api/v1/bios`
+  endpoints, and `userdataDir` and `biosCheckScript` settings.
+
+### Fixed
+
+- Upload lists: a long message goes under the file's name when it doesn't fit beside it, instead
+  of squeezing the name on a phone.
 
 ## [1.10.0] - 2026-11-23
 
@@ -292,7 +297,8 @@ for an R36S handheld; this release rewrites it for Batocera.
 - Uploads are streamed to disk and validated against path traversal and "zip slip".
 - No endpoint runs arbitrary commands.
 
-[Unreleased]: https://github.com/monteirohat/batox/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/monteirohat/batox/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/monteirohat/batox/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/monteirohat/batox/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/monteirohat/batox/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/monteirohat/batox/compare/v1.8.0...v1.9.0
