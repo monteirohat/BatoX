@@ -46,6 +46,9 @@ clicks, no terminal needed.
 - **Play on the console** from the games list, switching from the game being played when needed.
 - **Consoles**: every system Batocera can emulate, with the theme's logo, manufacturer, release
   year, type and the games you have, filtered by type and searchable.
+- **BIOS**: the files each system needs, from Batocera's own list (the one of EmulationStation's
+  Missing BIOS Check), with a check on those in place. Drop BIOS files of any system, under any
+  name: BatoX recognizes them by their content and puts them where Batocera looks.
 - **Library**: download games from your own library, at an address only you know (a GitHub
   repository, a NAS or a web server): browse them with their covers, pick some, and they land on
   the console with their cover and details. See [how to make a library](docs/library.md): scripts

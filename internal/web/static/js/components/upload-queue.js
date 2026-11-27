@@ -1,5 +1,5 @@
 // Reusable upload queue: a drop zone, a list with progress bars,
-// and send/clear buttons. Used by the game and music views.
+// and send/clear buttons. Used by the game, music and BIOS views.
 
 import { esc, fmtBytes, plural } from "../format.js";
 import { uploadFile } from "../api.js";
@@ -17,6 +17,9 @@ let counter = 0;
  *  - url:      () => API path for the upload (read when Send is clicked)
  *  - onStart:  called before the first upload (e.g. to lock form fields)
  *  - onFinish: ({ sent, failed }) => called when the queue is done
+ *  - sentText: (file, response) => what to say under a file once it is sent,
+ *              or { text, warn: true } when it went through with a catch
+ *  - errorText: (err) => what to say when the API refused it
  *
  * Returns { revalidate }, so the view can ask for a new check when its
  * choices change (e.g. another system was selected).
@@ -29,6 +32,8 @@ export function createUploadQueue(root, {
   url,
   onStart = () => {},
   onFinish = () => {},
+  sentText = () => "Uploaded",
+  errorText = err => err.message,
 }) {
   const id = `uq-files-${++counter}`;
   root.innerHTML = `
@@ -57,7 +62,7 @@ export function createUploadQueue(root, {
 
   function revalidate() {
     for (const q of queue) {
-      if (q.state === "done" || q.state === "sending") continue;
+      if (q.state === "done" || q.state === "warn" || q.state === "sending") continue;
       const problem = validate(q.file);
       if (problem) { q.state = "invalid"; q.msg = problem; }
       else { q.state = "ready"; q.msg = "Ready to upload"; }
@@ -107,14 +112,15 @@ export function createUploadQueue(root, {
       q.state = "sending"; q.msg = "Uploading…"; q.progress = 0;
       draw();
       try {
-        await uploadFile(path, q.file, p => {
+        const res = await uploadFile(path, q.file, p => {
           q.progress = p;
           q.msg = p < 1 ? `Uploading ${Math.round(p * 100)}%` : "Checking on the console…";
           draw();
         });
-        q.state = "done"; q.msg = "Uploaded"; q.progress = 1; sent++;
+        const said = sentText(q.file, res);
+        q.state = said.warn ? "warn" : "done"; q.msg = said.text ?? said; q.progress = 1; sent++;
       } catch (err) {
-        q.state = "error"; q.msg = err.message; failed++;
+        q.state = "error"; q.msg = errorText(err); failed++;
       }
       draw();
     }

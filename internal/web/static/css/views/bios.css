@@ -1,0 +1,37 @@
+/* BIOS view
+   The upload panel, and one panel per system with its files: a green check on
+   those in place, an amber mark on another version, a dashed ring on the
+   missing. The filters reuse the Consoles view's (consoles.css). */
+
+.bios-overwrite { margin-top: 14px; }
+.bios-summary { margin: 0 0 14px; }
+.bios-summary a { font-size: 14px; }
+.bios-list { display: grid; gap: 5px; }
+
+.bios-system > header { margin-bottom: 10px; }
+.bios-system h2 { margin: 0; }
+.bios-system > header p { font-size: 13px; }
+.bios-system .actions { align-items: center; gap: 14px; }
+.bios-progress { color: var(--ink-2); font-size: 13px; font-variant-numeric: tabular-nums; }
+.bios-progress[data-state="ok"] { color: var(--ok); }
+
+.bios-files { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 5px; margin: 0; padding: 0; list-style: none; }
+.bios-file { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface-2); }
+.bios-icon { display: grid; color: var(--ink-3); }
+.bios-icon svg { width: 22px; height: 22px; }
+.bios-file[data-state="ok"] .bios-icon { color: var(--ok); }
+.bios-file[data-state="mismatch"] .bios-icon { color: var(--signal); }
+.bios-name { display: grid; min-width: 0; }
+.bios-name code { font: 13px/1.4 var(--font-code); overflow-wrap: anywhere; }
+.bios-dir, .bios-inside { color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
+.bios-status { color: var(--ink-2); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.bios-file[data-state="ok"] .bios-status { color: var(--ok); }
+.bios-file[data-state="mismatch"] .bios-status { color: var(--signal); }
+
+.bios-dialog { display: grid; gap: 18px; }
+.bios-missing p { margin: 0 0 8px; }
+.bios-missing .presets { max-height: 132px; overflow-y: auto; }
+
+@media (max-width: 760px) {
+  .bios-system .actions { width: 100%; justify-content: space-between; }
+}

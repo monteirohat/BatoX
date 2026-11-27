@@ -11,6 +11,7 @@
 }
 /* A button at rest is a thin outline; the main one of a screen is the selected
    surface in its white frame */
+.btn[hidden] { display: none; }
 .btn:hover { background: var(--selected); border-color: var(--frame); }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
 .btn svg { width: 18px; height: 18px; }

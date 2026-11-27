@@ -201,6 +201,7 @@ function showDetails(c) {
           <dt>Played</dt><dd>${plural(c.played, "game", "games")}</dd>
           ${c.hidden ? `<dt>Hidden</dt><dd>${plural(c.hidden, "game", "games")}</dd>` : ""}
           ${c.mostPlayed ? `<dt>Most played</dt><dd>${esc(c.mostPlayed)}</dd>` : ""}` : ""}
+          <dt>BIOS</dt><dd data-bios><span class="muted">Checking…</span></dd>
           <dt>ROM folder</dt><dd><code>${esc(c.folder)}</code>${c.folderExists ? "" : ` <span class="muted small">(not created yet)</span>`}</dd>
         </dl>
         <h3>Accepted files</h3>
@@ -209,6 +210,7 @@ function showDetails(c) {
     footer: `
       ${c.games ? `<button class="btn btn-primary" data-act="games">Show games</button>` : ""}
       <button class="btn" data-act="upload">Upload games</button>
+      <button class="btn" data-act="bios" hidden>BIOS files</button>
       <button class="btn" data-act="close">Close</button>`,
   });
   const go = hash => { modal.close(); location.hash = hash; };
@@ -216,4 +218,30 @@ function showDetails(c) {
   if (games) games.onclick = () => { state.romFilter = c.name; go("#games"); };
   $('[data-act="upload"]', modal.footer).onclick = () => { localStorage.setItem("batox.system", c.name); go("#upload"); };
   $('[data-act="close"]', modal.footer).onclick = modal.close;
+  showBios(c, modal, go);
+}
+
+// The console's BIOS files, from Batocera's list: how many are in place, and
+// a button to the BIOS screen filtered to it. Without the list (dev mode)
+// the line goes away.
+async function showBios(c, modal, go) {
+  const dd = $("[data-bios]", modal.body);
+  const btn = $('[data-act="bios"]', modal.footer);
+  let s;
+  try {
+    [s] = (await api(`/bios?system=${encodeURIComponent(c.name)}`)).systems;
+  } catch {
+    dd.previousElementSibling.remove();
+    dd.remove();
+    return;
+  }
+  if (!s) {
+    dd.textContent = "None in Batocera's list";
+    return;
+  }
+  dd.innerHTML = s.found === s.total
+    ? `<span class="bios-progress" data-state="ok">${s.total === 1 ? "In place" : `All ${s.total} files in place`}</span>`
+    : `${s.found} of ${plural(s.total, "file", "files")} in place`;
+  btn.hidden = false;
+  btn.onclick = () => go(`#bios?system=${encodeURIComponent(c.name)}`);
 }

@@ -12,6 +12,11 @@ All notable changes to this project are documented here. The format follows
   own list (the one behind EmulationStation's Missing BIOS Check), and uploads that go where
   Batocera looks for them, found by their MD5, else by their name. New `GET /api/v1/bios` and
   `POST /api/v1/bios` endpoints, and `userdataDir` and `biosCheckScript` settings.
+- BIOS screen: each system's BIOS files with a green check on those in place, filtered by
+  status, by the consoles that have games, or by a search. Files dropped at the top, or on a
+  system's Upload, go where Batocera looks for them, and each says where it went. The details of
+  a console on the Consoles screen show how many of its BIOS files are in place, with a button to
+  them.
 
 ## [1.10.0] - 2026-11-23
 

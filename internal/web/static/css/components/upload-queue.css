@@ -13,13 +13,16 @@
    text is never set straight on the picture */
 #up-queue .uq-controls { margin-top: 5px; padding: 12px 16px; background: var(--surface); }
 .queue { display: grid; gap: 5px; margin-top: 14px; }
-.qitem { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; background: var(--surface); }
-.qitem .bar { grid-column: 1 / -1; margin-top: 4px; }
+/* The status sits beside the name, or under it when it doesn't fit */
+.qitem { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 14px; background: var(--surface); }
+.qitem .bar { flex: 1 0 100%; margin-top: 4px; }
 .qitem .bar > i { background: var(--frame); transition: width .15s linear; }
 .qitem[data-state="done"] .bar > i { background: var(--ok); }
 .qitem[data-state="error"] .bar > i { background: var(--danger); width: 100% !important; }
-.qname { font-weight: 600; overflow-wrap: anywhere; }
-.qstatus { font-size: 13px; color: var(--ink-2); text-align: right; }
+.qname { flex: 1 1 12em; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+.qstatus { flex: 0 1 auto; margin-left: auto; font-size: 13px; color: var(--ink-2); text-align: right; }
 .qitem[data-state="done"] .qstatus { color: var(--ok); }
 .qitem[data-state="error"] .qstatus { color: var(--danger); }
+.qitem[data-state="warn"] .bar > i { background: var(--signal); }
+.qitem[data-state="warn"] .qstatus { color: var(--signal); }
 .uq-controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 20px; }

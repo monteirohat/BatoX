@@ -7,6 +7,7 @@ import * as dashboard from "./views/dashboard.js";
 import * as games from "./views/games.js";
 import * as consoles from "./views/consoles.js";
 import * as upload from "./views/upload.js";
+import * as bios from "./views/bios.js";
 import * as library from "./views/library.js";
 import * as music from "./views/music.js";
 import * as recordings from "./views/recordings.js";
@@ -27,6 +28,7 @@ const views = {
   games: games.render,
   consoles: consoles.render,
   upload: upload.render,
+  bios: bios.render,
   library: library.render,
   music: music.render,
   recordings: recordings.render,
