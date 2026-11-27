@@ -382,3 +382,34 @@ if __name__ == '__main__':
 		t.Fatalf("missing script: %v", err)
 	}
 }
+
+func TestDelete(t *testing.T) {
+	s, root := newService(t, testTable())
+	write(t, root, "bios/scph1001.bin", "another version")
+	write(t, root, "bios/other.bin", "not in the list")
+	if err := os.MkdirAll(filepath.Join(root, "bios/dc"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := s.Delete("bios/scph1001.bin"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(root, "bios/scph1001.bin")); !os.IsNotExist(err) {
+		t.Fatal("still there")
+	}
+	list, _ := s.List(false)
+	if st := statuses(bySystem(list)["psx"]); st["bios/scph1001.bin"] != StatusMissing {
+		t.Fatalf("after delete: %v", st)
+	}
+	if err := s.Delete("bios/scph1001.bin"); !errors.Is(err, ErrNotFound) {
+		t.Fatalf("again: %v", err)
+	}
+	for _, rel := range []string{"bios/other.bin", "bios/../bios/scph5501.bin", "../etc/passwd", "bios/dc", ""} {
+		if err := s.Delete(rel); !errors.Is(err, ErrNotListed) {
+			t.Fatalf("%q: %v", rel, err)
+		}
+	}
+	if read(t, root, "bios/other.bin") != "not in the list" {
+		t.Fatal("a file outside the list was touched")
+	}
+}

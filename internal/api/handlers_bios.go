@@ -16,7 +16,9 @@ func (s *Server) biosError(w http.ResponseWriter, err error) {
 		writeError(w, http.StatusServiceUnavailable, err.Error())
 	case errors.Is(err, bios.ErrExists):
 		writeError(w, http.StatusConflict, err.Error())
-	case errors.Is(err, bios.ErrInvalidName), errors.Is(err, bios.ErrEmptyFile):
+	case errors.Is(err, bios.ErrNotFound):
+		writeError(w, http.StatusNotFound, err.Error())
+	case errors.Is(err, bios.ErrInvalidName), errors.Is(err, bios.ErrEmptyFile), errors.Is(err, bios.ErrNotListed):
 		writeError(w, http.StatusBadRequest, err.Error())
 	default:
 		s.internalError(w, err)
@@ -81,4 +83,16 @@ func (s *Server) uploadBios(w http.ResponseWriter, r *http.Request) {
 		status = http.StatusOK // it was already there
 	}
 	writeJSON(w, status, res)
+}
+
+// deleteBios: DELETE /bios?path=bios/scph1001.bin -> removes a file of
+// Batocera's BIOS list (a wrong version, say). Paths outside the list are
+// refused.
+func (s *Server) deleteBios(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Query().Get("path")
+	if err := s.Bios.Delete(path); err != nil {
+		s.biosError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"status": "deleted", "path": path})
 }

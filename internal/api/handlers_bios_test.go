@@ -143,3 +143,24 @@ func TestBiosWithoutTable(t *testing.T) {
 		t.Fatalf("status %d: %s", rec.Code, rec.Body)
 	}
 }
+
+func TestDeleteBios(t *testing.T) {
+	s := biosServer(t, biosTable)
+	if rec := uploadBiosFile(t, s, "", "scph1001.bin", "a different version"); rec.Code != http.StatusCreated {
+		t.Fatalf("upload: status %d: %s", rec.Code, rec.Body)
+	}
+	del := func(path string) int {
+		rec := httptest.NewRecorder()
+		s.deleteBios(rec, httptest.NewRequest(http.MethodDelete, "/bios?path="+path, nil))
+		return rec.Code
+	}
+	if code := del("bios/scph1001.bin"); code != http.StatusOK {
+		t.Fatalf("delete: status %d", code)
+	}
+	if code := del("bios/scph1001.bin"); code != http.StatusNotFound {
+		t.Fatalf("again: status %d", code)
+	}
+	if code := del("../etc/passwd"); code != http.StatusBadRequest {
+		t.Fatalf("outside the list: status %d", code)
+	}
+}

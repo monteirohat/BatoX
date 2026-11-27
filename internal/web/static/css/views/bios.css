@@ -1,7 +1,8 @@
 /* BIOS view
    The upload panel, and one panel per system with its files: a green check on
    those in place, an amber mark on another version, a dashed ring on the
-   missing. The filters reuse the Consoles view's (consoles.css). */
+   missing, with a delete button on the other versions. The filters reuse the
+   Consoles view's (consoles.css). */
 
 .bios-overwrite { margin-top: 14px; }
 .bios-summary { margin: 0 0 14px; }
@@ -24,6 +25,9 @@
 .bios-name { display: grid; min-width: 0; }
 .bios-name code { font: 13px/1.4 var(--font-code); overflow-wrap: anywhere; }
 .bios-dir, .bios-inside { color: var(--ink-2); font-size: 12px; overflow-wrap: anywhere; }
+.bios-end { display: flex; align-items: center; gap: 10px; }
+.bios-del { width: 30px; min-height: 30px; }
+.bios-del svg { width: 16px; height: 16px; }
 .bios-status { color: var(--ink-2); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
 .bios-file[data-state="ok"] .bios-status { color: var(--ok); }
 .bios-file[data-state="mismatch"] .bios-status { color: var(--signal); }

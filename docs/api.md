@@ -451,6 +451,16 @@ whatever its name:
 `unchanged`). A different file already in one of the places is only replaced with
 `?overwrite=true`; otherwise `409`, and nothing is written.
 
+### `DELETE /bios`
+
+Deletes a file of the list, such as one in another version: `?path=bios/scph1001.bin`, the `path`
+of `GET /bios`. Only the list's paths are accepted (`400` otherwise); `404` when the file isn't
+there.
+
+```json
+{ "status": "deleted", "path": "bios/scph1001.bin" }
+```
+
 ## Music
 
 EmulationStation plays background music from `/userdata/music`. Files in the root play for every

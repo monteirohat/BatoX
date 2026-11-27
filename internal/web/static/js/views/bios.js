@@ -2,10 +2,11 @@
 // one behind EmulationStation's Missing BIOS Check), with a check on those in
 // place. Uploads go where Batocera looks for them, recognized by their MD5
 // whatever their name, so one drop zone serves every system. #bios?system=psx
-// (the BIOS button of the Consoles screen) shows one system.
+// (the BIOS button of the Consoles screen) shows one system. A file that is
+// there in another version can be deleted.
 
 import { esc, plural } from "../format.js";
-import { $, $$, toast, errorBox } from "../ui.js";
+import { $, $$, toast, confirmDialog, errorBox } from "../ui.js";
 import { api } from "../api.js";
 import { openModal } from "../components/modal.js";
 import { createUploadQueue } from "../components/upload-queue.js";
@@ -20,6 +21,7 @@ const ICON = {
   mismatch: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>`,
   missing: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>`,
 };
+const ICON_DELETE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>`;
 
 const SHOW = [
   ["", "All"],
@@ -168,6 +170,27 @@ function draw() {
 
 function bind(body) {
   $$("[data-upload]", body).forEach(b => b.onclick = () => uploadTo(data.systems.find(s => s.name === b.dataset.upload)));
+  $$("[data-delete]", body).forEach(b => b.onclick = () => deleteFile(b.dataset.delete));
+}
+
+// Deletes a file that is there in another version, after asking.
+async function deleteFile(path) {
+  const name = path.slice(path.lastIndexOf("/") + 1);
+  const where = path.startsWith("bios/") ? "the BIOS folder" : path.slice(0, path.lastIndexOf("/") + 1);
+  const ok = await confirmDialog({
+    title: `Delete ${name}?`,
+    message: `It isn't the version Batocera checks for. It is deleted from ${where} on the console, and you can upload another one afterwards.`,
+    confirmLabel: "Delete",
+    danger: true,
+  });
+  if (!ok) return;
+  try {
+    await api(`/bios?path=${encodeURIComponent(path)}`, { method: "DELETE" });
+    toast(`${name} deleted.`);
+  } catch (err) {
+    toast(err.message, true);
+  }
+  await load();
 }
 
 function progress(s) {
@@ -202,7 +225,10 @@ function file(f) {
     <li class="bios-file" data-state="${esc(f.status)}" title="${esc(check)}">
       <span class="bios-icon">${ICON[f.status] || ICON.missing}</span>
       <span class="bios-name"><code>${esc(f.name)}</code>${dir !== "bios/" ? `<span class="bios-dir">${esc(dir)}</span>` : ""}${inside}</span>
-      <span class="bios-status">${STATUS[f.status] || esc(f.status)}</span>
+      <span class="bios-end">
+        <span class="bios-status">${STATUS[f.status] || esc(f.status)}</span>
+        ${f.status === "mismatch" ? `<button class="btn btn-danger icon-btn bios-del" data-delete="${esc(f.path)}" aria-label="Delete ${esc(f.name)}" title="Delete this version">${ICON_DELETE}</button>` : ""}
+      </span>
     </li>`;
 }
 

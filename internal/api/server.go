@@ -143,6 +143,7 @@ func (s *Server) routes() chi.Router {
 			// BIOS files, checked against Batocera's list (docs/api.md)
 			r.Get("/bios", s.listBios)
 			r.Post("/bios", s.uploadBios)
+			r.Delete("/bios", s.deleteBios)
 
 			// The user's own game library (docs/library.md)
 			r.Get("/library", s.libraryView)
